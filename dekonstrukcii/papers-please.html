@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Papers, Please — разбор по слоям</title>
+<style>
+  :root{
+    --paper:#ffffff; --ink:#2c2c2a; --grey:#5f5e5a; --faint:#888780; --line:#d9d6cc;
+    --terra:#D85A30; --terra-deep:#993C1D; --terra-pale:#FAECE7;
+    --violet:#7F77DD; --violet-deep:#3C3489; --violet-pale:#EEEDFE;
+    --ochre:#ba7517; --ochre-pale:#FBF3E4;
+    --green:#5C8A55; --green-deep:#3F6438; --green-pale:#F2F7F1;
+    --beige:#f1efe8; --beige2:#f7f5ee;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:Helvetica,Arial,sans-serif;line-height:1.55;font-size:15px;
+    display:flex;justify-content:center;padding:34px 20px 100px}
+  main{width:100%;max-width:880px}
+  .top{font-size:12px;color:var(--faint);margin-bottom:20px}
+  h1{font-size:29px;margin:0 0 10px;letter-spacing:.3px;line-height:1.25}
+  h2{font-size:20px;margin:52px 0 6px;padding-top:16px;border-top:2px solid var(--line)}
+  h2 .n{color:var(--faint);font-weight:400;font-size:14px;margin-right:8px}
+  h3{font-size:15.5px;margin:26px 0 8px}
+  p{margin:0 0 13px}
+  .lede{font-size:16px;color:var(--grey);margin:0 0 8px}
+  .legend{font-size:12.5px;color:var(--faint);background:var(--beige2);
+    border:1px solid var(--line);border-radius:9px;padding:11px 15px;margin:16px 0 0}
+  .zachem{font-size:12.5px;color:var(--faint);font-style:italic;margin:0 0 16px}
+  .voice{font-family:Georgia,serif;font-size:16px}
+
+  table{border-collapse:collapse;width:100%;font-size:13.5px;margin:14px 0 6px}
+  .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  th{text-align:left;font-size:11.5px;letter-spacing:.9px;color:var(--faint);
+    font-weight:600;border-bottom:1.5px solid var(--line);padding:0 12px 7px 0;vertical-align:bottom}
+  td{border-bottom:1px solid var(--line);padding:10px 12px 10px 0;vertical-align:top}
+  td:first-child{font-weight:600;width:23%;min-width:150px}
+  tr:hover td{background:var(--beige2)}
+
+  .ok{color:var(--green-deep);font-weight:600}
+  .hz{color:var(--ochre);font-weight:600}
+  .src{color:var(--faint);font-size:.87em;white-space:nowrap}
+  q,blockquote{font-family:Georgia,serif}
+  .cite{font-family:Georgia,serif;font-style:italic;color:var(--grey)}
+
+  .cards{display:grid;gap:12px;margin:16px 0}
+  .card{border:1px solid var(--line);border-radius:10px;padding:14px 18px;background:var(--beige2)}
+  .card h4{margin:0 0 8px;font-size:14.5px}
+  .card .r{font-size:13.5px;margin:5px 0}
+  .card .r b{font-size:11px;letter-spacing:1px;color:var(--faint);
+    display:inline-block;min-width:78px;font-weight:600}
+
+  ol.rules{padding-left:22px;margin:14px 0}
+  ol.rules li{margin:11px 0;font-size:14px}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;margin:14px 0;font-size:13.5px}
+  .two .h{padding:8px 14px;font-size:11.5px;letter-spacing:1px;font-weight:600;
+    background:var(--beige);border-bottom:1px solid var(--line)}
+  .two .l{border-right:1px solid var(--line)}
+  .two .c{padding:11px 14px;border-bottom:1px solid var(--line)}
+  .two .risk{grid-column:1 / -1;padding:9px 14px;border-bottom:1px solid var(--line);
+    background:var(--ochre-pale);font-size:13px}
+  .two .num{grid-column:1 / -1;padding:10px 14px 3px;font-weight:600;font-size:13.5px}
+
+  figure{margin:22px 0}
+  figure svg{width:100%;height:auto;display:block}
+  figcaption{font-size:12.5px;color:var(--faint);margin-top:7px}
+
+  .note{background:var(--violet-pale);border:1px solid #C9C5F2;border-radius:10px;
+    padding:13px 17px;margin:16px 0;font-size:13.5px;color:var(--violet-deep)}
+  .warn{background:var(--terra-pale);border:1px solid #E9C6B7;border-radius:10px;
+    padding:13px 17px;margin:16px 0;font-size:13.5px}
+  .plus{background:var(--green-pale);border:1px solid #C9D8C4;border-radius:10px;
+    padding:13px 17px;margin:16px 0;font-size:13.5px}
+  .turn{border-left:3px solid var(--ochre);padding:4px 0 4px 16px;margin:18px 0;
+    font-size:14.5px;color:var(--grey)}
+  .srcs{font-size:12px;color:var(--faint);line-height:1.65}
+  ul.tight{padding-left:20px;margin:12px 0;font-size:13.5px}
+  ul.tight li{margin:6px 0}
+  @media(max-width:700px){
+    .two{grid-template-columns:1fr}
+    .two .l{border-right:none}
+    td:first-child{width:auto}
+  }
+</style>
+</head>
+<body>
+<main>
+
+<div class="top"><a href="./" style="color:inherit;text-decoration:none;border-bottom:1px solid var(--line)">← все разборы</a> · деконструкция · живите как хотите · 2026-08-15</div>
+
+<h1>Papers, Please,<br>разобранная по слоям.</h1>
+<p class="lede">Lucas Pope, 2013, один автор, девять месяцев. Разбор по девлогу автора, фан-вики и отзывам Steam: как связаны механика и смысл, какие решения принимались по ходу и чем за них заплачено.</p>
+<div class="legend">
+  <b>Как читать.</b> <span class="ok">✅</span> — проверено по источнику, ссылка в квадратных скобках.
+  <span class="hz">🔶</span> — оценка или расчёт, источником не подтверждено.
+  Цитаты Поупа даны с номером поста и датой: девлог правился годами, ранние решения он потом отменял.
+  
+</div>
+
+<!-- ================= 1 ================= -->
+<h2><span class="n">1</span>Две идеи</h2>
+<p class="zachem">Первое, чему учит разбор: что игра говорит о себе — не то же, что делает её код.</p>
+
+<p><b>Papers, Please</b><br>
+Заявлено автором <span class="ok">✅</span>: <span class="cite">«you're a powerless cog in an uncaring machine»</span> — бессильный винтик в равнодушной машине <span class="src">[tig-10]</span>.<br>
+Выражено правилами <span class="hz">🔶</span>: система ставит норму выработки вплотную к счёту за квартиру, и внимание к чужой судьбе оказывается дороже невнимания. Игра не произносит ни того, ни другого.</p>
+
+<!-- ================= 2 ================= -->
+<h2><span class="n">2</span>Такт Papers Please: где кончается время</h2>
+<p class="zachem">Вся мораль игры сидит в одном ресурсе. Схема показывает, как он замыкается в петлю.</p>
+
+<figure>
+<svg viewBox="0 0 900 560" xmlns="http://www.w3.org/2000/svg" role="img" font-family="Helvetica, Arial, sans-serif">
+  <title>Такт Papers Please — где кончается время</title>
+  <desc>Слева серая зона, где часы стоят: газета, бюллетень, книга правил — бесплатно. Игрок сам жмёт кнопку, и начинается смена в 480 секунд. Проситель проходит девять шагов, через три секунды после его ухода печатается квитанция, когда человека уже не вернуть. Толстая петля показывает механизм: каждая лишняя секунда на человека уменьшает остаток времени, значит меньше людей за смену, значит меньше кредитов, значит нечем платить обязательную аренду и добровольные еду и тепло, значит голод, холод, болезнь и смерть в семье — и поэтому ты не слушаешь следующего просителя. Внизу шкала: 43 секунды на судьбу при полной оплате счетов, 100 секунд, если платить только аренду.</desc>
+  <defs>
+    <marker id="a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888780"/></marker>
+    <marker id="a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#D85A30"/></marker>
+  </defs>
+  <rect width="900" height="560" fill="#fff"/>
+
+  <!-- левая зона -->
+  <rect x="16" y="40" width="206" height="132" rx="9" fill="#f4f4f2" stroke="#c9c7c0" stroke-dasharray="5 4"/>
+  <text x="30" y="62" font-size="11.5" font-weight="600" fill="#888780">ЧАСЫ СТОЯТ</text>
+  <g font-size="11" fill="#5f5e5a">
+    <text x="30" y="88">газета — вчерашние последствия</text>
+    <text x="30" y="110">бюллетень — правила на сегодня</text>
+    <text x="30" y="132">книга правил — сколько угодно</text>
+  </g>
+  <text x="30" y="160" font-size="15" font-weight="600" fill="#3F6438">бесплатно</text>
+
+  <line x1="228" y1="30" x2="228" y2="500" stroke="#888780" stroke-width="1.3" stroke-dasharray="4 4"/>
+  <text x="236" y="26" font-size="11.5" fill="#5f5e5a">игрок сам жмёт «Next» — часы пошли</text>
+
+  <!-- смена -->
+  <text x="246" y="46" font-size="11.5" font-weight="600" fill="#993C1D">СМЕНА · 8 мин = 480 сек</text>
+  <g font-size="10.5">
+    <g fill="#fff" stroke="#b4b2a9">
+      <rect x="246" y="58" width="80" height="34" rx="6"/>
+      <rect x="332" y="58" width="94" height="34" rx="6"/>
+      <rect x="432" y="58" width="94" height="34" rx="6"/>
+      <rect x="532" y="58" width="120" height="34" rx="6"/>
+      <rect x="658" y="58" width="98" height="34" rx="6"/>
+      <rect x="762" y="58" width="66" height="34" rx="6"/>
+    </g>
+    <g fill="#2c2c2a" text-anchor="middle">
+      <text x="286" y="79">подошёл</text>
+      <text x="379" y="73">реплика</text><text x="379" y="86">3–6 слов</text>
+      <text x="479" y="73">бумаги</text><text x="479" y="86">на стойку</text>
+      <text x="592" y="73">сверка: ~35 фактов</text><text x="592" y="86">≈ 600 пар</text>
+      <text x="707" y="73">подсветить</text><text x="707" y="86">ДВА факта</text>
+      <text x="795" y="79">допрос</text>
+    </g>
+    <g stroke="#888780" fill="none" marker-end="url(#a1)">
+      <path d="M326 75 L330 75"/><path d="M426 75 L430 75"/><path d="M526 75 L530 75"/>
+      <path d="M652 75 L656 75"/><path d="M756 75 L760 75"/>
+    </g>
+  </g>
+  <g font-size="10.5">
+    <g fill="#fff" stroke="#b4b2a9">
+      <rect x="246" y="112" width="80" height="30" rx="6"/>
+      <rect x="332" y="112" width="94" height="30" rx="6"/>
+    </g>
+    <g fill="#2c2c2a" text-anchor="middle">
+      <text x="286" y="131">штамп</text>
+      <text x="379" y="131">вернуть · ушёл</text>
+    </g>
+    <path d="M795 92 C795 104 300 100 286 108" stroke="#888780" fill="none" marker-end="url(#a1)"/>
+    <path d="M326 127 L330 127" stroke="#888780" fill="none" marker-end="url(#a1)"/>
+    <rect x="446" y="108" width="150" height="38" rx="6" fill="#FAECE7" stroke="#D85A30"/>
+    <text x="521" y="124" font-size="11" font-weight="600" fill="#993C1D" text-anchor="middle">КВИТАНЦИЯ</text>
+    <text x="521" y="138" font-size="10" fill="#5f5e5a" text-anchor="middle">через ~3 сек, вернуть нельзя</text>
+    <path d="M426 127 L442 127" stroke="#D85A30" fill="none" marker-end="url(#a2)"/>
+  </g>
+
+  <!-- петля -->
+  <text x="246" y="182" font-size="11.5" font-weight="600" fill="#993C1D">ПЕТЛЯ — сам механизм</text>
+  <g font-size="11.5">
+    <g fill="#FAECE7" stroke="#D85A30" stroke-width="1.4">
+      <rect x="246" y="196" width="164" height="40" rx="7"/>
+      <rect x="446" y="196" width="164" height="40" rx="7"/>
+      <rect x="646" y="196" width="182" height="40" rx="7"/>
+      <rect x="446" y="276" width="382" height="44" rx="7"/>
+      <rect x="246" y="276" width="164" height="44" rx="7"/>
+    </g>
+    <g fill="#2c2c2a">
+      <text x="328" y="212" text-anchor="middle">каждая лишняя секунда</text>
+      <text x="328" y="228" text-anchor="middle" font-size="10.5" fill="#5f5e5a">на этого человека</text>
+      <text x="528" y="212" text-anchor="middle">меньше людей за смену</text>
+      <text x="528" y="228" text-anchor="middle" font-size="10.5" fill="#5f5e5a">квота не показана</text>
+      <text x="737" y="212" text-anchor="middle">5 кредитов × N</text>
+      <text x="737" y="228" text-anchor="middle" font-size="10.5" fill="#5f5e5a">весь доход</text>
+      <text x="637" y="294" text-anchor="middle" font-size="11">аренда 20→25 ОБЯЗАТЕЛЬНА · еда 5/чел и тепло 10 — добровольны</text>
+      <text x="637" y="311" text-anchor="middle" font-size="10.5" fill="#5f5e5a">не заплатил — голод, холод, болезнь, смерть</text>
+      <text x="328" y="296" text-anchor="middle" font-weight="600" fill="#993C1D">поэтому не слушаешь</text>
+      <text x="328" y="312" text-anchor="middle" font-size="10.5" fill="#5f5e5a">следующего в очереди</text>
+    </g>
+    <g stroke="#D85A30" stroke-width="1.6" fill="none" marker-end="url(#a2)">
+      <path d="M410 216 L442 216"/>
+      <path d="M610 216 L642 216"/>
+      <path d="M828 236 C860 236 860 298 832 298"/>
+      <path d="M446 298 L414 298"/>
+      <path d="M328 276 L328 240"/>
+    </g>
+    <path d="M328 196 L328 150" stroke="#D85A30" stroke-width="1.6" fill="none" marker-end="url(#a2)" stroke-dasharray="0"/>
+    <text x="336" y="170" font-size="10.5" fill="#993C1D">петля замкнулась</text>
+  </g>
+
+  <!-- шкала -->
+  <text x="246" y="368" font-size="11.5" font-weight="600" fill="#888780">480 СЕКУНД СМЕНЫ — НА СКОЛЬКО ЛЮДЕЙ</text>
+  <line x1="246" y1="392" x2="846" y2="392" stroke="#2c2c2a" stroke-width="1.6"/>
+  <g font-size="11">
+    <line x1="300" y1="384" x2="300" y2="400" stroke="#D85A30" stroke-width="2"/>
+    <text x="300" y="418" fill="#993C1D" text-anchor="middle">~43 сек на судьбу</text>
+    <text x="300" y="432" fill="#5f5e5a" text-anchor="middle">11 человек — полный день</text>
+    <text x="300" y="445" fill="#5f5e5a" text-anchor="middle">с семьёй и теплом</text>
+    <line x1="640" y1="384" x2="640" y2="400" stroke="#5C8A55" stroke-width="2"/>
+    <text x="640" y="418" fill="#3F6438" text-anchor="middle">~100 сек на судьбу</text>
+    <text x="640" y="432" fill="#5f5e5a" text-anchor="middle">4–5 человек — если платить</text>
+    <text x="640" y="445" fill="#5f5e5a" text-anchor="middle">одну аренду и дать семье болеть</text>
+  </g>
+  <text x="246" y="472" font-size="11" fill="#ba7517">🔶 расчёт по числам вики, не замер.</text>
+  <text x="246" y="492" font-size="11" fill="#5f5e5a">✅ на деле гонят быстрее: из отзыва Steam с 12,9 ч — «меньше 20 секунд на человека».</text>
+  <text x="246" y="516" font-size="11" fill="#888780">✅ квота не показана: «You don't have any control over the quota so I think it's ok to not show it» [tig-04]</text>
+</svg>
+<figcaption>Схема 1. Ресурс один — время. Всё, что игра говорит про сострадание, она говорит этой петлёй.</figcaption>
+</figure>
+
+<p><b>День — четыре стадии</b> <span class="ok">✅</span> <span class="src">[wiki:Timeline]</span>. Газета с последствиями вчерашнего (тексты статей нечитаемы по дизайну) → будка до открытия, часы стоят → смена 6:00→18:00, часы стартуют по кнопке самого игрока → вечерний счёт.</p>
+<p><b>Длина смены</b> <span class="ok">✅</span>: 3 мин (д.1) → 4 (д.2) → 6 (д.3) → 7 (д.4–12) → 8 (с д.13).</p>
+<p><b>Счёт</b> <span class="ok">✅</span> <span class="src">[wiki:Bills]</span>: 5 кредитов за обработанного. Расход — аренда 20 (с конца д.5 — 25) + 5 за каждого живого члена семьи + 10 за тепло. Обязательна только аренда: <span class="cite">«All bills except for penalties and rent are voluntary»</span>. Отсюда и вся арифметика милосердия.</p>
+
+<!-- ================= 3 ================= -->
+<h2><span class="n">3</span>Механика → идея → вычитание</h2>
+<p class="zachem">Главный приём разбора: связь механики со смыслом проверяется вычитанием. Убери механику — и смотри, что умирает в идее. Если ничего — механика была украшением.</p>
+
+<div class="scroll">
+<table>
+<tr><th>механика</th><th>какую часть идеи несёт</th><th>убрать →</th></tr>
+
+<tr><td>Улика = <b>пара</b> подсвеченных фактов</td>
+<td>Система требует предъявить понимание, а не мнение</td>
+<td><span class="ok">✅</span> Он проверял обратное: <span class="cite">«если можно просто кликать по тому, что кажется ошибкой, ничто не мешает кликать по всему подряд»</span> <span class="src">[tig-03 #179]</span>. Арифметика: ~35 фактов ≈ 600 пар — перебор дороже чтения</td></tr>
+
+<tr><td>Часы реального времени, «time costs time»</td>
+<td>Внимание к человеку оплачивается единственным ресурсом</td>
+<td><span class="hz">🔶</span> Сострадание становится бесплатным, экономика морали обнуляется. <span class="ok">✅</span> Обратная сторона задокументирована игроками: спешка вытесняет ту эмпатию, ради которой всё построено</td></tr>
+
+<tr><td>5 кредитов за обработанного против обязательной аренды</td>
+<td>Норма выработки упирается в счёт за жильё, и это считается в уме</td>
+<td>Моральный выбор весит ровно столько, сколько стоит в валюте выживания. <span class="hz">🔶</span> Без цены остаётся выбор на словах</td></tr>
+
+<tr><td>Квитанция через 3 секунды после ухода</td>
+<td>Ошибка догоняет, когда человека уже не вернуть. Обучение без туториала</td>
+<td><span class="ok">✅</span> В альфе квитанция была, но ошибку не называла: <span class="cite">«without the immediate citations the game is broken and unfun»</span> <span class="src">[tig-05 #424]</span>. Побочная выгода: <span class="cite">«позволяет пропустить кучу вводного обучающего текста»</span> <span class="src">[tig-04 #286]</span></td></tr>
+
+<tr><td>Текст квитанции — только про протокол</td>
+<td>Система судит бумагу, моральную оценку достраивает игрок</td>
+<td><span class="ok">✅</span> Человека система называет («возможный контрабандист», «разыскиваемый»), но не оценивает ни разу <span class="src">[wiki:Citation]</span>. <span class="hz">🔶</span> Добавь одну оценочную строку — игра начнёт проповедовать</td></tr>
+
+<tr><td>Семья = 4 счётчика без лиц и имён</td>
+<td>Близкие как расходная строка; образ достраивает игрок</td>
+<td><span class="ok">✅</span> Его принцип: усиливать <span class="cite">«не тем, что определить семью подробнее, а тем, что дать более тонкое влияние на её благополучие»</span> <span class="src">[tig-02]</span>. <span class="ok">✅</span> Цена известна: у части игроков не достраивается вовсе</td></tr>
+
+<tr><td>Сложность — в редкости улики</td>
+<td>Игру держит не количество ошибок, а их незаметность</td>
+<td><span class="ok">✅</span> Контринтуитивная находка беты: <span class="cite">«чем больше ошибок у просителя, тем легче»</span> <span class="src">[tig-05]</span>. В релизе проситель несёт до одной мелкой и до одной крупной</td></tr>
+
+<tr><td>Протокол проверяется в момент выхода</td>
+<td>Быстрый бездушный отказ дешевле честной проверки</td>
+<td><span class="ok">✅</span> Любое расхождение, открывшее обыск, годится как основание отказать без замечания — даже если человек чист. <span class="hz">🔶</span> Закрой дыру — исчезнет главный соблазн игры</td></tr>
+
+<tr><td>Жетоны: 7 штук, нулевая полезность</td>
+<td>Добро регистрируется, но не оплачивается и не осуждается</td>
+<td><span class="ok">✅</span> Жетон не даёт денег и не продаётся <span class="src">[wiki:Token]</span>. <span class="hz">🔶</span> Дай ему цену — доброта станет стратегией</td></tr>
+
+<tr><td>Провал — «нечем платить», не «плохо играешь»</td>
+<td>Игра не судит точностью</td>
+<td><span class="ok">✅</span> Число замечаний само по себе игру не кончает; отрицательный баланс = концовка в любой день</td></tr>
+
+<tr><td>20 концовок в одной форме «картинка + текст»</td>
+<td>Ни один исход не оформлен как правильный</td>
+<td><span class="ok">✅</span> Ради этого вырезана начатая мини-игра побега: она <span class="cite">«придала бы ему лишний вес, как будто он правильнее прочих концовок — а это не так»</span> <span class="src">[tig-10]</span>. И наоборот: дешёвая форма — причина, по которой развилок вообще стало двадцать</td></tr>
+
+<tr><td>Апгрейды — только скорость рук</td>
+<td>Прогресс не улучшает жизнь, а поднимает ставку</td>
+<td><span class="ok">✅</span> Четыре улучшения будки по 5 кредитов (горячие клавиши); квартира за 100, аренда растёт 25→30→40→50 <span class="src">[wiki:Apartment]</span></td></tr>
+</table>
+</div>
+
+<div class="note"><b>Темп ввода нового</b> <span class="ok">✅</span> <span class="src">[wiki:Rulebook]</span>. Новая сущность появляется каждые 1–5 дней: паспорт (д.1) → ID и разрешение (д.4) → рабочий пропуск (д.6) → дипаккредитация (д.8) → розыск (д.14) → штамп причины отказа (д.18) → винтовка (д.23) → прививка (д.26)… Пик — 5 бумаг на д.26, потом два требования снимают. И пять правил живут ровно один день и отменяются — вчерашняя правота сегодня даёт штраф.</div>
+
+<!-- ================= 4 ================= -->
+<h2><span class="n">4</span>Семь развилок разработки</h2>
+<p class="zachem">То, что ты просил: процесс решений. Главное, что здесь видно — игру делали <b>вычитанием</b>. Почти каждое решение это отказ от уже написанного.</p>
+
+<div class="cards">
+  <div class="card">
+    <h4>1. Надзиратель — вырезан целиком <span class="ok">✅</span> <span class="src">[tig-10]</span></h4>
+    <div class="r"><b>СТОЯЛО</b> Лампа на планке штампов: горит — смотрят, погасла — можно проштамповать нарушение безнаказанно. Плюс сюжет, где агент подполья занимает пост надзора и печатные правила перестают действовать.</div>
+    <div class="r"><b>ВЫБРАЛ</b> Убрать всё. Три причины его словами: «все просители с жалобной историей превращаются в ожидание нескольких секунд, пока лампа погаснет»; «это ослабляло центральную посылку — что ты бессильный винтик в равнодушной машине. Если до надзирателя так легко дотянуться, то, может, система и не так всесильна»; «вмешательство в систему квитанций подрывает суждение верно-или-неверно, привязанное к основной механике».</div>
+    <div class="r"><b>ЗАПЛАТИЛ</b> Самым эффектным поворотом проекта — сменой правил под конец игры.</div>
+  </div>
+
+  <div class="card">
+    <h4>2. Продажа фотографий с досмотра — вырезана уже работающей <span class="ok">✅</span> <span class="src">[tig-10]</span></h4>
+    <div class="r"><b>СТОЯЛО</b> Готовый источник дохода: снимки падали в ящик конфискации, скупщики платили 5 кредитов.</div>
+    <div class="r"><b>ВЫБРАЛ</b> Удалить рабочий код — чтобы конфискация впервые появилась ради <b>паспортов</b> и вела прямо к отъёму паспортов у собственной семьи. «Убрав это, я получил игру лучше во всех отношениях… Пожалуй, моя любимая вырезка».</div>
+    <div class="r"><b>ЗАПЛАТИЛ</b> Сделанной работой и каналом дохода. Критерий резки — не «работает ли механика», а «не размывает ли она то, что должно ударить».</div>
+  </div>
+
+  <div class="card">
+    <h4>3. Точная квитанция против мантры «держи туман» <span class="ok">✅</span> <span class="src">[tig-04, tig-05]</span></h4>
+    <div class="r"><b>СТОЯЛО</b> Атмосфера растерянности (человек выиграл трудовую лотерею и брошен работать без обучения) против понятности. В альфе квитанция приходила, но ошибку не называла — тестеры не понимали, за что наказаны.</div>
+    <div class="r"><b>ВЫБРАЛ</b> Называть ошибку точно и сразу.</div>
+    <div class="r"><b>ЗАПЛАТИЛ</b> Достоверностью: начальство выглядит всезнающим. Дыра осталась в релизе, живёт в отрицательных отзывах до сих пор — и именно она породила идею надзирателя, которую он потом вырезал.</div>
+  </div>
+
+  <div class="card">
+    <h4>4. Штамп-предмет против штампов на планке <span class="ok">✅</span> <span class="src">[tig-01 #75, отказ повторён #200]</span></h4>
+    <div class="r"><b>СТОЯЛО</b> Таскать штамп по столу против неподвижной планки, под которую подводишь документ.</div>
+    <div class="r"><b>ВЫБРАЛ</b> Планку. Причина чисто тактильная: «Штамп по отпусканию кнопки просто не даёт удовлетворения. Нужен плотный ТУК на нажатии, а не когда отпускаешь».</div>
+    <div class="r"><b>ЗАПЛАТИЛ</b> Свободой обращения со столом. В возврате перетаскиваемого штампа отказывал трижды.</div>
+  </div>
+
+  <div class="card">
+    <h4>5. Электронный сканер против чернильной подушечки <span class="ok">✅</span> <span class="src">[tig-02 #122–128]</span></h4>
+    <div class="r"><b>СТОЯЛО</b> Уже написанный хайтек-сканер отпечатков против замечания с форума, что он ломает вид холодной войны.</div>
+    <div class="r"><b>ВЫБРАЛ</b> Бумажный лист с отпечатком плюс печатную карточку личности. Старый код снял на гифку «для потомков» и удалил.</div>
+    <div class="r"><b>ЗАПЛАТИЛ</b> Работой. Выиграл новый класс ошибок: карточка личности принесла псевдонимы. Смена носителя оказалась не упрощением, а новой механикой.</div>
+  </div>
+
+  <div class="card">
+    <h4>6. Интерактивный побег против общей формы концовок <span class="ok">✅</span> <span class="src">[tig-10]</span></h4>
+    <div class="r"><b>СТОЯЛО</b> Частично сделанная сцена «теперь ты по ту сторону окошка»: подаёшь свои документы чужому инспектору.</div>
+    <div class="r"><b>ВЫБРАЛ</b> Единый формат «картинка + текст», взятый из вступительных экранов.</div>
+    <div class="r"><b>ЗАПЛАТИЛ</b> Зрелищностью финала. Купил равный вес всех концовок и саму возможность иметь их много: дешёвая форма сделала развилки производственно допустимыми.</div>
+  </div>
+
+  <div class="card">
+    <h4>7. Тридцать дней против тридцати одного <span class="ok">✅</span> <span class="src">[tig-10]</span></h4>
+    <div class="r"><b>СТОЯЛО</b> Круглое число, привязанное к визитам начальника каждые 10 дней, против готовых сцен.</div>
+    <div class="r"><b>ВЫБРАЛ</b> 31-й день. «Можно было вырезать ещё, чтобы влезло. Но тогда я убирал бы полностью готовые сцены ради красивого круглого числа дней. Дурацкая причина — так что я растянул всё на день».</div>
+    <div class="r"><b>ЗАПЛАТИЛ</b> Стройностью структуры. Длина игры выведена назад от последнего действия игрока.</div>
+  </div>
+</div>
+
+<!-- ================= 5 ================= -->
+<h2><span class="n">5</span>Мораль без морализаторства — технически</h2>
+<p class="zachem">Не философия, а список решений. После семи развилок видно, что это та же работа резцом.</p>
+
+<ol class="rules">
+<li><span class="ok">✅</span> <b>Нет шкалы морали.</b> На вечернем экране только жетоны, паспорта, улучшения, сводка, деньги и статус семьи. Появись цифра «добро» — игрок начнёт её оптимизировать.</li>
+<li><span class="ok">✅</span> <b>Единственный судья говорит о протоколе.</b> Квитанции — ярлыки нарушений: «просроченная дата», «отсутствуют документы», «Кобрастан — не настоящая страна». Оценки нет ни одной.</li>
+<li><span class="ok">✅</span> <b>Добро регистрируется предметом с нулевой пользой.</b> Семь жетонов; минимум четыре из семи получаются только через нарушение правил, то есть через гарантированный штраф.</li>
+<li><span class="ok">✅</span> <b>Цена сразу, отдача потом и может не прийти.</b> Пропустить Элизу без документов — гарантированное замечание. Если Сергиу пережил атаку того же дня, приходят 100 кредитов и они обнимаются в верхней части экрана, пока ты работаешь. Если Сергиу убит — она разворачивается и уходит, даже если ты её пропустил. Игра допускает бессмысленное милосердие и не комментирует его.</li>
+<li><span class="ok">✅</span> <b>Оба голоса власти хвалят.</b> Государство: «Слава Арстотцке». Подполье: «ты справился хорошо». Ни один из них не голос автора — игроку негде найти автора, и он вынужден судить сам.</li>
+<li><span class="ok">✅</span> <b>Единственное прямое обвинение обезврежено механически.</b> Журналист кричит «фашист!» на д.20; его можно отравить, и это ни на что не влияет. А его критика приводит к тому, что вводится <b>ещё один штамп</b> — «причина отказа». Внешняя критика системы порождает дополнительную бюрократию.</li>
+<li><span class="ok">✅</span> <b>Равенство формы = равенство веса.</b> Все 20 концовок — картинка плюс текст казённым голосом.</li>
+<li><span class="ok">✅</span> <b>Послушание вознаграждается.</b> Концовка «Лоялист» — ноль заданий подполья — единственная, открывающая бесконечный режим. Игра не осуждает соучастие и оставляет игроку решать, что это значит.</li>
+</ol>
+
+<div class="plus">
+<b>Два условия, которые всё это держат.</b><br>
+<span class="ok">✅</span> <b>Дыра оставлена как обвинение, а не залатана.</b> Платить еду и тепло через день выгоднее, чем каждый день; можно дать умереть всем, кроме одного, и расходы упадут. Возможность считать близких расходной статьёй — сама по себе высказывание.<br>
+<span class="ok">✅</span> <b>Бедность продакшена названа причиной, а не помехой:</b> <span class="cite">«Если бы там были горы 3D-ассетов, озвучка и эффектные катсцены, держать эти нюансы было бы куда труднее. Пришлось бы выбрать пару веток и вложиться только в них»</span> <span class="src">[GameDeveloper]</span>. Там же довод за вымышленный режим: игра «замутилась бы готовыми предубеждениями», укажи она на конкретную несправедливость.<br>
+<span class="ok">✅</span> Его формула: <span class="cite">«Не рассказывай и не показывай то, что можешь заставить игрока сделать самому»</span>.
+</div>
+
+<!-- ================= 6 ================= -->
+<h2><span class="n">6</span>Чем заплачено</h2>
+<p class="zachem">Каждая претензия — обратная сторона решения из третьего блока. Не список недостатков, а список цен.</p>
+
+<p><span class="ok">✅</span> Steam на 2026-08-15: ~77,9 тыс. положительных против 2 171 отрицательного — 97,3 %. Metascore 85 при 39 положительных рецензиях и ни одной отрицательной. <b>Пресса игру не ругала — весь содержательный корпус претензий лежит в отзывах и эссеистике.</b></p>
+
+<div class="scroll">
+<table>
+<tr><th>претензия</th><th>какое решение её породило</th></tr>
+<tr><td><span class="cite">«Это ощущается как работа, а не игра»</span>, «я лучше отработаю свои 9–5»</td><td>Процедура как игровой глагол. Механика работает как задумана, часть аудитории уходит именно поэтому</td></tr>
+<tr><td><span class="cite">«Трудно переживать за этих людей, когда я активно пытаюсь уложиться в 20 секунд на человека… дизайн игры помешал мне с ними связаться»</span> (12,9 ч)</td><td>Часы. Давление даёт соучастие и оно же съедает эмпатию — обе вещи из одной механики, одновременно их не получить</td></tr>
+<tr><td>«моя семья — два текстовых поля с надписями Сын и Жена», «у них даже имён нет»</td><td>Семья без лиц. Экономический шантаж работает только на тех, кто уже достроил семью в голове</td></tr>
+<tr><td><span class="cite">«квитанции смущали меня — они казались всезнающими»</span> <span class="src">[tig-04, бета]</span> — живо и в отзывах 2020-х</td><td>Точная мгновенная квитанция (развилка 3). Обучаемость куплена ценой достоверности</td></tr>
+<tr><td>«к середине игра показала почти все карты», «нулевая реиграбельность»</td><td>Лестница правил конечна. Его решение — не делать сюжет реиграбельным, а вынести это в отдельный бесконечный режим</td></tr>
+<tr><td>«лёгкий режим не облегчает, просто даёт больше денег» — механически ровно +20 кредитов в день</td><td>Сложность в памяти и внимании. Смягчения не предусмотрено</td></tr>
+<tr><td>Огрызок вырезанной механики — рубильник ставни: <span class="cite">«Обычно я убираю все следы вырезанного, но здесь оставил… До сих пор получаю комментарии про бессмысленность этого рубильника. Наверное, надо было убрать»</span></td><td>Незавершённая резка</td></tr>
+<tr><td>Главная содержательная критика <span class="src">[ZEAL]</span>: игрок не может добиться революционного исхода, <b>отказавшись</b> поддерживать насилие государства; игра «проповедует уже обращённым»</td><td>Соучастие встроено в цикл. Отказ от него — не путь, а проигрыш</td></tr>
+<tr><td><span class="ok">✅</span> В мобильном порте пропала боковая листовка с розыском, и автор заметил это, только доиграв почти готовый порт</td><td>Часть игры жила не в правилах, а в физической тесноте стола</td></tr>
+</table>
+</div>
+
+<!-- ================= 7 ================= -->
+<h2><span class="n">7</span>Граница проверенного</h2>
+<p class="zachem">Отчёт без границы покрытия — не отчёт.</p>
+<ul class="tight">
+<li><span class="hz">🔶</span> Точные квоты по дням и реальное число просителей за смену нигде не опубликованы.</li>
+<li><span class="hz">🔶</span> Вероятности генератора Papers Please (как часто у процедурного просителя есть ошибка) — ни в девлоге, ни в вики; в файлы игры никто не залезал.</li>
+<li><span class="hz">🔶</span> Балансировочные таблицы показаны в девлоге только скриншотами.</li>
+<li><span class="hz">🔶</span> Бюджет разработки в деньгах неизвестен.</li>
+<li><span class="hz">🔶</span> Отзывы Steam разбирались только англоязычные, выборка 69 отрицательных. Русскоязычная реакция не собиралась.</li>
+<li><span class="hz">🔶</span> Часть чисел — из фан-вики, перепроверена по двум-трём страницам, но не по коду игры. Цитаты Поупа — с его сайта.</li>
+<li><span class="ok">✅</span> Обещанный раздел постмортема «Тестирование» не написан: данных о том, как он тестировал баланс, в открытом виде нет.</li>
+</ul>
+
+<h2><span class="n">8</span>Источники</h2>
+<p class="srcs">
+[tig-00…tig-13] девлог Лукаса Поупа, dukope.com/devlogs/papers-please/ — посты 11.2012–04.2014. Плюс отдельные посты про мобильный порт и локализацию.<br>
+[wiki:*] papersplease.fandom.com — Bills, Citation, Endings, Token, Inspection_mode, Discrepancy, Rulebook, End_of_day_screen, Apartment, Timeline, Elisa_Katsenja, Infobox_Day.<br>
+[GameDeveloper] «Designing the bleak genius of Papers, Please», Leigh Alexander, 03.09.2013 · [Reason] Scott Shackford, 26.09.2013 · [Steam API] appreviews/239030, 2026-08-15 · [Metacritic] · [ZEAL] · [PopMatters].<br>
+Русские переводы цитат мои; оригиналы английские.
+</p>
+
+</main>
+</body>
+</html>

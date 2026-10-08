@@ -1,0 +1,116 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Brown Noise Generator — Fanarlabs</title>
+<meta name="description" content="Расширение Chrome: коричневый, розовый или белый шум, который генерируется прямо на устройстве, для работы и учёбы, с таймером по желанию.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Brown Noise Generator — Fanarlabs">
+<meta property="og:description" content="Расширение Chrome: коричневый, розовый или белый шум, который генерируется прямо на устройстве, для работы и учёбы, с таймером по желанию.">
+<meta property="og:image" content="https://fanarlabs.com/projects/img/variants/oblozhki-2026-10-07/sound-focus-stol.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/assets/hub.css">
+<script data-goatcounter="https://panarini.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head><body>
+<!-- СОБРАНО gen_pages.py из content/sound-focus.txt — правьте источник, не эту страницу. -->
+<nav class="topbar">
+  <a class="me" href="/">Fanarlabs</a>
+  <span class="links">
+    <a href="mailto:hello@fanarlabs.com" aria-label="Email">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 3h13a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5Z" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M1.6 4.1 8 8.9l6.4-4.8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+    </a>
+    <a href="https://github.com/PanarinI" aria-label="GitHub">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+    </a>
+    <a href="https://bsky.app/profile/igorpanarin.bsky.social" aria-label="Bluesky">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 7.1C7.1 5.4 4.7 2.2 2.7 1.4 1.5.9.5 1.4.5 2.9c0 1.4.8 4.7 1.3 5.5.9 1.4 2.4 1.3 3.9 1.1-1.5.2-2.8.8-1.1 2.6.4.4 1 1 1.5 1.5.8.8 1.5.9 1.9.9s1.1-.1 1.9-.9c.5-.5 1.1-1.1 1.5-1.5 1.7-1.8.4-2.4-1.1-2.6 1.5.2 3 .3 3.9-1.1.5-.8 1.3-4.1 1.3-5.5 0-1.5-1-2-2.2-1.5-2 .8-4.4 4-5.3 5.7Z"/></svg>
+    </a>
+    <a href="https://t.me/bot_and_kot" aria-label="Telegram channel, in Russian">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M15.2 2.2 1.1 7.6c-.7.3-.7.9 0 1.1l3.5 1.1L13 4.4c.4-.2.8-.1.5.2l-6.8 6.2-.3 3.6c.4 0 .6-.2.8-.4l1.7-1.7 3.6 2.6c.7.4 1.1.2 1.3-.6l2.3-10.9c.2-.9-.3-1.3-.9-1.2Z"/></svg><span class="ru">RU</span>
+    </a>
+    <a class="lang" href="/projects/sound-focus.html" hreflang="en">Eng</a>
+  </span>
+</nav>
+<div class="wrap page">
+
+<a class="back" href="../../">← Ко всем работам</a>
+
+<div class="head"><h1>Brown Noise Generator</h1><span class="stage">в деле</span></div>
+
+<p class="lede">Коричневый, розовый или белый шум для работы и учёбы. Он <em>считается прямо на устройстве</em>,
+      пока вы работаете: ничего не загружается и не играет из файла. Таймер включается по желанию. С ним
+      сеанс идёт как перелёт к звезде, и на прибытии звук стихает.</p>
+
+<div class="ext">
+  <a href="https://chromewebstore.google.com/detail/minimalist-timer/miknhphoakphfhgjajhkalmpdnadkeic">В магазине <span class="w">Chrome Web Store</span></a>
+</div>
+<figure class="hero"><span data-zoom="../../projects/img/noise-glavnaya.png" tabindex="0"><img src="../../projects/img/noise-glavnaya.png" alt="Chrome: слева статья Википедии «Brownian noise», справа боковая панель расширения — маленькая тёплая звезда, шкала заведена на 15 минут, Start, пресет комнаты и четыре ручки."></span></figure>
+
+<h2>Как устроено</h2>
+<div class="how">
+<p>Весь звук считается в браузере. Ядро — коричневый шум. Над ним слой розового шума — воздух, слой
+      пространства и медленный дрейф, чтобы звук не стоял на месте. Ничего не меняется скачком: резкая
+      перемена отрывает внимание от работы.</p>
+<p>У розового и белого шума свои источники и свои фильтры. Коричневый остался по умолчанию и звучит
+      ровно так же, как до них. Поверх шума — тоновый слой по желанию, одна ручка; он идёт по фазам сеанса.</p>
+</div>
+<div class="spec">
+  <div class="r"><b>Цвет</b><span>коричневый · розовый · белый</span><i>три отдельных источника</i></div>
+  <div class="r"><b>Комната</b><span>open office · thin walls · café · deep reading · racing thoughts · too much</span><i>пресет не меняет длину</i></div>
+  <div class="r"><b>Ручки</b><span>громкость · маскировка · стимуляция · тон</span><i>одни и те же в любой комнате</i></div>
+  <div class="r"><b>Таймер</b><span>5 · 15 · 25 · 45 · 90 минут или ∞</span><i>длину задаёт только шкала</i></div>
+</div>
+<div class="how">
+<p>Картинка выводится из звука, и настроек вида у панели нет. Цвет интерфейса — это цвет шума, сила
+      свечения звезды — громкость. Есть один выключатель, <em>motion</em>: он останавливает движение для тех,
+      кому оно мешает.</p>
+</div>
+
+<div class="timeline ryad">
+  <figure class="tl port"><span data-zoom="../../projects/img/noise-2026-10-05-pokoj.jpg" tabindex="0"><img src="../../projects/img/noise-2026-10-05-pokoj.jpg" alt="Панель в покое: маленькая звезда, шкала заведена на 15 минут, кнопки Start и бесконечность, четыре ручки."></span><figcaption><time>В покое</time>Шкала заведена на 15 минут. Звезда маленькая: до неё ещё далеко.</figcaption></figure>
+  <figure class="tl port"><span data-zoom="../../projects/img/noise-2026-10-05-polyot.jpg" tabindex="0"><img src="../../projects/img/noise-2026-10-05-polyot.jpg" alt="Панель в полёте: звезда крупнее, вокруг штрихи пролетающих звёзд, ни шкалы, ни цифр."></span><figcaption><time>В полёте</time>Ни шкалы, ни цифр: только звезда и летящие навстречу звёзды.</figcaption></figure>
+  <figure class="tl port"><span data-zoom="../../projects/img/noise-2026-10-05-mysh.jpg" tabindex="0"><img src="../../projects/img/noise-2026-10-05-mysh.jpg" alt="Тот же полёт с мышью над панелью: шкала вернулась и показывает 9 минут."></span><figcaption><time>Под мышью</time>Шкала возвращается, пока мышь над панелью: осталось 9 минут.</figcaption></figure>
+  <figure class="tl port"><span data-zoom="../../projects/img/noise-2026-10-05-pribytie.jpg" tabindex="0"><img src="../../projects/img/noise-2026-10-05-pribytie.jpg" alt="Прибытие: шкала раскрутилась до нуля, звезда большая и близкая, снова горит Start."></span><figcaption><time>Прибытие</time>Шкала раскрутилась до нуля. Звезда рядом.</figcaption></figure>
+</div>
+
+
+<h2>Для кого</h2>
+<div class="how">
+<p>Он сделан прежде всего для взрослых с СДВГ. Им трудны два момента: начать и вынырнуть из работы.
+      Звук мягко нарастает в начале и стихает на прибытии. Звонка нет.</p>
+</div>
+
+<h2>Журнал</h2>
+<div class="devlog">
+  <div class="e"><time>5 окт</time><span class="tag">интерфейс</span>
+    <p>Пользователь написал, что панель стала слишком шумной: зерно на экране и большая шкала. Я убрал зерно
+      совсем. Звезда в покое снова маленькая и растёт по ходу полёта; шкала раскручивается, как кухонный
+      таймер, и в полёте видна только под мышью.</p></div>
+  <div class="e"><time>26 сен</time><span class="tag">выпуск</span>
+    <p>Новое имя — Brown Noise Generator, и в одном выпуске новая панель, иконка и описание на 53 языках.
+      Картинка теперь следует за звуком.</p></div>
+  <div class="e"><time>26 сен</time><span class="tag">таймер</span>
+    <p>Четыре правила таймера. Длину задаёт только шкала; пресет меняет только комнату. ∞ — режим без
+      отсчёта. Смена длины на ходу начинает отсчёт заново с полной. Finish заканчивает полёт и звук.</p></div>
+  <div class="e"><time>25 сен</time><span class="tag">фокус</span>
+    <p>Центр перевёрнут второй раз. Ведёт звук; таймер полезен, но не обязателен.</p></div>
+  <div class="e"><time>31 авг</time><span class="tag">звук</span>
+    <p>Розовый и белый шум добавлены своими источниками — чтобы слова «pink noise generator» в описании
+      магазина были фактом.</p></div>
+  <div class="e"><time>7 авг</time><span class="tag">звук</span>
+    <p>В 1.1.0 появился тоновый слой поверх шума — сколько угодно или совсем без него.</p></div>
+  <div class="e"><time>26 июля</time><span class="tag">интерфейс</span>
+    <p>Экран стал звёздным полем, звезда — местом прибытия. До этого там был уголёк в кольце.</p>
+    <div class="pic"><span data-zoom="../../projects/img/timeline/2026-07-26-0a35bc5.png"><img src="../../projects/img/timeline/2026-07-26-0a35bc5.png" alt="Панель 26 июля: тёмное звёздное поле, в центре тёплая звезда."></span></div></div>
+  <div class="e"><time>11 июля</time><span class="tag">фокус</span>
+    <p>Первый разворот: опыт показал, что центр — таймер, а звук — то, из чего сделано время.</p></div>
+  <div class="e"><time>5 июля</time><span class="tag">звук</span>
+    <p>Время несёт шум, и он меняется медленным дрейфом, без скачков.</p></div>
+</div>
+
+<footer>Расширение лежит в Chrome Web Store под именем
+      <a href="https://chromewebstore.google.com/detail/minimalist-timer/miknhphoakphfhgjajhkalmpdnadkeic">Brown Noise Generator</a>.
+      Как оно описано и рекламируется — слова, ключи, кампания — на эту страницу не выносится.</footer>
+
+</div>
+<div id="lb" role="dialog" aria-modal="true" hidden><b>×</b><img alt=""></div>
+<script src="/assets/hub.js"></script>
+</body></html>

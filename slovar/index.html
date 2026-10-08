@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Движок изнутри</title>
+<style>
+:root{
+  --paper:#F7F4EE; --ink:#14110E; --mute:#6B635A; --line:#DED7CB;
+  --accent:#B4331F; --field:#EFE9DE; --good:#2F6B4F;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink)}
+body{font:14px/1.5 -apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif}
+.top{padding:16px 18px 12px;border-bottom:1px solid var(--line)}
+.counts{display:flex;flex-wrap:wrap;gap:0 26px;margin:0 0 14px;list-style:none;padding:0}
+.counts li{font:12px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mute)}
+.counts b{display:block;font:700 21px/1.1 -apple-system,BlinkMacSystemFont,Arial,sans-serif;
+  color:var(--ink);letter-spacing:-.02em;margin-bottom:3px;font-variant-numeric:tabular-nums}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+.tab{font:600 12px/1 -apple-system,Arial,sans-serif;padding:7px 11px;border:1px solid var(--line);
+  background:#fff;color:var(--ink);border-radius:2px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.row2{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sounds{display:flex;flex-wrap:wrap;gap:4px}
+.snd{font:600 12px/1 ui-monospace,Menlo,monospace;padding:6px 9px;border:1px solid var(--line);
+  background:#fff;border-radius:2px;cursor:pointer;color:var(--ink)}
+.snd[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+input[type=search]{font:13px/1 -apple-system,Arial,sans-serif;padding:7px 10px;border:1px solid var(--line);
+  background:#fff;border-radius:2px;min-width:170px;color:var(--ink)}
+.found{font:12px/1 ui-monospace,Menlo,monospace;color:var(--mute);margin-left:auto}
+.wrap{overflow-x:auto;padding:0 18px 18px}
+table{border-collapse:collapse;width:100%;font-size:13px;margin-top:12px}
+th{position:sticky;top:0;background:var(--paper);text-align:left;font:600 11px/1.2 ui-monospace,Menlo,monospace;
+  letter-spacing:.04em;text-transform:uppercase;color:var(--mute);padding:8px 10px 7px;
+  border-bottom:1px solid var(--ink);white-space:nowrap}
+td{padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+td.w{font-weight:700;white-space:nowrap}
+td.t,td.f{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:var(--mute);white-space:nowrap}
+td.n{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+td.oc span{display:inline-block;border:1px solid var(--line);color:var(--mute);border-radius:2px;
+  font:600 11px/1 ui-monospace,Menlo,monospace;padding:3px 4px;margin:0 3px 3px 0}
+td.oc span.hit{border-color:var(--accent);color:var(--accent)}
+td.c{color:var(--mute)}
+tr:hover td{background:var(--field)}
+tr.out td{color:#A79E92}
+tr.out td.w{text-decoration:line-through}
+.why{font:600 11px/1 ui-monospace,Menlo,monospace;white-space:nowrap}
+.why.base{color:var(--accent)}
+.why.prof{color:#8A5A12}
+.why.keep{color:var(--good)}
+.more{display:block;margin:14px auto 0;font:600 12px/1 -apple-system,Arial,sans-serif;padding:9px 16px;
+  border:1px solid var(--ink);background:#fff;border-radius:2px;cursor:pointer;color:var(--ink)}
+.legend{padding:14px 18px 20px;border-top:1px solid var(--line);color:var(--mute);font-size:12.5px}
+.legend b{color:var(--ink)}
+.legend p{margin:0 0 7px;max-width:95ch}
+.empty{padding:26px 4px;color:var(--mute)}
+
+/* фильтр */
+.panel{padding:14px 18px 0}
+.panel h3{font:700 13px/1.2 -apple-system,Arial,sans-serif;margin:0 0 7px;letter-spacing:-.01em}
+.panel .hint{font-size:12.5px;color:var(--mute);margin:0 0 9px;max-width:90ch}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 12px}
+.chip{font:600 12px/1 ui-monospace,Menlo,monospace;padding:6px 9px;border:1px solid var(--line);
+  background:#fff;border-radius:2px;cursor:pointer;color:var(--ink)}
+.chip[aria-pressed="true"]{background:#8A5A12;border-color:#8A5A12;color:#fff}
+.chip[disabled]{opacity:.35;cursor:default}
+.chip i{font-style:normal;opacity:.7;margin-left:4px;font-size:11px}
+.funnel{display:flex;flex-wrap:wrap;align-items:stretch;gap:8px;margin:4px 0 2px}
+.step{border:1px solid var(--line);background:#fff;border-radius:2px;padding:9px 12px;min-width:132px}
+.step b{display:block;font:700 20px/1.1 -apple-system,Arial,sans-serif;font-variant-numeric:tabular-nums;
+  letter-spacing:-.02em}
+.step i{font:11px/1.3 ui-monospace,Menlo,monospace;font-style:normal;color:var(--mute);display:block;margin-top:4px}
+.step.minus b{color:var(--accent)}
+.step.left b{color:var(--good)}
+.arrow{align-self:center;color:var(--mute)}
+.toggle{font:12px/1 -apple-system,Arial,sans-serif;color:var(--mute);display:flex;align-items:center;gap:6px}
+.rules{padding:4px 18px 18px;display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.rules h3{font:700 13px/1.2 -apple-system,Arial,sans-serif;margin:0 0 4px}
+.rules p{font-size:12.5px;color:var(--mute);margin:0 0 8px;max-width:60ch}
+.rules table{margin-top:0}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <ul class="counts" id="counts"></ul>
+  <div class="tabs" id="tabs"></div>
+  <div class="row2" id="controls">
+    <div class="sounds" id="sounds"></div>
+    <input type="search" id="q" placeholder="слово…" autocomplete="off">
+    <span class="found" id="found"></span>
+  </div>
+</div>
+
+<div id="panel"></div>
+<div class="wrap"><div id="table"></div></div>
+<div class="legend" id="legend"></div>
+
+<script>
+const RU = {
+  counts: [["nouns","существительных"],["verbs","глаголов"],["adjectives","прилагательных"],
+           ["texts","текстов"],["onsets","стечений"],["objects","рисунков"]],
+  tabs: {filter:"Фильтр", nouns:"Существительные", verbs:"Глаголы",
+         adjectives:"Прилагательные", onsets:"Стечения", rules:"Правила"},
+  all: "все звуки", found: n => n + " строк", more: "Показать ещё",
+  cols: {word:"слово", transcription:"как звучит", stress_syllable:"удар. слог",
+         markova_v1_guess:"класс Марковой", plural:"мн. ч.", form_3sg:"он/она",
+         form_f:"жен. род", form_n:"ср. род", antonym:"антоним", aspect:"вид",
+         transitive:"перех.", other_correctable:"другие звуки", semantic_category:"категория",
+         age_min:"с лет", sound:"звук", onset:"стечение", proof:"слово-доказательство",
+         why:"что с ним", phoneme:"фонемы", cls:"класс", pair:"пара", side_a:"сторона A",
+         side_b:"сторона B", num:"№", structure:"структура слова"},
+  f_target: "Звук",
+  f_profile: "Чего ребёнок не выговаривает",
+  f_hint: "",
+  f_show: "показывать отсеянные",
+  f_dict: "в картотеке", f_base: "уходит всегда", f_prof: "уходит по профилю", f_left: "остаётся",
+  f_base_why: sounds => "путают с целью: " + sounds.join(" · "),
+  f_prof_why: "нет у ребёнка",
+  f_left_why: "из них собирается лист",
+  why_base: "ушло всегда", why_prof: "ушло по профилю", why_keep: "остаётся",
+  r_classes_h: "Классы фонем", r_classes_p: "Из них собирается профиль ребёнка.",
+  r_pairs_h: "Смешиваемые пары", r_pairs_p: "Цель по одну сторону — вся другая сторона запрещена, у любого ребёнка.",
+  r_markova_h: "Классы Марковой", r_markova_p: "По ним блок слов держит длину — не по числу букв.",
+  legend: ""
+};
+const EN = {
+  counts: [["nouns","nouns"],["verbs","verbs"],["adjectives","adjectives"],
+           ["texts","texts"],["onsets","clusters"],["objects","drawings"]],
+  tabs: {filter:"Filter", nouns:"Nouns", verbs:"Verbs",
+         adjectives:"Adjectives", onsets:"Clusters", rules:"Rules"},
+  all: "all sounds", found: n => n + " rows", more: "Show more",
+  cols: {word:"word", transcription:"as spoken", stress_syllable:"stress",
+         markova_v1_guess:"Markova class", plural:"plural", form_3sg:"he/she does",
+         form_f:"feminine", form_n:"neuter", antonym:"antonym", aspect:"aspect",
+         transitive:"transitive", other_correctable:"other sounds", semantic_category:"category",
+         age_min:"from age", sound:"sound", onset:"cluster", proof:"proof word",
+         why:"what happens", phoneme:"phonemes", cls:"class", pair:"pair", side_a:"side A",
+         side_b:"side B", num:"no.", structure:"word structure"},
+  f_target: "Sound",
+  f_profile: "What the child cannot say",
+  f_hint: "",
+  f_show: "show what was dropped",
+  f_dict: "in the card file", f_base: "always dropped", f_prof: "dropped for this child", f_left: "left",
+  f_base_why: sounds => "confused with the target: " + sounds.join(" · "),
+  f_prof_why: "not in this child",
+  f_left_why: "the sheet comes from these",
+  why_base: "always out", why_prof: "out for this child", why_keep: "stays",
+  class_names: {"свистящие":"whistling","шипящие":"hissing","сонорные":"sonorants",
+               "заднеязычные":"velars","смычные":"stops"},
+  r_classes_h: "Phoneme classes", r_classes_p: "The child's profile is built from these.",
+  r_pairs_h: "Confusable pairs", r_pairs_p: "Target on one side — the whole other side is banned, for every child.",
+  r_markova_h: "Markova classes", r_markova_p: "The word block keeps its length by these, not by counting letters.",
+  legend: ""
+};
+
+const L = new URLSearchParams(location.search).get("lang") === "en" ? EN : RU;
+const COLS = {
+  nouns: ["word","transcription","stress_syllable","markova_v1_guess","plural","other_correctable","semantic_category","age_min","sound"],
+  verbs: ["word","transcription","form_3sg","aspect","other_correctable","semantic_category","age_min","sound"],
+  adjectives: ["word","transcription","form_f","form_n","antonym","other_correctable","semantic_category","age_min","sound"],
+  onsets: ["onset","proof"]
+};
+const NUM = new Set(["stress_syllable","markova_v1_guess","age_min"]);
+const PAGE = 150;
+const TABS = ["filter","nouns","verbs","adjectives","onsets","rules"];
+
+let DATA = null, tab = "filter", sound = null, shown = PAGE;
+let target = "Р", profile = new Set(), showDropped = true;
+
+fetch("data.json").then(r => r.json()).then(d => { DATA = d; boot(); });
+
+function boot() {
+  document.getElementById("counts").innerHTML = L.counts
+    .map(([k, label]) => `<li><b>${DATA.counts[k].toLocaleString("ru")}</b>${label}</li>`).join("");
+  document.getElementById("tabs").innerHTML = TABS
+    .map(k => `<button class="tab" data-tab="${k}" aria-selected="${k === tab}">${L.tabs[k]}</button>`).join("");
+  document.getElementById("sounds").innerHTML =
+    `<button class="snd" data-s="" aria-pressed="true">${L.all}</button>` +
+    DATA.sounds.map(s => `<button class="snd" data-s="${s}" aria-pressed="false">${s}</button>`).join("");
+  const lg = document.getElementById("legend");
+  if (L.legend) lg.innerHTML = L.legend; else lg.remove();
+
+  document.getElementById("tabs").addEventListener("click", e => {
+    const b = e.target.closest(".tab"); if (!b) return;
+    tab = b.dataset.tab; shown = PAGE;
+    [...document.querySelectorAll(".tab")].forEach(t => t.setAttribute("aria-selected", t === b));
+    draw();
+  });
+  document.getElementById("sounds").addEventListener("click", e => {
+    const b = e.target.closest(".snd"); if (!b) return;
+    sound = b.dataset.s || null; shown = PAGE;
+    [...document.querySelectorAll(".snd")].forEach(t => t.setAttribute("aria-pressed", t === b));
+    draw();
+  });
+  document.getElementById("q").addEventListener("input", () => { shown = PAGE; draw(); });
+  draw();
+}
+
+/* ── фильтр движка: banned = смешиваемые с целью ∪ профиль ∪ мягкие близнецы профиля ── */
+function bannedSet() {
+  const out = new Set(DATA.base_banned[target] || []);
+  profile.forEach(p => {
+    out.add(p);
+    const twin = DATA.soft_twins[p];
+    if (twin) out.add(twin);
+  });
+  out.delete(DATA.target_of[target]);
+  return out;
+}
+
+function judged() {
+  const base = new Set(DATA.base_banned[target] || []);
+  const prof = new Set();
+  profile.forEach(p => { prof.add(p); const t = DATA.soft_twins[p]; if (t) prof.add(t); });
+  prof.delete(DATA.target_of[target]);
+  const q = document.getElementById("q").value.trim().toLowerCase();
+  return DATA.nouns.filter(r => r.sound === target && (!q || (r.word || "").toLowerCase().includes(q)))
+    .map(r => {
+      const oc = [].concat(r.other_correctable || []);
+      const hitBase = oc.filter(x => base.has(x));
+      const hitProf = oc.filter(x => prof.has(x) && !base.has(x));
+      return { ...r, hitBase, hitProf,
+               why: hitBase.length ? "base" : (hitProf.length ? "prof" : "keep") };
+    });
+}
+
+function drawFilter() {
+  const all = judged();
+  const dropBase = all.filter(r => r.why === "base").length;
+  const dropProf = all.filter(r => r.why === "prof").length;
+  const left = all.length - dropBase - dropProf;
+  const corrigible = [...new Set(Object.values(DATA.phoneme_classes).flat())]
+    .filter(p => !p.endsWith("'"));
+
+  document.getElementById("controls").style.display = "none";
+  document.getElementById("panel").innerHTML = `
+    <div class="panel">
+      <h3>${L.f_target}</h3>
+      <div class="sounds" id="ftarget">${DATA.sounds.map(s =>
+        `<button class="snd" data-t="${s}" aria-pressed="${s === target}">${s}</button>`).join("")}</div>
+      <h3 style="margin-top:14px">${L.f_profile}</h3>
+      ${L.f_hint ? `<p class="hint">${L.f_hint}</p>` : ""}
+      <div class="chips" id="fprofile">${corrigible.map(p => {
+        const isTarget = p === DATA.target_of[target].replace("'", "");
+        const twin = DATA.soft_twins[p];
+        const plus = (profile.has(p) && twin) ? `<i>+${twin.toUpperCase()}</i>` : "";
+        return `<button class="chip" data-p="${p}" ${isTarget ? "disabled" : ""}
+          aria-pressed="${profile.has(p)}">${p.toUpperCase()}${plus}</button>`;
+      }).join("")}</div>
+      <div class="funnel">
+        <div class="step"><b>${all.length}</b><i>${L.f_dict} [${target}]</i></div>
+        <span class="arrow">→</span>
+        <div class="step minus"><b>−${dropBase}</b><i>${L.f_base_why((DATA.base_banned[target] || []).map(x => x.toUpperCase()))}</i></div>
+        <span class="arrow">→</span>
+        <div class="step minus"><b>−${dropProf}</b><i>${L.f_prof_why}</i></div>
+        <span class="arrow">→</span>
+        <div class="step left"><b>${left}</b><i>${L.f_left_why}</i></div>
+      </div>
+      <label class="toggle"><input type="checkbox" id="fshow" ${showDropped ? "checked" : ""}>
+        ${L.f_show}</label>
+    </div>`;
+
+  document.getElementById("ftarget").addEventListener("click", e => {
+    const b = e.target.closest(".snd"); if (!b) return;
+    target = b.dataset.t; shown = PAGE; draw();
+  });
+  document.getElementById("fprofile").addEventListener("click", e => {
+    const b = e.target.closest(".chip"); if (!b || b.disabled) return;
+    const p = b.dataset.p;
+    profile.has(p) ? profile.delete(p) : profile.add(p);
+    shown = PAGE; draw();
+  });
+  document.getElementById("fshow").addEventListener("change", e => {
+    showDropped = e.target.checked; shown = PAGE; draw();
+  });
+
+  const rows = showDropped ? all : all.filter(r => r.why === "keep");
+  const part = rows.slice(0, shown);
+  document.getElementById("found").textContent = "";
+  const head = "<tr>" + ["word","transcription","markova_v1_guess","plural","other_correctable","why"]
+    .map(c => `<th>${L.cols[c] || c}</th>`).join("") + "</tr>";
+  const body = part.map(r => {
+    const oc = [].concat(r.other_correctable || []).map(x => {
+      const hit = r.hitBase.includes(x) || r.hitProf.includes(x);
+      return `<span class="${hit ? "hit" : ""}">${String(x).toUpperCase()}</span>`;
+    }).join("");
+    const why = r.why === "base" ? `<span class="why base">${L.why_base}</span>`
+              : r.why === "prof" ? `<span class="why prof">${L.why_prof}</span>`
+              : `<span class="why keep">${L.why_keep}</span>`;
+    return `<tr class="${r.why === "keep" ? "" : "out"}"><td class="w">${r.word}</td>` +
+           `<td class="t">${r.transcription || ""}</td>` +
+           `<td class="n">${r.markova_v1_guess ?? ""}</td>` +
+           `<td class="f">${r.plural || ""}</td>` +
+           `<td class="oc">${oc}</td><td>${why}</td></tr>`;
+  }).join("");
+  const more = rows.length > shown
+    ? `<button class="more" id="more">${L.more} (${rows.length - shown})</button>` : "";
+  document.getElementById("table").innerHTML = `<table>${head}${body}</table>${more}`;
+  const mb = document.getElementById("more");
+  if (mb) mb.addEventListener("click", () => { shown += PAGE * 3; draw(); });
+}
+
+function drawRules() {
+  document.getElementById("controls").style.display = "none";
+  document.getElementById("table").innerHTML = "";
+  const classes = Object.entries(DATA.phoneme_classes).map(([name, phs]) =>
+    `<tr><td class="w">${(L.class_names && L.class_names[name]) || name}</td><td class="oc">${phs.map(p =>
+      `<span>${p.toUpperCase()}</span>`).join("")}</td></tr>`).join("");
+  const pairs = DATA.opposition_pairs.map(([name, a, b]) =>
+    `<tr><td class="w">${name}</td><td class="oc">${a.map(x => `<span>${x.toUpperCase()}</span>`).join("")}</td>` +
+    `<td class="oc">${b.map(x => `<span>${x.toUpperCase()}</span>`).join("")}</td></tr>`).join("");
+  const mark = Object.entries(DATA.markova).map(([n, text]) =>
+    `<tr><td class="n">${n}</td><td class="c">${text}</td></tr>`).join("");
+  document.getElementById("panel").innerHTML = `
+    <div class="rules">
+      <div><h3>${L.r_classes_h}</h3><p>${L.r_classes_p}</p>
+        <table><tr><th>${L.cols.cls}</th><th>${L.cols.phoneme}</th></tr>${classes}</table></div>
+      <div><h3>${L.r_pairs_h}</h3><p>${L.r_pairs_p}</p>
+        <table><tr><th>${L.cols.pair}</th><th>${L.cols.side_a}</th><th>${L.cols.side_b}</th></tr>${pairs}</table></div>
+      <div><h3>${L.r_markova_h}</h3><p>${L.r_markova_p}</p>
+        <table><tr><th>${L.cols.num}</th><th>${L.cols.structure}</th></tr>${mark}</table></div>
+    </div>`;
+}
+
+function rows() {
+  if (tab === "onsets") {
+    return Object.entries(DATA.onsets).map(([onset, proof]) =>
+      ({ onset, proof: Array.isArray(proof) ? proof.join(" · ") : String(proof) }));
+  }
+  const q = document.getElementById("q").value.trim().toLowerCase();
+  return DATA[tab].filter(r =>
+    (!sound || r.sound === sound) && (!q || (r.word || "").toLowerCase().includes(q)));
+}
+
+function cell(key, v) {
+  if (v === undefined || v === null || v === "") return "<td></td>";
+  if (key === "word") return `<td class="w">${v}</td>`;
+  if (key === "other_correctable")
+    return `<td class="oc">${[].concat(v).map(x => `<span>${String(x).toUpperCase()}</span>`).join("")}</td>`;
+  if (key === "transcription" || key === "proof") return `<td class="t">${v}</td>`;
+  if (key === "onset") return `<td class="w">${String(v).toUpperCase()}</td>`;
+  if (NUM.has(key)) return `<td class="n">${v}</td>`;
+  if (key === "semantic_category") return `<td class="c">${v}</td>`;
+  if (typeof v === "boolean") return `<td class="c">${v ? "✓" : ""}</td>`;
+  return `<td class="f">${v}</td>`;
+}
+
+function draw() {
+  if (tab === "filter") return drawFilter();
+  if (tab === "rules") return drawRules();
+  document.getElementById("panel").innerHTML = "";
+  document.getElementById("controls").style.display = "flex";
+  document.getElementById("sounds").style.display = tab === "onsets" ? "none" : "flex";
+  const cols = COLS[tab], all = rows(), part = all.slice(0, shown);
+  document.getElementById("found").textContent = L.found(all.length.toLocaleString("ru"));
+  if (!all.length) { document.getElementById("table").innerHTML = `<p class="empty">—</p>`; return; }
+  const head = "<tr>" + cols.map(c => `<th>${L.cols[c] || c}</th>`).join("") + "</tr>";
+  const body = part.map(r => "<tr>" + cols.map(c => cell(c, r[c])).join("") + "</tr>").join("");
+  const more = all.length > shown
+    ? `<button class="more" id="more">${L.more} (${(all.length - shown).toLocaleString("ru")})</button>` : "";
+  document.getElementById("table").innerHTML = `<table>${head}${body}</table>${more}`;
+  const b = document.getElementById("more");
+  if (b) b.addEventListener("click", () => { shown += PAGE * 3; draw(); });
+}
+</script>
+</body>
+</html>

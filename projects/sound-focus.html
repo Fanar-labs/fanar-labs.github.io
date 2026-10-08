@@ -1,0 +1,119 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Brown Noise Generator — Fanarlabs</title>
+<meta name="description" content="A Chrome extension that generates brown, pink or white noise on the device, for work and study, with an optional timer.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Brown Noise Generator — Fanarlabs">
+<meta property="og:description" content="A Chrome extension that generates brown, pink or white noise on the device, for work and study, with an optional timer.">
+<meta property="og:image" content="https://fanarlabs.com/projects/img/variants/oblozhki-2026-10-07/sound-focus-stol.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/assets/hub.css">
+<script data-goatcounter="https://panarini.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head><body>
+<!-- СОБРАНО gen_pages.py из content/sound-focus.txt — правьте источник, не эту страницу. -->
+<nav class="topbar">
+  <a class="me" href="/">Fanarlabs</a>
+  <span class="links">
+    <a href="mailto:hello@fanarlabs.com" aria-label="Email">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 3h13a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5Z" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M1.6 4.1 8 8.9l6.4-4.8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+    </a>
+    <a href="https://github.com/PanarinI" aria-label="GitHub">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+    </a>
+    <a href="https://bsky.app/profile/igorpanarin.bsky.social" aria-label="Bluesky">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 7.1C7.1 5.4 4.7 2.2 2.7 1.4 1.5.9.5 1.4.5 2.9c0 1.4.8 4.7 1.3 5.5.9 1.4 2.4 1.3 3.9 1.1-1.5.2-2.8.8-1.1 2.6.4.4 1 1 1.5 1.5.8.8 1.5.9 1.9.9s1.1-.1 1.9-.9c.5-.5 1.1-1.1 1.5-1.5 1.7-1.8.4-2.4-1.1-2.6 1.5.2 3 .3 3.9-1.1.5-.8 1.3-4.1 1.3-5.5 0-1.5-1-2-2.2-1.5-2 .8-4.4 4-5.3 5.7Z"/></svg>
+    </a>
+    <a href="https://t.me/bot_and_kot" aria-label="Telegram channel, in Russian">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M15.2 2.2 1.1 7.6c-.7.3-.7.9 0 1.1l3.5 1.1L13 4.4c.4-.2.8-.1.5.2l-6.8 6.2-.3 3.6c.4 0 .6-.2.8-.4l1.7-1.7 3.6 2.6c.7.4 1.1.2 1.3-.6l2.3-10.9c.2-.9-.3-1.3-.9-1.2Z"/></svg><span class="ru">RU</span>
+    </a>
+    <a class="lang" href="/ru/projects/sound-focus.html" hreflang="ru">Рус</a>
+  </span>
+</nav>
+<div class="wrap page">
+
+<a class="back" href="../">← All work</a>
+
+<div class="head"><h1>Brown Noise Generator</h1><span class="stage">in use</span></div>
+
+<p class="lede">Brown, pink or white noise for work and study, <em>computed on the device</em> while you work.
+      Nothing is streamed and nothing is played from a file. The timer is optional: with it on, the
+      session is a flight toward a star, and the sound fades out on arrival.</p>
+
+<div class="ext">
+  <a href="https://chromewebstore.google.com/detail/minimalist-timer/miknhphoakphfhgjajhkalmpdnadkeic">In the store <span class="w">Chrome Web Store</span></a>
+</div>
+<figure class="hero"><span data-zoom="img/noise-glavnaya.png" tabindex="0"><img src="img/noise-glavnaya.png" alt="Chrome with the Wikipedia article Brownian noise on the left and the extension&#x27;s side panel on the right: a small warm star, the dial wound to 15 minutes, Start, the room preset and four knobs."></span></figure>
+
+<h2>How it is made</h2>
+<div class="how">
+<p>Every sound is computed in the browser. The core is brown noise. Above it sit a layer of pink noise
+      for air, a layer of space, and a slow drift that keeps the sound from standing still. Nothing
+      changes in steps: a sudden change pulls attention away from the work.</p>
+<p>Pink and white noise have their own sources and filters. Brown stays the default and sounds exactly
+      as it did before the other two were added. Over the noise there is an optional tone layer with one
+      knob; it follows the phases of the session.</p>
+</div>
+<div class="spec">
+  <div class="r"><b>Colour</b><span>brown · pink · white</span><i>three separate sources</i></div>
+  <div class="r"><b>Room</b><span>open office · thin walls · café · deep reading · racing thoughts · too much</span><i>a preset never changes the length</i></div>
+  <div class="r"><b>Knobs</b><span>volume · masking · stimulation · tone</span><i>the same four in every room</i></div>
+  <div class="r"><b>Timer</b><span>5 · 15 · 25 · 45 · 90 minutes, or ∞</span><i>length comes only from the dial</i></div>
+</div>
+<div class="how">
+<p>The picture is computed from the sound, and the panel has no settings for how it looks. The colour of
+      the interface is the colour of the noise; the glow of the star is the volume. There is one switch,
+      <em>motion</em>, which stops the movement for people it bothers.</p>
+</div>
+
+<div class="timeline ryad">
+  <figure class="tl port"><span data-zoom="img/noise-2026-10-05-pokoj.jpg" tabindex="0"><img src="img/noise-2026-10-05-pokoj.jpg" alt="The panel at rest: a small star, the dial wound to 15 minutes, Start and infinity buttons, four knobs."></span><figcaption><time>At rest</time>The dial is wound to 15 minutes. The star is small: it is still far away.</figcaption></figure>
+  <figure class="tl port"><span data-zoom="img/noise-2026-10-05-polyot.jpg" tabindex="0"><img src="img/noise-2026-10-05-polyot.jpg" alt="The panel in flight: a larger star, short streaks of passing stars, no dial and no numbers."></span><figcaption><time>In flight</time>No dial and no numbers, only the star and the stars flying past.</figcaption></figure>
+  <figure class="tl port"><span data-zoom="img/noise-2026-10-05-mysh.jpg" tabindex="0"><img src="img/noise-2026-10-05-mysh.jpg" alt="The same flight with the mouse over the panel: the dial is back and shows 9 minutes left."></span><figcaption><time>Mouse over</time>The dial comes back while the mouse is over the panel: 9 minutes left.</figcaption></figure>
+  <figure class="tl port"><span data-zoom="img/noise-2026-10-05-pribytie.jpg" tabindex="0"><img src="img/noise-2026-10-05-pribytie.jpg" alt="Arrival: the dial has unwound to zero, the star is large and close, Start is lit again."></span><figcaption><time>Arrival</time>The dial has unwound to zero. The star is close.</figcaption></figure>
+</div>
+
+
+<h2>Who it is for</h2>
+<div class="how">
+<p>It is made first of all for adults with ADHD. Two moments are hard for them: getting started and
+      being pulled out of the work. The sound rises gently at the start and fades on arrival. There is
+      no bell.</p>
+</div>
+
+<h2>Devlog</h2>
+<div class="devlog">
+  <div class="e"><time>5 Oct</time><span class="tag">UI</span>
+    <p>A user wrote that the panel had become too noisy: the grain on the screen and the big dial. I removed
+      the grain completely. The star is small at rest again and grows as you fly. The dial unwinds like a
+      kitchen timer. In flight it shows only under the mouse.</p></div>
+  <div class="e"><time>26 Sep</time><span class="tag">release</span>
+    <p>Renamed to Brown Noise Generator, with a new panel, icon and listing in 53 languages in one release.
+      The picture now follows the sound.</p></div>
+  <div class="e"><time>26 Sep</time><span class="tag">timer</span>
+    <p>Four rules for the timer. Only the dial sets the length; a preset changes only the room.
+      ∞ is a mode with no countdown. Changing the length mid-session starts it again from full. Finish ends
+      the flight and the sound.</p></div>
+  <div class="e"><time>25 Sep</time><span class="tag">focus</span>
+    <p>Reversed the centre a second time. The sound leads; the timer is useful but optional.</p></div>
+  <div class="e"><time>31 Aug</time><span class="tag">sound</span>
+    <p>Added pink and white noise as their own sources, so that the words “pink noise generator” in the
+      listing are a fact.</p></div>
+  <div class="e"><time>7 Aug</time><span class="tag">sound</span>
+    <p>1.1.0 added the tone layer over the noise, as much or as little of it as you want.</p></div>
+  <div class="e"><time>26 July</time><span class="tag">UI</span>
+    <p>The screen became a starfield with the star as the destination. Before that it was an ember in a ring.</p>
+    <div class="pic"><span data-zoom="img/timeline/2026-07-26-0a35bc5.png"><img src="img/timeline/2026-07-26-0a35bc5.png" alt="The panel on 26 July: a dark starfield with a warm star in the middle."></span></div></div>
+  <div class="e"><time>11 July</time><span class="tag">focus</span>
+    <p>The first reversal: use showed the timer is the centre, and sound is what time is made of.</p></div>
+  <div class="e"><time>5 July</time><span class="tag">sound</span>
+    <p>Time is carried by noise, and it drifts slowly instead of changing in steps.</p></div>
+</div>
+
+<footer>The extension is in the Chrome Web Store as
+      <a href="https://chromewebstore.google.com/detail/minimalist-timer/miknhphoakphfhgjajhkalmpdnadkeic">Brown Noise Generator</a>.
+      How it is listed and advertised — the wording, the keywords, the campaign — stays off this page.</footer>
+
+</div>
+<div id="lb" role="dialog" aria-modal="true" hidden><b>×</b><img alt=""></div>
+<script src="/assets/hub.js"></script>
+</body></html>

@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Стенд эволюции</title>
+<style>
+  :root { --bg:#0e1013; --panel:#16191e; --line:#252a31; --ink:#d7dbe0; --dim:#7c848e; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+         font:13px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+  .wrap { display:flex; gap:14px; padding:14px; align-items:flex-start; flex-wrap:wrap; }
+  canvas { background:#080a0c; border:1px solid var(--line); border-radius:4px; display:block; cursor:crosshair; }
+  .side { width:272px; }
+  .box { background:var(--panel); border:1px solid var(--line); border-radius:4px;
+         padding:11px 12px; margin-bottom:10px; }
+  h2 { font-size:11px; letter-spacing:.09em; text-transform:uppercase; color:var(--dim);
+       margin:0 0 9px; font-weight:600; }
+  .row { display:flex; justify-content:space-between; padding:2px 0; gap:8px; }
+  .row b { font-weight:600; font-variant-numeric:tabular-nums; }
+  .big { font-size:25px; font-weight:600; font-variant-numeric:tabular-nums; line-height:1.15; }
+  .cap { color:var(--dim); font-size:11px; }
+  button { background:#1e232a; color:var(--ink); border:1px solid var(--line);
+           border-radius:3px; padding:5px 9px; font-size:12px; cursor:pointer; margin:0 4px 4px 0; }
+  button:hover { background:#272d36; }
+  button.on { background:#3a4757; border-color:#4d5d70; }
+  button:disabled { opacity:.5; cursor:default; }
+  input[type=range] { width:100%; }
+  input[type=text] { width:88px; background:#0e1116; color:var(--ink);
+                     border:1px solid var(--line); border-radius:3px; padding:3px 5px; font-family:inherit; }
+  .log { height:96px; overflow:auto; font-size:11px; color:var(--dim); }
+  .log div { padding:1px 0; border-bottom:1px solid #1c2026; }
+  .legend { font-size:11px; color:var(--dim); line-height:1.7; }
+  .dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:5px; vertical-align:middle; }
+  .card { font-size:11px; color:var(--dim); line-height:1.6; }
+  .card b { color:var(--ink); }
+  .bar { height:4px; background:#232a33; border-radius:2px; overflow:hidden; margin:3px 0 7px; }
+  .bar i { display:block; height:100%; background:#c9563f; }
+  .bar.blue i { background:#3f7fc9; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div>
+    <canvas id="cv" width="720" height="480"></canvas>
+    <div class="cap" style="margin-top:7px; max-width:720px" data-t="intro"></div>
+  </div>
+
+  <!-- Надписи — из словаря T ниже, на двух языках (?lang=en — английский). 10-08, слово автора:
+       интерфейс на английском для сайта и без «эзотерического языка» — слов, понятных только нам
+       («хвост», «пресс», «летопись», «дележей своим должникам», «гнать»). Пишем, что считает цифра. -->
+  <div class="side">
+    <div class="box">
+      <h2 data-t="food_h"></h2>
+      <input type="range" id="press" min="1" max="100" value="52">
+      <div class="row"><span class="cap" data-t="food_now"></span><b id="pressv">—</b></div>
+      <div style="margin-top:7px">
+        <button data-p="88" data-t="food_0"></button><button data-p="52" data-t="food_1"></button>
+        <button data-p="30" data-t="food_2"></button><button data-p="16" data-t="food_3"></button>
+      </div>
+    </div>
+
+    <div class="box">
+      <h2 data-t="move_h"></h2>
+      <input type="range" id="mob" min="5" max="100" value="75">
+      <div class="row"><span class="cap" data-t="move_step"></span><b id="mobv">0.75</b></div>
+      <div class="row"><span class="cap" data-t="move_known"></span><b id="repeat">—</b></div>
+      <div class="cap" data-t="move_note"></div>
+    </div>
+
+    <div class="box">
+      <h2 data-t="peace_h"></h2>
+      <div class="big" id="tail">—</div>
+      <div class="row" style="margin-top:4px"><span class="cap" data-t="peace_chance"></span><b id="fair">—</b></div>
+      <div class="cap"><span data-t="peace_note"></span><br>
+        <span id="tailn" style="color:#59606a"></span></div>
+    </div>
+
+    <div class="box">
+      <h2 data-t="mem_h"></h2>
+      <div class="row"><span class="cap" data-t="mem_rev"></span><b id="revenge">—</b></div>
+      <div class="bar"><i id="revb" style="width:0"></i></div>
+      <div class="row"><span class="cap" data-t="mem_rec"></span><b id="recip">—</b></div>
+      <div class="bar blue"><i id="recb" style="width:0"></i></div>
+      <div class="cap" data-t="mem_note"></div>
+    </div>
+
+    <div class="box">
+      <h2 data-t="world_h"></h2>
+      <div class="row"><span class="cap" data-t="w_tick"></span><b id="tick">0</b></div>
+      <div class="row"><span class="cap" data-t="w_pop"></span><b id="pop">0</b></div>
+      <div class="row"><span class="cap" data-t="w_gen"></span><b id="gen">0</b></div>
+      <div class="row"><span class="cap" data-t="w_raids"></span><b id="raids">0</b></div>
+      <div class="row"><span class="cap" data-t="w_gifts"></span><b id="gifts">0</b></div>
+      <div class="row"><span class="cap" data-t="w_life"></span><b id="life">0</b></div>
+      <div class="row"><span class="cap" data-t="w_acq"></span><b id="acq">0</b></div>
+    </div>
+
+    <div class="box">
+      <h2 data-t="pick_h"></h2>
+      <div class="card" id="card" data-t="pick_none"></div>
+    </div>
+
+    <div class="box">
+      <h2 data-t="run_h"></h2>
+      <div class="row" style="margin-bottom:6px">
+        <span class="cap" data-t="run_seed"></span><input type="text" id="seed" value="1570">
+      </div>
+      <button id="restart" data-t="run_restart"></button>
+      <button id="pause" data-t="run_pause"></button><br>
+      <button data-sp="3" data-t="run_slow"></button><button data-sp="12" class="on" data-t="run_fast"></button><button data-sp="40" data-t="run_fastest"></button>
+      <div class="cap" style="margin-top:6px" data-t="run_note"></div>
+    </div>
+
+    <div class="box">
+      <h2 data-t="series_h"></h2>
+      <button id="serie" data-t="series_btn"></button>
+      <div id="seriev" class="cap" style="margin-top:6px" data-t="series_note"></div>
+    </div>
+
+    <div class="box">
+      <h2 data-t="legend_h"></h2>
+      <div class="legend">
+        <span class="dot" style="background:#e04b4b"></span><span data-t="legend_took"></span><br>
+        <span class="dot" style="background:#4d9be6"></span><span data-t="legend_shared"></span><br>
+        <span class="dot" style="background:#8d949c"></span><span data-t="legend_neither"></span><br>
+        <span class="cap" data-t="legend_note"></span>
+      </div>
+    </div>
+
+    <div class="box">
+      <h2 data-t="log_h"></h2>
+      <div class="log" id="log"></div>
+    </div>
+  </div>
+</div>
+
+<script src="mir.js"></script>
+<script>
+'use strict';
+
+// ---------- язык надписей: ?lang=en — английский, иначе русский ----------
+const LANG = new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'ru';
+const T = {
+  ru: {
+    title: 'Стенд эволюции',
+    intro: 'В коде нет ни одной строки вида «если голоден — отними» или «если обидели — отомсти». Заданы только тело, ' +
+           'то, что существо замечает, и пять действий. Мозг — 176 чисел: при рождении случайный, дальше его отбирает ' +
+           'смерть. Щёлкните по существу, чтобы увидеть, что у него внутри.',
+    food_h: 'Сколько еды в мире', food_now: 'сейчас',
+    food_0: 'много', food_1: 'норма', food_2: 'мало', food_3: 'голод',
+    move_h: 'Как далеко ходят', move_step: 'клеток за такт', move_known: 'встречи со знакомыми',
+    move_note: 'Знакомый — тот, с кем уже что-то было: отнял у него еду или поделился. Если никто ни у кого не отнимает ' +
+               'и не делится, знакомых нет, и цифра мала, даже когда встречи частые.',
+    peace_h: 'Мирные: ни разу не отняли еду', peace_chance: 'у кого был случай',
+    peace_note: 'Доля тех, кто прожил дольше 300 тактов, не меньше 50 раз оказывался рядом с другим и ни разу не отнял еду.',
+    peace_fair: (f, g, m) => f + ' из ' + g + ' поживших · встреч за жизнь ' + m,
+    peace_alt: (a, b) => 'Без условия о встречах — ' + a + '%; если считать и умерших молодыми — ' + b + '%.',
+    peace_wait: 'ждём, пока кто-нибудь проживёт 300 тактов',
+    mem_h: 'Помнят ли, кто обидел и кто помог', mem_rev: 'отнимают у тех, кто отнимал у них',
+    mem_rec: 'делятся с теми, кто делился с ними',
+    mem_note: 'Для сравнения — как часто такой сосед просто оказывается рядом: тот, кто отнимал, <b id="foeBase">—</b>, ' +
+              'тот, кто делился, <b id="frBase">—</b>. Если доли выше заметно больше, существа помнят лица.',
+    world_h: 'Мир сейчас', w_tick: 'такт', w_pop: 'население', w_gen: 'поколение',
+    w_raids: 'отъёмов еды за 100 тактов', w_gifts: 'дележей за 100 тактов', w_life: 'средняя длина жизни',
+    w_acq: 'знакомых у существа',
+    pick_h: 'Выбранное существо', pick_none: 'щёлкните по точке на поле', pick_miss: 'мимо — щёлкните ближе к точке',
+    card: (id, gen, age, e, r, g, mem, n, k) => '<b>существо №' + id + '</b>, поколение ' + gen + '<br>возраст ' + age +
+          ' · сытость ' + e + '<br>отнимал ' + r + ' · делился ' + g + '<br>внутреннее состояние: ' + mem +
+          '<br>помнит ' + n + ': ' + k,
+    run_h: 'Запуск', run_seed: 'зерно случайности', run_restart: 'заново', run_pause: 'пауза',
+    run_slow: 'медленно', run_fast: 'быстро', run_fastest: 'очень быстро',
+    run_note: 'То же зерно и те же настройки дают тот же прогон, такт в такт.',
+    series_h: 'Шесть миров с одними настройками', series_btn: 'запустить 6 миров',
+    series_note: 'Один прогон ничего не доказывает: исход сильно зависит от того, чья линия случайно захватила мир первой.',
+    series_counting: n => 'считаю 6 миров по ' + n + ' тактов…', series_head: 'настройки те же, миров 6',
+    series_row: (s, t, r, p) => 'зерно ' + s + ' — мирных ' + t + ', месть ' + r + ', население ' + p,
+    series_sum: (m, rg) => 'медиана мирных ' + m + '%, разброс ' + rg + '%',
+    legend_h: 'Обозначения', legend_took: 'отнимал еду хоть раз', legend_shared: 'делился хоть раз',
+    legend_neither: 'ни того, ни другого',
+    legend_note: 'цвет обода — род, размер — сытость,<br>яркость обода — внутреннее состояние',
+    log_h: 'Журнал', log_food: 'еда: ',
+  },
+  en: {
+    title: 'Evolution simulator',
+    intro: 'The code has no line like “if hungry, take food” or “if hurt, take revenge”. It defines only a body, what a ' +
+           'creature notices and five actions. The brain is 176 numbers: random at birth, then selected by death. ' +
+           'Click a creature to see inside it.',
+    food_h: 'Food in the world', food_now: 'now',
+    food_0: 'plenty', food_1: 'normal', food_2: 'scarce', food_3: 'famine',
+    move_h: 'How far they move', move_step: 'cells per tick', move_known: 'meetings with acquaintances',
+    move_note: 'An acquaintance is someone you have already dealt with: you took food from them or shared with them. ' +
+               'If nobody takes or shares, there are no acquaintances, and the number stays low even when meetings are frequent.',
+    peace_h: 'Peaceful: never took food', peace_chance: 'had the chance',
+    peace_note: 'The share of creatures that lived over 300 ticks, were next to another at least 50 times, and never took food.',
+    peace_fair: (f, g, m) => f + ' of ' + g + ' that lived · ' + m + ' meetings per life',
+    peace_alt: (a, b) => 'Without the meetings rule: ' + a + '%; counting those who died young: ' + b + '%.',
+    peace_wait: 'waiting for someone to live 300 ticks',
+    mem_h: 'Do they remember who hurt or helped them?', mem_rev: 'take from those who took from them',
+    mem_rec: 'share with those who shared with them',
+    mem_note: 'For comparison, how often such a neighbour is simply nearby: one who took <b id="foeBase">—</b>, ' +
+              'one who shared <b id="frBase">—</b>. If the shares above are clearly higher, they remember faces.',
+    world_h: 'The world now', w_tick: 'tick', w_pop: 'population', w_gen: 'generation',
+    w_raids: 'food taken, per 100 ticks', w_gifts: 'food shared, per 100 ticks', w_life: 'average lifespan',
+    w_acq: 'acquaintances per creature',
+    pick_h: 'Selected creature', pick_none: 'click a dot on the field', pick_miss: 'missed — click closer to a dot',
+    card: (id, gen, age, e, r, g, mem, n, k) => '<b>creature #' + id + '</b>, generation ' + gen + '<br>age ' + age +
+          ' · energy ' + e + '<br>took ' + r + ' · shared ' + g + '<br>inner state: ' + mem +
+          '<br>remembers ' + n + ': ' + k,
+    run_h: 'Run', run_seed: 'random seed', run_restart: 'restart', run_pause: 'pause',
+    run_slow: 'slow', run_fast: 'fast', run_fastest: 'fastest',
+    run_note: 'The same seed and settings give the same run, tick for tick.',
+    series_h: 'Six worlds, same settings', series_btn: 'run 6 worlds',
+    series_note: 'One run proves nothing: the outcome depends heavily on which lineage happened to take over the world first.',
+    series_counting: n => 'running 6 worlds, ' + n + ' ticks each…', series_head: 'same settings, 6 worlds',
+    series_row: (s, t, r, p) => 'seed ' + s + ' — peaceful ' + t + ', revenge ' + r + ', population ' + p,
+    series_sum: (m, rg) => 'median peaceful ' + m + '%, range ' + rg + '%',
+    legend_h: 'Legend', legend_took: 'took food at least once', legend_shared: 'shared at least once',
+    legend_neither: 'neither',
+    legend_note: 'ring colour — lineage, size — energy,<br>ring brightness — inner state',
+    log_h: 'Log', log_food: 'food: ',
+  },
+}[LANG];
+document.documentElement.lang = LANG;
+document.title = T.title;
+document.querySelectorAll('[data-t]').forEach(el => { el.innerHTML = T[el.dataset.t]; });
+// записи журнала пишет ядро mir.js по-русски; на английском их переводим при показе
+function logLine(l){
+  if (LANG === 'ru') return l.replace(/^т\.(\d+) — /, 'такт $1 — ').replace('прогон начат, сид', 'прогон начат, зерно');
+  return l.replace(/^т\.(\d+) — /, 'tick $1 — ')
+          .replace(/прогон начат, сид (\d+)/, 'run started, seed $1')
+          .replace(/^(tick \d+ — )поколение (\d+)/, '$1generation $2')
+          .replace('мир почти вымер — подсеяно 24 случайных', 'the world nearly died out — 24 random creatures added')
+          .replace('еда: ', 'food: ');
+}
+
+// ---------- мир берётся из общего ядра mir.js ----------
+let M = createMir({ seed: 1570, press: 52, mobility: 0.75 });
+let beings, food, tick, genMax, deaths, raidWin, giftWin, logLines, picked = null;
+let revengeHits, revengeAll, recipHits, recipAll, foeMeet, friendMeet, allMeet, knownMeet;
+
+function sync(){
+  beings = M.beings; food = M.food; tick = M.tick; genMax = M.genMax;
+  deaths = M.deaths; raidWin = M.raidWin; giftWin = M.giftWin; logLines = M.log;
+  revengeHits = M.revengeHits; revengeAll = M.revengeAll;
+  recipHits = M.recipHits; recipAll = M.recipAll;
+  foeMeet = M.foeMeet; friendMeet = M.friendMeet; allMeet = M.allMeet; knownMeet = M.knownMeet;
+}
+function step(){ M.step(); }
+function reset(){
+  const sv = parseInt(document.getElementById('seed').value, 10);
+  M = createMir({ seed: isNaN(sv) ? 1 : sv,
+                  press: +document.getElementById('press').value,
+                  mobility: +document.getElementById('mob').value / 100 });
+  picked = null; sync();
+}
+const CW = M.CW, CH = M.CH, MAX_E = M.MAX_E;
+sync();
+
+// ---------- отрисовка ----------
+const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+function draw(){
+  ctx.fillStyle = '#080a0c'; ctx.fillRect(0,0,cv.width,cv.height);
+  const sx = cv.width/CW, sy = cv.height/CH;
+  for (let y=0;y<CH;y++) for (let x=0;x<CW;x++){
+    const f = food[y*CW+x];
+    if (f > 0.05){
+      ctx.fillStyle = 'rgba(70,150,80,' + (f*0.5).toFixed(3) + ')';
+      ctx.fillRect(x*sx, y*sy, sx, sy);
+    }
+  }
+  for (const b of beings){
+    const r = 1.6 + (b.e/MAX_E)*2.6;
+    ctx.beginPath();
+    ctx.arc(b.x*sx, b.y*sy, r, 0, 6.2832);
+    ctx.fillStyle = b.raided ? '#e04b4b' : (b.gave ? '#4d9be6' : '#8d949c');
+    ctx.fill();
+    const heat = 0.3 + Math.min(1, Math.abs(b.mem[0]))*0.6;
+    ctx.strokeStyle = 'hsla(' + b.line + ',65%,62%,' + heat.toFixed(2) + ')';
+    ctx.lineWidth = 1; ctx.stroke();
+  }
+  if (picked){
+    ctx.beginPath();
+    ctx.arc(picked.x*sx, picked.y*sy, 9, 0, 6.2832);
+    ctx.strokeStyle = '#ffd479'; ctx.lineWidth = 1.4; ctx.stroke();
+    for (const [id, v] of picked.know){
+      const o = beings.find(z => z.id === id);
+      if (!o) continue;
+      ctx.beginPath();
+      ctx.moveTo(picked.x*sx, picked.y*sy); ctx.lineTo(o.x*sx, o.y*sy);
+      ctx.strokeStyle = v < 0 ? 'rgba(224,75,75,.55)' : 'rgba(77,155,230,.55)';
+      ctx.lineWidth = 1; ctx.stroke();
+    }
+  }
+}
+
+function pct(a, b){ return b > 0 ? Math.round(a/b*100) + '%' : '—'; }
+
+function stats(){
+  const $ = id => document.getElementById(id);
+  $('tick').textContent = tick;
+  $('pop').textContent = beings.length;
+  $('gen').textContent = genMax;
+  $('raids').textContent = raidWin.reduce((a,c)=>a+c,0);
+  $('gifts').textContent = giftWin.reduce((a,c)=>a+c,0);
+  const mt = M.metrics();
+  $('tail').textContent = mt.tailFair === null ? '—' : Math.round(mt.tailFair*100) + '%';
+  $('fair').textContent = T.peace_fair(mt.fairN, mt.grownN, Math.round(mt.met));
+  $('tailn').textContent = mt.grownN
+    ? T.peace_alt(Math.round(mt.tail*100), Math.round(mt.tailAll*100))
+    : T.peace_wait;
+  $('life').textContent = deaths.length ? Math.round(deaths.reduce((a,d)=>a+d.age,0)/deaths.length) : 0;
+  let acq = 0; for (const b of beings) acq += b.know.size;
+  $('acq').textContent = beings.length ? (acq/beings.length).toFixed(1) : '0';
+
+  $('revenge').textContent = pct(revengeHits, revengeAll);
+  $('recip').textContent   = pct(recipHits, recipAll);
+  $('foeBase').textContent = pct(foeMeet, allMeet);
+  $('frBase').textContent  = pct(friendMeet, allMeet);
+  $('revb').style.width = (revengeAll ? revengeHits/revengeAll*100 : 0) + '%';
+  $('recb').style.width = (recipAll ? recipHits/recipAll*100 : 0) + '%';
+
+  M.mobility = +$('mob').value / 100;
+  M.press = +$('press').value;
+  $('mobv').textContent = M.mobility.toFixed(2);
+  $('repeat').textContent = pct(knownMeet, allMeet);
+  const p = +$('press').value;
+  $('pressv').textContent = p >= 80 ? T.food_0 : p >= 42 ? T.food_1 : p >= 24 ? T.food_2 : T.food_3;
+  $('log').innerHTML = logLines.map(l => '<div>' + logLine(l) + '</div>').join('');
+
+  if (picked){
+    const k = [...picked.know.entries()].sort((a,b)=>a[1]-b[1])
+      .map(([id,v]) => '#' + id + ' ' + (v>0 ? '+'+v : v)).join(' · ');
+    $('card').innerHTML = T.card(picked.id, picked.gen, picked.age, Math.round(picked.e), picked.raided, picked.gave,
+      [...picked.mem].map(v => v.toFixed(2)).join(', '), picked.know.size, k || '—');
+  }
+}
+
+let paused = false, budget = 12;
+function frame(){
+  if (!paused){
+    const t0 = performance.now();
+    let n = 0;
+    do { step(); n++; } while (n < 400 && performance.now() - t0 < budget);
+  }
+  sync(); draw(); stats();
+}
+setInterval(frame, 16);
+
+cv.onclick = e => {
+  const r = cv.getBoundingClientRect();
+  const mx = (e.clientX - r.left) / cv.width * CW;
+  const my = (e.clientY - r.top) / cv.height * CH;
+  let best = null, bd = 1e9;
+  for (const b of beings){
+    const d = (b.x-mx)*(b.x-mx) + (b.y-my)*(b.y-my);
+    if (d < bd){ bd = d; best = b; }
+  }
+  picked = (bd < 6) ? best : null;
+  if (!picked) document.getElementById('card').textContent = T.pick_miss;
+};
+
+document.getElementById('restart').onclick = reset;
+document.getElementById('pause').onclick = e => { paused = !paused; e.target.classList.toggle('on', paused); };
+document.querySelectorAll('button[data-sp]').forEach(btn => {
+  btn.onclick = () => {
+    budget = +btn.dataset.sp;
+    document.querySelectorAll('button[data-sp]').forEach(b => b.classList.toggle('on', b === btn));
+  };
+});
+document.querySelectorAll('button[data-p]').forEach(btn => {
+  // было say(…) — такой функции нет, запись в журнал падала; журнал ведёт ядро: M.say
+  btn.onclick = () => { document.getElementById('press').value = btn.dataset.p; M.say(T.log_food + btn.textContent); };
+});
+
+// ---------- серия: тот же пресс, разные миры ----------
+const serieBtn = document.getElementById('serie'), serieOut = document.getElementById('seriev');
+serieBtn.onclick = () => {
+  const homeSeed = document.getElementById('seed').value;
+  const seeds = [1570, 7, 42, 101, 888, 3003];
+  const TICKS = 2500;
+  const results = [];
+  paused = true; serieBtn.disabled = true;
+  let wi = 0, t = 0;
+  document.getElementById('seed').value = seeds[0];
+  reset();
+  function chunk(){
+    for (let i=0;i<200 && t<TICKS;i++,t++) step();
+    if (t >= TICKS){
+      const mm = M.metrics();
+      results.push({ seed: seeds[wi], pop: mm.pop,
+                     tail: mm.tail === null ? null : Math.round(mm.tail*100),
+                     rev: mm.revenge === null ? null : Math.round(mm.revenge*100) });
+      wi++; t = 0;
+      if (wi < seeds.length){ document.getElementById('seed').value = seeds[wi]; reset(); }
+      else {
+        const tails = results.filter(r => r.tail !== null).map(r => r.tail).sort((a,b)=>a-b);
+        const med = tails.length ? tails[Math.floor(tails.length/2)] : '—';
+        serieOut.innerHTML = '<b style="color:#d7dbe0">' + T.series_head + '</b><br>' +
+          results.map(r => T.series_row(r.seed, r.tail===null?'—':r.tail+'%', r.rev===null?'—':r.rev+'%', r.pop)).join('<br>') +
+          '<br><b style="color:#d7dbe0">' + T.series_sum(med, tails.length ? tails[0] + '–' + tails[tails.length-1] : '—') + '</b>';
+        document.getElementById('seed').value = homeSeed;
+        reset(); paused = false; serieBtn.disabled = false;
+        return;
+      }
+    }
+    setTimeout(chunk, 0);
+  }
+  serieOut.textContent = T.series_counting(TICKS);
+  chunk();
+};
+
+reset();
+</script>
+</body>
+</html>

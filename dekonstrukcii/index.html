@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Разборы игр — Игорь Панарин</title>
+<meta name="description" content="Чужие игры, разобранные по слоям: связь механики со смыслом, решения разработчиков и чем за них заплачено."/>
+<style>
+  :root{
+    --paper:#ffffff; --ink:#2c2c2a; --grey:#5f5e5a; --faint:#888780; --line:#d9d6cc;
+    --terra:#D85A30; --ochre:#ba7517;
+    --green:#5C8A55; --green-deep:#3F6438;
+    --beige:#f1efe8; --beige2:#f7f5ee;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:Helvetica,Arial,sans-serif;line-height:1.55;font-size:15px;
+    display:flex;justify-content:center;padding:34px 20px 100px}
+  main{width:100%;max-width:880px}
+  .top{font-size:12px;color:var(--faint);margin-bottom:20px}
+  .top a{color:inherit;text-decoration:none;border-bottom:1px solid var(--line)}
+  .top a:hover{color:var(--terra);border-color:var(--terra)}
+  h1{font-size:29px;margin:0 0 10px;letter-spacing:.3px;line-height:1.25}
+  p{margin:0 0 13px}
+  .lede{font-size:16px;color:var(--grey);margin:0 0 13px}
+  .legend{font-size:12.5px;color:var(--faint);background:var(--beige2);
+    border:1px solid var(--line);border-radius:9px;padding:11px 15px;margin:16px 0 0}
+  .ok{color:var(--green-deep);font-weight:600}
+  .hz{color:var(--ochre);font-weight:600}
+
+  .cards{display:grid;gap:12px;margin:30px 0 0}
+  a.card{display:block;text-decoration:none;color:inherit;
+    border:1px solid var(--line);border-radius:10px;padding:15px 18px 16px;background:var(--beige2)}
+  a.card:hover{border-color:var(--terra);background:var(--paper)}
+  .card h2{margin:0;font-size:17px;line-height:1.3}
+  .card .meta{font-size:11.5px;letter-spacing:.9px;color:var(--faint);
+    text-transform:uppercase;margin:6px 0 9px}
+  .card p{margin:0;font-size:14px;color:var(--grey)}
+
+  .foot{margin-top:34px;padding-top:14px;border-top:1px solid var(--line);
+    font-size:13px;color:var(--faint)}
+  .foot a{color:var(--grey)}
+  @media(max-width:700px){ .card .meta{letter-spacing:.5px} }
+</style>
+</head>
+<body>
+<main>
+
+<div class="top"><a href="/ru/">← все работы</a> · живите как хотите</div>
+
+<h1>Разборы игр</h1>
+<p class="lede">Чужие игры, разобранные по слоям: как механика связана со смыслом, какие решения
+принимали разработчики по ходу и чем за эти решения заплачено.</p>
+<p>Сделаны для работы над игрой «Живите как хотите». Материал — девлоги авторов, фан-вики,
+интервью, отзывы и статистика Steam.</p>
+<div class="legend">
+  <b>Как читать.</b> <span class="ok">✅</span> — проверено по источнику, источник назван.
+  <span class="hz">🔶</span> — расчёт или оценка. У каждого разбора есть раздел
+  «граница проверенного»: что осталось неизвестным и почему.
+</div>
+
+<div class="cards">
+
+  <a class="card" href="papers-please.html">
+    <h2>Papers, Please, разобранная по слоям</h2>
+    <p class="meta">Лукас Поуп · 2013 · разбор 15.08.2026</p>
+    <p>Как игра держит мораль, ни разу не сказав ничего моралью. Разобран такт игрока и один
+    расходуемый ресурс, на котором всё стоит; семь развилок разработки по девлогу автора.</p>
+  </a>
+
+  <a class="card" href="beholder.html">
+    <h2>Beholder, разобранный по слоям</h2>
+    <p class="meta">Warm Lamp Games · 2016 · разбор 16.08.2026</p>
+    <p>Дом как персонаж: комнаты, жильцы, директивы, сроки — и как из этого собран донос.
+    Восемь развилок разработки, сравнение с Papers, Please по механике, цена решений
+    по статистике Steam.</p>
+  </a>
+
+</div>
+
+
+
+</main>
+</body>
+</html>

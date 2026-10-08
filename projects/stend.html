@@ -1,0 +1,97 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Evolution simulator — Fanarlabs</title>
+<meta name="description" content="Creatures on a 90×60 grid, each with a brain of 176 numbers. Nobody tells them what is good; behaviour is selected by death alone.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Evolution simulator — Fanarlabs">
+<meta property="og:description" content="Creatures on a 90×60 grid, each with a brain of 176 numbers. Nobody tells them what is good; behaviour is selected by death alone.">
+<meta property="og:image" content="https://fanarlabs.com/projects/img/variants/oblozhki-2026-10-07/stend-kadr.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/assets/hub.css">
+<script data-goatcounter="https://panarini.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head><body>
+<!-- СОБРАНО gen_pages.py из content/stend.txt — правьте источник, не эту страницу. -->
+<nav class="topbar">
+  <a class="me" href="/">Fanarlabs</a>
+  <span class="links">
+    <a href="mailto:hello@fanarlabs.com" aria-label="Email">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 3h13a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5Z" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M1.6 4.1 8 8.9l6.4-4.8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+    </a>
+    <a href="https://github.com/PanarinI" aria-label="GitHub">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+    </a>
+    <a href="https://bsky.app/profile/igorpanarin.bsky.social" aria-label="Bluesky">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 7.1C7.1 5.4 4.7 2.2 2.7 1.4 1.5.9.5 1.4.5 2.9c0 1.4.8 4.7 1.3 5.5.9 1.4 2.4 1.3 3.9 1.1-1.5.2-2.8.8-1.1 2.6.4.4 1 1 1.5 1.5.8.8 1.5.9 1.9.9s1.1-.1 1.9-.9c.5-.5 1.1-1.1 1.5-1.5 1.7-1.8.4-2.4-1.1-2.6 1.5.2 3 .3 3.9-1.1.5-.8 1.3-4.1 1.3-5.5 0-1.5-1-2-2.2-1.5-2 .8-4.4 4-5.3 5.7Z"/></svg>
+    </a>
+    <a href="https://t.me/bot_and_kot" aria-label="Telegram channel, in Russian">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M15.2 2.2 1.1 7.6c-.7.3-.7.9 0 1.1l3.5 1.1L13 4.4c.4-.2.8-.1.5.2l-6.8 6.2-.3 3.6c.4 0 .6-.2.8-.4l1.7-1.7 3.6 2.6c.7.4 1.1.2 1.3-.6l2.3-10.9c.2-.9-.3-1.3-.9-1.2Z"/></svg><span class="ru">RU</span>
+    </a>
+    <a class="lang" href="/ru/projects/stend.html" hreflang="ru">Рус</a>
+  </span>
+</nav>
+<div class="wrap page">
+
+<a class="back" href="../">← All work</a>
+
+<div class="head"><h1>Evolution simulator</h1><span class="stage">in build</span></div>
+
+<p class="lede">Creatures on a 90×60 grid, each with a brain of 176 numbers. <em>Nobody tells them what is good.</em>
+      The code describes a body, what it can notice and what it can physically do. Behaviour is selected
+      by death alone.</p>
+<figure class="fig embed hero"><iframe src="/stend/stend-press.html?lang=en" title="The evolution simulator, running" loading="lazy" style="height:820px;width:100%;border:1px solid var(--line);border-radius:2px;background:#fff"></iframe><figcaption>Running in your browser. Click a creature to see inside it.</figcaption></figure>
+
+<h2>How the brain works</h2>
+<div class="spec">
+  <div class="r"><b>Brain</b><span>12 inputs → 8 hidden → 8 outputs</span><i>176 numbers</i></div>
+  <div class="r"><b>Senses</b><span>own hunger · food underfoot · best food within six cells · anyone near · stronger or weaker · own kind or not · what this one was to me before</span><i>nothing else of the world</i></div>
+  <div class="r"><b>Actions</b><span>go to food · eat · take from a neighbour · give part of yourself · freeze and spend less</span><i>the largest of five wins</i></div>
+  <div class="r"><b>Memory in a life</b><span>three numbers of state, and up to eight acquaintances scored from −4 to +4</span><i>who took, who gave</i></div>
+  <div class="r"><b>Memory across lives</b><span>the 176 numbers themselves, passed to the child with small random noise</span><i>no learning within a life</i></div>
+</div>
+<div class="how">
+<p>At birth the numbers are random, behaviour makes no sense, and almost everyone dies. Those whose
+      numbers happened to work leave children with nearly the same numbers. After four hundred generations
+      the world holds habits nobody wrote.</p>
+</div>
+
+<h2>Not machine learning</h2>
+<table class="ex">
+  <tr><th></th><th>what moves the weights</th><th>who sets the goal</th></tr>
+  <tr><td class="w">supervised learning</td><td>the error against a right answer</td><td>a person, with the right answers</td></tr>
+  <tr><td class="w">reinforcement learning</td><td>a reward for the outcome</td><td>a person, with the reward formula</td></tr>
+  <tr><td class="w">unsupervised learning</td><td>structure in the data</td><td>a person, by choosing what counts as structure</td></tr>
+  <tr><td class="w"><b>this stand</b></td><td><b>random mutation and death</b></td><td><b>nobody</b></td></tr>
+</table>
+
+<h2>How it is measured</h2>
+<div class="spec">
+  <div class="r"><b>“Didn&#x27;t” is not “had no chance”</b><span>11% never took from anyone. All of them were infants who died before their first meeting; among those who lived past 300 ticks it was 0 of 56.</span><i>now counted only among those who had the chance</i></div>
+  <div class="r"><b>One knob at a time</b><span>Memory and a sevenfold longer run were added together, and the world turned predatory. The control without memory gave 11% against 14%: the length did it.</span><i>always with a control</i></div>
+  <div class="r"><b>Predict before the run</b><span>Less movement should make meetings repeat and revenge rise above the background. Meetings with acquaintances rose from 21% to 39%; revenge did not move.</span><i>recorded as failed</i></div>
+  <div class="r"><b>One run proves nothing</b><span>Two worlds with the same rules and different random seeds: 1% and 59%.</span><i>a claim is a spread over many worlds</i></div>
+  <div class="r"><b>Same seed, same run</b><span>tick for tick</span><i>otherwise a knob cannot be told from noise</i></div>
+</div>
+
+<h2>What it has shown so far</h2>
+<div class="how">
+<p>Predation appears on its own, but only after hundreds of generations. Mobility is a stronger knob than
+      abundance. At a step of 0.75 cells per tick, 1–5% live a life without taking from anyone. At 0.10 it is
+      91–100%, even with food cut until the population falls sixfold. Settled creatures meet more often, so
+      taking needs movement for something else: to choose whom to approach.</p>
+<p>Good reputation appears and bad does not. Creatures share with those who fed them before, 18–36% of the
+      time against a background of 0–2%. Selection has found no revenge.</p>
+</div>
+
+<h2>Where it stands</h2>
+<div class="how">
+<p>It is simpler than a bacterium. The nearest relatives are teaching models of artificial life such as
+      Sugarscape and Tierra. On the same base it can grow towards signals between creatures, choosing a
+      partner, caring for offspring and learning within a life. Language and planning will not come from it.</p>
+</div>
+
+<footer>The stand runs entirely in the browser and sends nothing anywhere.</footer>
+
+</div>
+<div id="lb" role="dialog" aria-modal="true" hidden><b>×</b><img alt=""></div>
+<script src="/assets/hub.js"></script>
+</body></html>

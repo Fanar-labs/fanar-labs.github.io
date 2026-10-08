@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 400" width="1120" height="400" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif">
+<!-- Путь экспорта для гостя: почему копию приходится собирать, а не просто скопировать
+     страницу. Рамка = окно браузера, сплошные полосы = турны, которые в странице есть,
+     пунктир = те, что ChatGPT из неё удалил. -->
+<style>
+  .lbl{font-size:13.5px;fill:#14110E}
+  .sub{font-size:12.5px;fill:#6B635A}
+  .cap{font-size:11px;fill:#6B635A;letter-spacing:.1em;font-weight:600}
+  .turn{fill:#14110E}
+  .gone{fill:none;stroke:#B8AFA0;stroke-width:1.5;stroke-dasharray:5 4}
+  .win{fill:none;stroke:#D93A00;stroke-width:2}
+</style>
+<rect fill="#F7F4EE" width="1120" height="400"/>
+
+<!-- A · страница ChatGPT -->
+<text class="cap" x="40" y="42">CHATGPT PAGE</text>
+<g>
+  <rect class="gone" x="40" y="60" width="140" height="16"/>
+  <rect class="gone" x="40" y="84" width="140" height="16"/>
+  <rect class="gone" x="40" y="108" width="140" height="16"/>
+  <rect class="turn" x="40" y="132" width="140" height="16"/>
+  <rect class="turn" x="40" y="156" width="140" height="16"/>
+  <rect class="turn" x="40" y="180" width="140" height="16"/>
+  <rect class="gone" x="40" y="204" width="140" height="16"/>
+  <rect class="gone" x="40" y="228" width="140" height="16"/>
+  <rect class="gone" x="40" y="252" width="140" height="16"/>
+  <rect class="win" x="30" y="126" width="160" height="76"/>
+  <text class="lbl" x="196" y="150">window</text>
+</g>
+<text class="sub" x="40" y="296">A long chat has many turns.</text>
+<text class="sub" x="40" y="316">Only those inside the window</text>
+<text class="sub" x="40" y="336">are really in the page —</text>
+<text class="sub" x="40" y="356">ChatGPT deletes the others.</text>
+
+<path d="M290 160 H340" stroke="#14110E" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+
+<!-- B · прокрутка -->
+<text class="cap" x="370" y="42">THE EXTENSION SCROLLS</text>
+<g>
+  <rect class="turn" x="370" y="60" width="140" height="16"/>
+  <rect class="turn" x="370" y="84" width="140" height="16"/>
+  <rect class="turn" x="370" y="108" width="140" height="16"/>
+  <rect class="turn" x="370" y="132" width="140" height="16"/>
+  <rect class="turn" x="370" y="156" width="140" height="16"/>
+  <rect class="gone" x="370" y="180" width="140" height="16"/>
+  <rect class="gone" x="370" y="204" width="140" height="16"/>
+  <rect class="gone" x="370" y="228" width="140" height="16"/>
+  <rect class="gone" x="370" y="252" width="140" height="16"/>
+  <rect class="win" x="360" y="54" width="160" height="76"/>
+  <path d="M540 70 V250" stroke="#D93A00" stroke-width="2" fill="none" marker-end="url(#b)"/>
+</g>
+<text class="sub" x="370" y="296">Scrolling makes ChatGPT put</text>
+<text class="sub" x="370" y="316">the deleted turns back. The</text>
+<text class="sub" x="370" y="336">extension walks the whole</text>
+<text class="sub" x="370" y="356">thread and keeps each one.</text>
+
+<path d="M600 160 H650" stroke="#14110E" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+
+<!-- C · копия -->
+<text class="cap" x="680" y="42">COPY IT BUILDS</text>
+<g>
+  <rect class="turn" x="680" y="60" width="140" height="16"/>
+  <rect class="turn" x="680" y="84" width="140" height="16"/>
+  <rect class="turn" x="680" y="108" width="140" height="16"/>
+  <rect class="turn" x="680" y="132" width="140" height="16"/>
+  <rect class="turn" x="680" y="156" width="140" height="16"/>
+  <rect class="turn" x="680" y="180" width="140" height="16"/>
+  <rect class="turn" x="680" y="204" width="140" height="16"/>
+  <rect class="turn" x="680" y="228" width="140" height="16"/>
+  <rect class="turn" x="680" y="252" width="140" height="16"/>
+</g>
+<text class="sub" x="680" y="296">The collected turns are put</text>
+<text class="sub" x="680" y="316">back in their original order.</text>
+<text class="sub" x="680" y="336">This copy, not the page,</text>
+<text class="sub" x="680" y="356">is what gets printed.</text>
+
+<path d="M840 160 H890" stroke="#14110E" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+
+<!-- D · сервер и файл -->
+<text class="cap" x="920" y="42">SERVER</text>
+<rect x="920" y="60" width="160" height="90" fill="none" stroke="#14110E" stroke-width="2.5"/>
+<rect x="940" y="82" width="120" height="10" fill="#DBD4C7"/>
+<rect x="940" y="100" width="120" height="10" fill="#DBD4C7"/>
+<circle cx="948" cy="128" r="6" fill="#D93A00"/>
+<text class="lbl" x="964" y="133">renders</text>
+<path d="M1000 158 V186" stroke="#14110E" stroke-width="2.5" fill="none" marker-end="url(#b)"/>
+<text class="cap" x="920" y="212">PDF</text>
+<path d="M920 226 h100 l22 22 v76 h-122 z" fill="#EFEAE0" stroke="#14110E" stroke-width="2.5"/>
+<path d="M1020 226 v22 h22" fill="none" stroke="#14110E" stroke-width="2.5"/>
+<rect x="940" y="268" width="80" height="8" fill="#14110E"/>
+<rect x="940" y="284" width="80" height="8" fill="#14110E"/>
+<rect x="940" y="300" width="52" height="8" fill="#14110E"/>
+
+<defs>
+  <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+    <path d="M0 0 L10 5 L0 10 z" fill="#14110E"/>
+  </marker>
+  <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+    <path d="M0 0 L10 5 L0 10 z" fill="#D93A00"/>
+  </marker>
+</defs>
+</svg>
