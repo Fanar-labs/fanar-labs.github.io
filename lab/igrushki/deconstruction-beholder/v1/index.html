@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Deconstruction — Beholder v1</title>
+<style>
+  html,body{margin:0;background:#111;color:#ccc;font-family:monospace}
+  canvas{display:block;margin:0 auto;background:#1a1a1a}
+</style>
+<script data-goatcounter="https://panarini.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+<canvas id="c" width="700" height="500"></canvas>
+<script>
+const cv = document.getElementById('c'), g = cv.getContext('2d');
+const W = 700, H = 500;
+
+// knobs (the stand turns these)
+const P = { dayLen: 20, report: 250, blackmail: 2000, bill: 400, window: 1, camCost: 1 };
+
+const THINGS = ['Radio', 'Vodka', 'Books', 'Photos', 'Knife', 'Letters'];
+const LAWS = [
+  { n: 11, day: 1, thing: 'Radio' },
+  { n: 12, day: 1, thing: 'Vodka' },
+  { n: 13, day: 2, thing: 'Books' },
+  { n: 14, day: 3, thing: 'Photos' },
+  { n: 15, day: 5, thing: 'Knife' },
+  { n: 16, day: 6, thing: 'Letters' },
+];
+const TYPES = [
+  { job: 'Worker',    away: [11, 17], home: [5, 8] },
+  { job: 'Pensioner', away: [4, 7],   home: [12, 18] },
+  { job: 'Student',   away: [8, 12],  home: [6, 10] },
+  { job: 'Nurse',     away: [9, 14],  home: [5, 8] },
+];
+const NAMES = ['Anna', 'Boris', 'Clara', 'Dmitri', 'Elena', 'Fyodor', 'Galina', 'Hugo', 'Irina', 'Jakob', 'Katya', 'Leon'];
+const CAMS = [50, 150, 350];
+const DAYS = 8, DAUGHTER = 1200, FINE_CAUGHT = 150, FINE_WRONG = 100, FINE_RETAL = 800, HELP_COST = 150;
+
+let S, mx = -1, my = -1, hits = [];
+
+function rnd(a, b) { return a + Math.random() * (b - a); }
+function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+
+function reset() {
+  S = { t: 0, day: 1, money: 600, auth: 0, due: 0, overdue: -1, stash: { Vodka: 1 },
+        flats: [], sel: -1, inside: -1, act: null, form: null, log: [], over: null, last: false,
+        st: { reports: 0, blackmails: 0, helps: 0, planted: 0, caught: 0, errors: 0, plantedAccepted: 0 } };
+  for (let i = 0; i < 6; i++) {
+    const f = { id: i, tenant: null, items: [], cam: false, vac: 0 };
+    S.flats.push(f);
+    if (i < 4) { newTenant(f, true); } else { f.vac = 8 * (i - 3); }
+  }
+  log('Rent and food are due at the end of every day.');
+  announce(1);
+}
+
+function newTenant(f, first) {
+  const used = S.flats.map(x => x.tenant && x.tenant.name);
+  const ty = pick(TYPES);
+  const t = { name: pick(NAMES.filter(n => !used.includes(n))), job: ty.job, ty, phase: Math.random() < 0.5 ? 'away' : 'home', left: 0, squeezed: false, ret: 0 };
+  t.left = rnd(...(t.phase === 'away' ? ty.away : ty.home)) * (t.phase === 'away' ? P.window : 1);
+  f.tenant = t;
+  const n = first ? Math.floor(rnd(1, 4)) : Math.floor(rnd(1, 3));
+  for (let i = 0; i < n && f.items.length < 4; i++) {
+    const free = THINGS.filter(x => !f.items.some(it => it.n === x));
+    f.items.push({ n: pick(free), known: false, planted: false });
+  }
+  if (!first) log(t.name + ' (' + t.job + ') moved into flat ' + (f.id + 1) + '.');
+}
+
+function log(s) { S.log.unshift(s); if (S.log.length > 6) S.log.pop(); }
+function announce(d) {
+  LAWS.filter(l => l.day === d).forEach(l => log('NEW DIRECTIVE No.' + l.n + ' (day ' + d + '): ' + l.thing + ' is forbidden.'));
+}
+function laws() { return LAWS.filter(l => l.day <= S.day); }
+function reveal(f) {
+  const hid = f.items.filter(i => !i.known);
+  if (!hid.length) return null;
+  const it = pick(hid); it.known = true; return it.n;
+}
+function camCost(f) {
+  const n = S.flats.filter(x => x.cam).length;
+  return Math.round(CAMS[Math.min(n, CAMS.length - 1)] * P.camCost);
+}
+
+// ---------- actions ----------
+function enter(f) { if (S.act) return; S.inside = f.id; log('You enter flat ' + (f.id + 1) + ' with your own key.'); }
+function leave() { if (S.act) return; S.inside = -1; }
+function startAct(type, f, secs, thing) { if (S.act) return; S.act = { type, fid: f.id, left: secs, total: secs, thing }; }
+function finishAct() {
+  const a = S.act, f = S.flats[a.fid]; S.act = null;
+  if (a.type === 'plant') {
+    S.stash[a.thing]--; if (!S.stash[a.thing]) delete S.stash[a.thing];
+    f.items.push({ n: a.thing, known: true, planted: true }); S.st.planted++;
+    log('You leave ' + a.thing + ' in flat ' + (f.id + 1) + '.');
+  } else {
+    const r = reveal(f);
+    log(r ? 'Found in flat ' + (f.id + 1) + ': ' + r + '.' : 'Flat ' + (f.id + 1) + ': nothing more to find.');
+  }
+}
+function buyCam(f) { const c = camCost(f); if (S.auth >= c) { S.auth -= c; f.cam = true; log('Camera installed in flat ' + (f.id + 1) + '.'); } }
+function openForm(f, item) { S.form = { fid: f.id, item, li: 0, di: 1 }; }
+function fileReport() {
+  const F = S.form, f = S.flats[F.fid], L = laws()[F.li], it = f.items.find(i => i.n === F.item);
+  S.form = null;
+  if (!f.tenant || !it) return;
+  const ok = L && L.thing === F.item && L.day === F.di;      // the form is checked ...
+  if (!ok) {                                                  // ... the world is not
+    S.money = Math.max(0, S.money - FINE_WRONG); S.st.errors++;
+    log('Form rejected (wrong directive/date/thing). Fine $' + FINE_WRONG + '.'); return;
+  }
+  S.money += P.report; S.auth += 60; S.st.reports++;
+  if (it.planted) { S.st.plantedAccepted++; log('Accepted: No.' + L.n + ', ' + F.item + '. Nobody asked where it came from. +$' + P.report); }
+  else log('Accepted: No.' + L.n + ', ' + F.item + '. ' + f.tenant.name + ' is taken away. +$' + P.report);
+  f.items = f.items.filter(i => i !== it);
+  S.stash[F.item] = (S.stash[F.item] || 0) + 1;
+  log(f.tenant.name + ' is arrested. Flat ' + (f.id + 1) + ' is empty.');
+  f.tenant = null; f.vac = 6;
+}
+function blackmail(f) {
+  S.money += P.blackmail; f.tenant.squeezed = true; f.tenant.ret = 10; S.st.blackmails++;
+  log(f.tenant.name + ' pays $' + P.blackmail + ' to keep quiet. No authority for you.');
+}
+function help(f, item) {
+  if (S.money < HELP_COST) return;
+  S.money -= HELP_COST; S.st.helps++;
+  f.items = f.items.filter(i => i.n !== item);
+  const others = S.flats.filter(x => x !== f && x.items.some(i => !i.known));
+  let tip = '';
+  if (others.length) { const o = pick(others); tip = ' A tip: ' + reveal(o) + ' in flat ' + (o.id + 1) + '.'; }
+  log('You warn ' + f.tenant.name + ' to hide the ' + item + ' (-$' + HELP_COST + ').' + tip);
+}
+
+// ---------- update ----------
+function update(dt) {
+  if (S.over) return;
+  S.t += dt;
+  const want = Math.min(DAYS, Math.floor(S.t / P.dayLen) + 1);
+  while (S.day < want) { endOfDay(S.day); S.day++; announce(S.day); }
+  if (S.t >= DAYS * P.dayLen && !S.last) { S.last = true; endOfDay(DAYS); }
+  if (S.last && S.due === 0) { finish('win'); return; }
+
+  for (const f of S.flats) {
+    if (f.vac > 0) { f.vac -= dt; if (f.vac <= 0) newTenant(f, false); }
+    const t = f.tenant; if (!t) continue;
+    t.left -= dt;
+    if (t.left <= 0) {
+      t.phase = t.phase === 'away' ? 'home' : 'away';
+      t.left = rnd(...(t.phase === 'away' ? t.ty.away : t.ty.home)) * (t.phase === 'away' ? P.window : 1);
+      if (t.phase === 'home' && S.inside === f.id) {
+        S.inside = -1; S.act = null; S.money = Math.max(0, S.money - FINE_CAUGHT); S.st.caught++;
+        log(t.name + ' came home and found you inside! Fine $' + FINE_CAUGHT + '.');
+      }
+    }
+    if (t.ret > 0) {
+      t.ret -= dt;
+      if (t.ret <= 0 && Math.random() < 0.4) { S.money = Math.max(0, S.money - FINE_RETAL); log(t.name + ' filed a complaint about you! Fine $' + FINE_RETAL + '.'); }
+    }
+  }
+  if (S.act) { S.act.left -= dt; if (S.act.left <= 0) finishAct(); }
+  if (S.due > 0 && S.money >= S.due) { S.money -= S.due; S.due = 0; S.overdue = -1; log('Bills paid.'); }
+  if (S.due > 0) { S.overdue -= dt; if (S.overdue <= 0) finish('lose'); }
+}
+function endOfDay(d) {
+  S.due += P.bill + (d === 5 ? DAUGHTER : 0);
+  if (d === 5) log("Day 5 ends: your daughter's treatment costs $" + DAUGHTER + ' too.');
+  if (S.due <= S.money) { S.money -= S.due; S.due = 0; S.overdue = -1; log('Day ' + d + ' bills paid.'); }
+  else { if (S.overdue < 0) S.overdue = 8; log('BILL OVERDUE: $' + S.due + '. Pay within 8 seconds or be arrested.'); }
+}
+function finish(r) {
+  S.over = r;
+  window.IGRUSHKA.poslednyaya = { ishod: r === 'win' ? 'family survives' : 'arrested over a bill', vremya: Math.round(S.t), den: S.day, dengi: S.money,
+    donosov: S.st.reports, shantazhej: S.st.blackmails, pomoshchi: S.st.helps, podbrosov: S.st.planted,
+    podbroshennykh_prinyato: S.st.plantedAccepted, poimali_vnutri: S.st.caught, oshibok_v_forme: S.st.errors };
+}
+
+// ---------- drawing ----------
+function txt(s, x, y, c, size, al) { g.fillStyle = c || '#ccc'; g.font = (size || 11) + 'px monospace'; g.textAlign = al || 'left'; g.fillText(s, x, y); }
+function hit(x, y, w, h, fn, en) { hits.push({ x, y, w, h, fn, en: en !== false }); }
+function over(x, y, w, h) { return mx >= x && mx <= x + w && my >= y && my <= y + h; }
+function btn(x, y, w, h, label, fn, en) {
+  en = en !== false;
+  const hv = en && over(x, y, w, h);
+  g.fillStyle = !en ? '#262626' : hv ? '#5a5a5a' : '#3a3a3a'; g.fillRect(x, y, w, h);
+  g.strokeStyle = en ? '#888' : '#333'; g.strokeRect(x + .5, y + .5, w - 1, h - 1);
+  txt(label, x + w / 2, y + h / 2 + 4, en ? '#eee' : '#666', 11, 'center');
+  hit(x, y, w, h, fn, en);
+}
+function bar(x, y, w, h, f, c) { g.fillStyle = '#333'; g.fillRect(x, y, w, h); g.fillStyle = c; g.fillRect(x, y, w * Math.max(0, Math.min(1, f)), h); }
+
+function draw() {
+  hits = [];
+  g.fillStyle = '#1a1a1a'; g.fillRect(0, 0, W, H);
+  txt('Mouse: click a flat → Enter while its tenant is away → Search → Report / Blackmail / Help, or stay silent.', 8, 10, '#aaa', 10);
+  txt('Win: survive ' + DAYS + ' days. Lose: a bill unpaid for 8 seconds = arrest. Cameras cost authority; only reports give authority.', 8, 22, '#aaa', 10);
+  // HUD
+  const nextBill = P.bill + (S.day === 5 ? DAUGHTER : 0);
+  txt('Day ' + S.day + '/' + DAYS, 8, 37, '#fff', 12);
+  txt('Money $' + S.money, 85, 37, '#9d9', 12);
+  txt('Authority ' + S.auth, 190, 37, '#9bd', 12);
+  if (S.due > 0) txt('OVERDUE $' + S.due + ' — arrest in ' + Math.ceil(S.overdue) + 's', 300, 37, '#f66', 12);
+  else txt('Bill $' + nextBill + ' in ' + Math.max(0, Math.ceil(S.day * P.dayLen - S.t)) + 's' + (S.day === 5 ? " (incl. daughter's treatment)" : ''), 300, 37, '#ec8', 12);
+  bar(0, 42, W, 3, (S.t % P.dayLen) / P.dayLen, '#876');
+
+  S.flats.forEach(drawFlat);
+  // directives board
+  txt('MINISTRY DIRECTIVES', 10, 318, '#fff', 11);
+  laws().forEach((l, i) => txt('No.' + l.n + '  announced day ' + l.day + '  —  ' + l.thing + ' forbidden', 10, 332 + i * 13, '#cb9', 11));
+  // stash + log
+  const stash = Object.keys(S.stash).map(k => k + ' x' + S.stash[k]).join(', ') || 'empty';
+  txt('Your stash (confiscated things): ' + stash, 10, 418, '#999', 10);
+  S.log.forEach((s, i) => txt(s.length > 68 ? s.slice(0, 67) + '…' : s, 10, 432 + i * 11, i === 0 ? '#ddd' : '#777', 10));
+  drawPanel();
+  if (S.over) drawEnd();
+}
+
+function drawFlat(f) {
+  const col = f.id % 3, row = Math.floor(f.id / 3), x = 10 + col * 142, y = 46 + row * 130, w = 136, h = 124;
+  const t = f.tenant, inside = S.inside === f.id, home = t && t.phase === 'home';
+  g.fillStyle = !t ? '#1f1f1f' : home ? '#3a3a3a' : '#262626'; g.fillRect(x, y, w, h);
+  g.strokeStyle = inside ? '#fc3' : S.sel === f.id ? '#fff' : over(x, y, w, h) ? '#999' : '#555';
+  g.lineWidth = inside || S.sel === f.id ? 2 : 1; g.strokeRect(x + 1, y + 1, w - 2, h - 2); g.lineWidth = 1;
+  txt('#' + (f.id + 1), x + 6, y + 14, '#888', 11);
+  if (f.cam) { g.fillStyle = '#c55'; g.beginPath(); g.arc(x + w - 12, y + 11, 4, 0, 7); g.fill(); }
+  if (t) {
+    txt(t.name + ' · ' + t.job, x + 28, y + 14, '#ddd', 10);
+    if (home) { g.fillStyle = '#999'; g.beginPath(); g.arc(x + w / 2, y + 52, 9, 0, 7); g.fill(); g.fillRect(x + w / 2 - 10, y + 62, 20, 24); }
+    txt(home ? 'at home' : 'away ' + Math.ceil(t.left) + 's', x + w / 2, y + 100, home ? '#ec8' : '#8c8', 10, 'center');
+    bar(x + 8, y + 104, w - 16, 4, t.left / (t.phase === 'away' ? 12 * P.window : 10), home ? '#a85' : '#585');
+    if (t.squeezed) txt('$', x + w - 12, y + 40, '#9d9', 12, 'center');
+  } else txt('vacant · ' + Math.ceil(f.vac) + 's', x + w / 2, y + 62, '#777', 10, 'center');
+  const kn = f.items.filter(i => i.known);
+  kn.forEach((it, i) => txt('▪' + it.n, x + 6 + (i % 2) * 64, y + 76 + Math.floor(i / 2) * 11 - (t && home ? 0 : 10), '#fb7', 10));
+  if (inside) txt('YOU ARE INSIDE', x + w / 2, y + h - 3, '#fc3', 9, 'center');
+  hit(x, y, w, h, () => { S.sel = f.id; S.form = null; });
+}
+
+function drawPanel() {
+  const X = 440, Y = 46, Wd = 250, Hh = 444, bx = 450, bw = 230;
+  g.fillStyle = '#222'; g.fillRect(X, Y, Wd, Hh); g.strokeStyle = '#555'; g.strokeRect(X + .5, Y + .5, Wd - 1, Hh - 1);
+  if (S.form) return drawForm(X, Y);
+  const f = S.sel >= 0 ? S.flats[S.sel] : null;
+  if (!f) { txt('Click a flat to see it.', X + 12, Y + 24, '#888'); return; }
+  const t = f.tenant; let y = Y + 20;
+  txt('Flat ' + (f.id + 1) + (t ? ' — ' + t.name + ', ' + t.job : ' — vacant'), bx, y, '#fff', 12); y += 16;
+  if (t) txt(t.phase === 'home' ? 'At home.' : 'Away, back in ' + Math.ceil(t.left) + 's.', bx, y, t.phase === 'home' ? '#ec8' : '#8c8'); y += 8;
+  const inside = S.inside === f.id, busy = !!S.act;
+  if (inside) {
+    txt('You are inside.', bx, y + 12, '#fc3'); y += 18;
+    btn(bx, y, bw, 22, 'Search (2.5s)', () => startAct('search', f, 2.5), !busy); y += 26;
+    Object.keys(S.stash).forEach(k => {
+      btn(bx, y, bw, 22, 'Plant ' + k + ' (x' + S.stash[k] + ', 1s)', () => startAct('plant', f, 1, k), !busy && !f.items.some(i => i.n === k) && f.items.length < 5); y += 26;
+    });
+    btn(bx, y, bw, 22, 'Leave', leave, !busy); y += 26;
+  } else if (!t || t.phase === 'away') {
+    y += 6; btn(bx, y, bw, 22, 'Enter with my key (free)', () => enter(f), !busy); y += 26;
+  } else {
+    y += 6;
+    if (f.cam) { btn(bx, y, bw, 22, 'Watch through camera (3s)', () => startAct('watch', f, 3), !busy); y += 26; }
+    else { txt('Home. Without a camera you see nothing.', bx, y + 12, '#888', 10); y += 20; }
+  }
+  if (!f.cam) { const c = camCost(f); btn(bx, y, bw, 22, 'Buy camera (' + c + ' authority)', () => buyCam(f), S.auth >= c); y += 26; }
+  else { txt('Camera installed.', bx, y + 10, '#c88', 10); y += 16; }
+  // dossier
+  y += 6; txt('DOSSIER — what you have found', bx, y, '#fff', 11); y += 8;
+  const kn = f.items.filter(i => i.known);
+  if (!kn.length) { txt('Nothing yet.', bx, y + 12, '#888'); y += 18; }
+  kn.forEach(it => {
+    txt(it.n + (it.planted ? ' (planted)' : ''), bx, y + 16, '#fb7', 11);
+    btn(bx + 108, y, 56, 22, 'Report', () => openForm(f, it.n), !!t);
+    btn(bx + 168, y, 62, 22, 'Help -$' + HELP_COST, () => help(f, it.n), !!t && S.money >= HELP_COST);
+    y += 26;
+  });
+  if (t) {
+    y += 4;
+    if (t.squeezed) txt('Under your thumb.', bx, y + 12, '#9d9');
+    else btn(bx, y, bw, 22, 'Blackmail +$' + P.blackmail + (kn.length < 2 ? ' (needs 2 findings)' : ''), () => blackmail(f), kn.length >= 2);
+    y += 26;
+  }
+  if (S.act) {
+    const a = S.act;
+    txt({ search: 'Searching…', watch: 'Watching…', plant: 'Planting…' }[a.type], bx, Y + Hh - 24, '#fc3', 11);
+    bar(bx, Y + Hh - 18, bw, 8, 1 - a.left / a.total, '#fc3');
+  }
+}
+
+function drawForm(X, Y) {
+  const F = S.form, bx = 450, bw = 230, Ls = laws(), L = Ls[F.li];
+  txt('REPORT FORM', bx, Y + 22, '#fff', 13);
+  txt('Flat ' + (F.fid + 1) + ' · ' + (S.flats[F.fid].tenant ? S.flats[F.fid].tenant.name : ''), bx, Y + 40, '#aaa');
+  txt('Thing in the room:  ' + F.item, bx, Y + 66, '#fb7');
+  txt('Directive No. (click to change):', bx, Y + 94, '#ccc');
+  btn(bx, Y + 100, bw, 24, 'No.' + L.n, () => { F.li = (F.li + 1) % Ls.length; });
+  txt('Date the law was announced:', bx, Y + 148, '#ccc');
+  btn(bx, Y + 154, bw, 24, 'Day ' + F.di, () => { F.di = F.di % S.day + 1; });
+  btn(bx, Y + 200, bw, 28, 'FILE REPORT (+$' + P.report + ')', fileReport);
+  btn(bx, Y + 234, bw, 22, 'Cancel', () => { S.form = null; });
+  txt('Check the board on the left.', bx, Y + 282, '#888', 10);
+  txt('A wrong form costs $' + FINE_WRONG + '.', bx, Y + 296, '#888', 10);
+  txt('The Ministry checks the form,', bx, Y + 318, '#888', 10);
+  txt('not the truth.', bx, Y + 330, '#888', 10);
+}
+
+function drawEnd() {
+  g.fillStyle = 'rgba(0,0,0,.8)'; g.fillRect(0, 0, W, H);
+  const win = S.over === 'win';
+  txt(win ? 'THE FAMILY SURVIVES' : 'ARRESTED — A BILL WENT UNPAID', W / 2, 170, win ? '#9d9' : '#f66', 22, 'center');
+  const s = S.st;
+  txt('Day ' + S.day + '  ·  money $' + S.money + '  ·  time ' + Math.round(S.t) + 's', W / 2, 205, '#ccc', 12, 'center');
+  txt('Reports ' + s.reports + ' (planted ' + s.plantedAccepted + ')  ·  blackmail ' + s.blackmails + '  ·  help ' + s.helps + '  ·  rejected forms ' + s.errors + '  ·  caught inside ' + s.caught, W / 2, 228, '#ccc', 11, 'center');
+  hit(0, 0, W, H, null, false);
+  btn(W / 2 - 70, 260, 140, 30, 'Again (R)', reset);
+}
+
+// ---------- input ----------
+function pos(e) { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * cv.width / r.width, (e.clientY - r.top) * cv.height / r.height]; }
+cv.addEventListener('mousemove', e => { [mx, my] = pos(e); cv.style.cursor = hits.some(h => h.en && mx >= h.x && mx <= h.x + h.w && my >= h.y && my <= h.y + h.h) ? 'pointer' : 'default'; });
+cv.addEventListener('mouseleave', () => { mx = my = -1; });
+cv.addEventListener('mousedown', e => {
+  [mx, my] = pos(e);
+  for (let i = hits.length - 1; i >= 0; i--) {
+    const h = hits[i];
+    if (mx >= h.x && mx <= h.x + h.w && my >= h.y && my <= h.y + h.h) { if (h.en) h.fn(); break; }
+  }
+});
+window.addEventListener('keydown', e => { if (e.key === 'r' || e.key === 'R') reset(); });
+
+// ---------- stand contract ----------
+window.IGRUSHKA = {
+  ruchki: [
+    { id: 'dayLen',    nazv: 'seconds in a day (how fast the bills come)', min: 10, max: 40, shag: 1, znach: P.dayLen },
+    { id: 'report',    nazv: 'pay for a report ($)', min: 50, max: 1000, shag: 50, znach: P.report },
+    { id: 'blackmail', nazv: 'pay for blackmail ($)', min: 250, max: 4000, shag: 250, znach: P.blackmail },
+    { id: 'bill',      nazv: 'daily bill: rent + food ($)', min: 100, max: 900, shag: 50, znach: P.bill },
+    { id: 'window',    nazv: 'how long tenants stay away (×)', min: 0.4, max: 2, shag: 0.1, znach: P.window },
+    { id: 'camCost',   nazv: 'camera price (×)', min: 0.2, max: 3, shag: 0.1, znach: P.camCost },
+  ],
+  ustanovit(id, v) { P[id] = +v; },
+  sbros() { reset(); },
+  poslednyaya: null,
+};
+
+let last = performance.now();
+function loop(now) { const dt = Math.min(0.1, (now - last) / 1000); last = now; update(dt); draw(); requestAnimationFrame(loop); }
+reset();
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

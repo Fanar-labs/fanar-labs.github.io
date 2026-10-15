@@ -1,0 +1,1584 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Game Designer</title>
+<style>
+  :root { color-scheme: light; --bg:#FBF9F4; --panel:#F7F4EE; --line:#E2DCCF; --line2:#CFC8BA; --ink:#222; --dim:#6f6a60;
+          --faint:#9a948a; --acc:#4A6FA5; --acc-bg:#F1F5FA; --ok:#4d6b3c; --red:#C0392B; --gold:#C98A1E; --cel:#7A5BA6; }
+  * { box-sizing:border-box; }
+  html, body { height:100%; }
+  body { margin:0; background:var(--bg); color:var(--ink); display:grid; grid-template-rows:auto 1fr; overflow:hidden;
+         font:13px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+  button, select, input, textarea { font:inherit; color:var(--ink); }
+  button { cursor:pointer; border:1px solid var(--line2); background:#fff; border-radius:6px; padding:4px 10px; }
+  button:hover { border-color:#a99f8c; }
+  button.main { background:var(--acc); border-color:var(--acc); color:#fff; }
+  select { padding:4px 8px; border:1px solid var(--line2); border-radius:6px; background:#fff; }
+  a { color:var(--acc); }
+  .meta { font-size:12px; color:var(--faint); }
+  .cap { font-size:11px; font-weight:700; letter-spacing:.08em; color:var(--faint); text-transform:uppercase; margin:14px 0 6px; }
+  .sp { flex:1; }
+  .dot { display:inline-block; width:9px; height:9px; border-radius:50%; flex:none; }
+  .ik { display:inline-flex; width:18px; height:18px; flex:none; font-style:normal; color:currentColor; }
+  .ik svg { width:100%; height:100%; }
+  .chip.on .ik, .pchip.vi .ik { background:#fff; border-radius:5px; padding:1px; }
+  .tipIk { float:right; width:46px; height:46px; background:#fff; border-radius:9px; padding:5px; margin:0 0 6px 10px; }
+  .tipIk .ik { width:36px; height:36px; }
+  .pusto { border:1px dashed var(--line2); border-radius:8px; padding:12px 10px; color:var(--faint); font-size:12px; text-align:center; background:#FCFBF8; }
+  .note { font-size:12px; color:#8a5d10; background:#FFFDF7; border:1px solid #f0dfb8; border-radius:6px; padding:6px 8px; margin:8px 0; }
+
+  header { display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:8px 14px; background:#F3EFE6; border-bottom:1px solid var(--line); }
+  header h1 { font-size:16px; margin:0 4px 0 0; line-height:1.1; }
+  header .imya { display:flex; flex-direction:column; margin-right:4px; }
+  header .versiya { font-size:10.5px; color:var(--faint); }
+  nav.tabs { display:flex; gap:2px; margin-left:12px; }
+  nav.tabs button { border:0; background:none; border-bottom:2px solid transparent; border-radius:0; padding:6px 12px; color:var(--dim); }
+  nav.tabs button.on { color:var(--ink); border-bottom-color:var(--acc); font-weight:600; }
+  #igryTaby { display:flex; gap:3px; overflow-x:auto; max-width:46vw; }
+  .itab { display:flex; align-items:center; gap:5px; padding:4px 5px 4px 11px; border:1px solid var(--line2); border-radius:7px;
+          background:#ebe5d8; color:var(--dim); cursor:pointer; white-space:nowrap; font-size:13px; }
+  .itab.on { background:#fff; color:var(--ink); font-weight:600; border-color:var(--acc); }
+  .itab small { color:var(--faint); font-weight:400; }
+  .itab .x { border:0; background:none; padding:0 4px; color:var(--faint); font-size:15px; line-height:1; }
+  .itab .x:hover { color:var(--red); }
+  .igryPlus { position:relative; }
+  #igryPlus { padding:3px 11px; font-size:15px; }
+  #igryMenu { position:absolute; top:calc(100% + 6px); left:0; z-index:30; width:330px; background:#fff; border:1px solid var(--line2);
+              border-radius:9px; box-shadow:0 8px 24px rgba(40,30,10,.18); padding:10px 12px; }
+  #igryMenu .row { display:flex; gap:6px; }
+  #novNazv { flex:1; min-width:0; padding:5px 8px; border:1px solid var(--line2); border-radius:6px; }
+  .igrRow { display:flex; align-items:center; gap:8px; padding:6px; border-radius:6px; cursor:pointer; }
+  .igrRow:hover { background:#f6f2ea; }
+  .igrRow .nm { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .igrRow .udal { visibility:hidden; border:0; background:none; color:var(--faint); font-size:11.5px; padding:0 2px; }
+  .igrRow:hover .udal { visibility:visible; }
+  .igrRow .udal:hover { color:var(--red); text-decoration:underline; }
+  .igrRow.ubrat { background:#FFF7F5; cursor:default; flex-wrap:wrap; }
+  .igrRow.ubrat .nm { white-space:normal; flex-basis:100%; }
+  .igrRow.ubrat button { font-size:12px; }
+
+  main { min-height:0; display:grid; grid-template-columns:minmax(0,1fr) auto; }
+  #ekrany { min-height:0; min-width:0; display:grid; }
+  #rezhim { display:flex; border:1px solid var(--line2); border-radius:16px; padding:2px; background:#fff; }
+  #rezhim button { border:0; border-radius:13px; padding:3px 12px; background:none; color:var(--dim); }
+  #rezhim button.on { background:var(--acc); color:#fff; font-weight:600; }
+  #rezhim button.on[data-rezhim="miry"] { background:#2f6f5e; }
+  .tab { display:none; height:100%; min-height:0; }
+  .tab.on { display:grid; }
+
+  /* ── Constructor: откуда карточки · рецепт · выход ── */
+  #t-ceh { grid-template-columns:minmax(230px,26%) minmax(0,1fr); }
+  #t-mir { grid-template-columns:minmax(230px,26%) minmax(0,1fr); }
+  #t-ceh > *, #t-stend > *, #t-mir > * { min-width:0; min-height:0; }
+  #derevo { display:grid; grid-template-rows:auto minmax(0,1fr); background:var(--panel); border-right:1px solid var(--line); }
+  #derevo .verh, #derevo2 .verh { padding:10px 12px 6px; }
+  #derevo2 { display:grid; grid-template-rows:auto minmax(0,1fr); background:var(--panel); border-right:1px solid var(--line); }
+  #mdR { display:flex; gap:4px; margin-bottom:6px; } #mdR button { flex:1; font-size:12px; padding:3px 6px; }
+  #mdR button.on { background:#2f6f5e; border-color:#2f6f5e; color:#fff; }
+  #mPoisk { width:100%; padding:5px 8px; border:1px solid var(--line2); border-radius:6px; background:#fff; }
+  #mTelo { overflow:auto; padding:4px 8px 18px 10px; }
+  .mi .pl { border:1px solid #2f6f5e; color:#2f6f5e; background:#fff; padding:0 6px; font-weight:700; line-height:16px; font-size:12px; }
+  .mi .pl.v { border-color:var(--gold); color:#fff; background:var(--gold); }
+  .kolZag { font-size:11px; font-weight:700; letter-spacing:.08em; color:var(--faint); text-transform:uppercase; margin-bottom:6px; }
+  #dR { display:flex; gap:4px; margin-bottom:6px; } #dR button { flex:1; font-size:12px; padding:3px 6px; }
+  #dR button.on { background:var(--acc); border-color:var(--acc); color:#fff; }
+  #dPoisk { width:100%; padding:5px 8px; border:1px solid var(--line2); border-radius:6px; background:#fff; }
+  #dTelo { overflow:auto; padding:4px 8px 18px 10px; }
+  .dhead { display:flex; align-items:center; gap:6px; flex-wrap:wrap; font-size:12px; color:var(--dim); margin:4px 0 6px; }
+  .dhead button { font-size:11.5px; padding:1px 8px; }
+  .dsub { font-size:10.5px; font-weight:700; letter-spacing:.05em; color:#8a8273; text-transform:uppercase; margin:12px 0 4px; }
+  .dn { display:flex; align-items:center; gap:4px; padding:2px 4px; border-radius:5px; font-size:12.5px; }
+  .dn:hover { background:#efe9dd; }
+  .dn .tg { width:13px; color:var(--faint); cursor:pointer; flex:none; text-align:center; font-size:11px; }
+  .dn .nm { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; cursor:pointer; }
+  .dn .nm.v { font-weight:700; }
+  .dn .n { color:var(--faint); font-size:10.5px; }
+  .dn .pl { border:1px solid var(--acc); color:var(--acc); background:#fff; padding:0 6px; font-weight:700; line-height:16px; font-size:12px; }
+  .dn .pl.v { border-color:var(--gold); color:#fff; background:var(--gold); }
+  .dn.chuv { margin-top:6px; } .dn.chuv .nm { color:var(--cel); font-weight:700; font-size:13.5px; }
+  .dn.esche .nm { color:var(--acc); font-size:11.5px; }
+  .dleg { margin-top:12px; line-height:1.5; }
+  .dIgra h3 { font-size:16px; margin:6px 0 2px; }
+
+  #recept { overflow:auto; background:#FCFBF8; }
+  #receptTelo { position:relative; padding:10px 16px 24px; min-height:100%; }
+  /* слои: фон полки → стрелки → карточки, подписи и кнопки (иначе стрелки прячутся под фоном полок) */
+  #lLinii { position:absolute; left:0; top:0; pointer-events:none; overflow:visible; z-index:1; }
+  #lHit { position:absolute; left:0; top:0; pointer-events:none; overflow:visible; z-index:3; }
+  #lHit .hit { pointer-events:stroke; stroke:transparent; stroke-width:12; fill:none; cursor:help; }
+  #receptTelo > :not(#lLinii):not(#lHit):not(#polki) { position:relative; z-index:2; }
+  .polka { position:relative; } .polka .ph, .kart, .polka .meta { position:relative; z-index:2; }
+  .rverh { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .rverh h2 { font-size:14px; margin:0; letter-spacing:.06em; }
+  #kPerebor { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+  #kPerebor .main { background:var(--gold); border-color:var(--gold); font-weight:600; }
+  .cel { display:grid; grid-template-columns:minmax(0,340px); gap:14px; margin:12px 0 26px; }
+  .polka .celRyad { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:6px 0 2px; position:relative; z-index:2; }
+  .polka .celRyad .lbl { margin:0; }
+  .gr .lbl { display:block; font-size:10.5px; font-weight:700; letter-spacing:.04em; color:#8a8273; text-transform:uppercase; margin-bottom:4px; cursor:help; }
+  .gr .lbl.c { color:var(--cel); }
+  .chips { display:flex; flex-wrap:wrap; gap:4px; }
+  .chip { border-radius:12px; padding:1px 8px; font-size:11.5px; color:var(--dim); border-color:#c3d2e6; }
+  .chip.on { background:var(--acc); border-color:var(--acc); color:#fff; }
+  .chip.c { border-color:#d6c8ea; } .chip.c.on { background:var(--cel); border-color:var(--cel); color:#fff; font-weight:600; }
+  .polka { border-radius:9px; padding:7px 10px 12px; margin-bottom:30px; }
+  .polka .ph { display:flex; align-items:center; gap:8px; font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; }
+  .polka .ph button { font-size:11px; padding:0 9px; border-radius:10px; border-style:dashed; background:#fff; text-transform:none; letter-spacing:0; font-weight:400; }
+  .kartochki { display:flex; flex-wrap:wrap; gap:12px 16px; margin-top:8px; min-height:30px; align-items:flex-start; }
+  .kart { width:205px; background:#fff; border:1px solid var(--line2); border-left:5px solid var(--acc); border-radius:8px; padding:5px 7px 6px 8px; cursor:pointer; }
+  .kart.sl-mech { border-left-color:#4A6FA5; } .kart.sl-dyn { border-left-color:#4d6b3c; } .kart.sl-aes { border-left-color:#7A5BA6; }
+  .kart.novyj { outline:2px solid var(--gold); } .kart.konf { background:#FFF7F5; }
+  .kart.zamok { background:#FFF8E6; } .kart.zamok .kn button[data-zamok] { opacity:1; }
+  .kart.kor { box-shadow:0 0 0 3px #bcd0ea; }
+  .kart:hover { box-shadow:0 1px 6px rgba(40,30,10,.15); }
+  .kart .kv { display:flex; align-items:flex-start; gap:4px; }
+  .kart .kv .ik { width:22px; height:22px; }
+  .kart .kv b { flex:1; min-width:0; font-size:12.5px; line-height:1.3; overflow-wrap:anywhere; }
+  .kart .kn { white-space:nowrap; } .kart .kn button { border:0; background:none; padding:0 2px; font-size:12px; opacity:.5; }
+  .kart .kn button:hover { opacity:1; }
+  .kart .kg { font-size:11px; color:var(--dim); line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-top:2px; }
+  .kart .kc { font-size:10.5px; color:var(--cel); margin-top:3px; }
+  .meh textarea { width:100%; min-height:44px; resize:vertical; border:1px solid var(--line2); border-radius:7px; padding:6px 8px; font-size:12.5px; background:#fff; }
+  .ssylka { border:0; background:none; color:var(--acc); padding:8px 0 4px; }
+  .rleg { font-size:11px; color:var(--faint); margin:-18px 0 18px; }
+  .razmer { display:inline-flex; align-items:center; gap:2px; font-size:11.5px; color:var(--faint); margin-right:4px; }
+  .razmer button { font-size:11.5px; padding:1px 7px; border-radius:10px; margin-left:2px; }
+  .razmer button.on { background:#8a5d10; border-color:#8a5d10; color:#fff; }
+  #rHrebet { font-size:12px; color:var(--ok); margin:-14px 0 14px; } #rHrebet:empty { display:none; }
+  #rHrebet.net { color:#8a5d10; }
+
+  .shag { background:#fff; border:1px solid var(--line); border-radius:9px; padding:8px 10px; margin-bottom:8px; }
+  .shag.akt { border-color:var(--acc); box-shadow:0 0 0 2px #dfe8f4; }
+  .shag .h { display:flex; align-items:baseline; gap:7px; cursor:pointer; }
+  .shag .num { display:inline-flex; width:20px; height:20px; border-radius:10px; background:var(--acc-bg); color:var(--acc);
+               font-weight:700; align-items:center; justify-content:center; font-size:11px; flex:none; }
+  .shag.gotov .num { background:var(--ok); color:#fff; }
+  .shag .t { font-weight:700; } .shag .en { color:var(--faint); font-size:11px; }
+  .shag .q { font-size:12px; margin:2px 0 0 27px; } .shag .pr { font-size:11px; margin:0 0 4px 27px; color:var(--faint); }
+  .shag .telo { margin-left:27px; }
+  .shag textarea { width:100%; min-height:34px; resize:vertical; border:1px solid var(--line2); border-radius:6px; padding:5px 7px; margin-top:3px; font-size:12.5px; }
+  .shag .formula { font-size:11.5px; color:#8a5d10; margin:4px 0 0; }
+  .shag .gr { margin:6px 0 2px; } .shag .gr .lbl { text-transform:none; letter-spacing:0; font-weight:600; color:var(--dim); font-size:11px; }
+
+  .vyhod { background:#F2F5FA; border:1px solid #C9D3E3; border-radius:10px; padding:10px 12px 12px; display:flex; flex-direction:column; gap:8px; margin-top:18px; }
+  .vyhod .kolZag { color:var(--acc); margin:0; }
+  .vyhod pre { max-height:340px; overflow:auto; }
+  .vyhod details summary { cursor:pointer; color:var(--acc); font-size:12px; font-weight:600; }
+  #vRecept, #vPolno, #mvRecept, #mvPolno { white-space:pre-wrap; font:11.5px/1.5 ui-monospace,Menlo,monospace; background:#fff; border:1px solid #C9D3E3;
+                      border-radius:8px; padding:8px 10px; margin:0; overflow-wrap:anywhere; }
+  #vPolno, #mvPolno { max-height:55vh !important; overflow:auto; font-size:11px; color:#444; }
+  #gen, #mGen { display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 12px; border:1px solid #8a5d10; border-radius:9px; background:var(--gold); color:#fff; font-size:16px; }
+  #gen #genPod, #mGen #mGenPod { font-size:12px; color:#fff8ea; }
+  #gen:disabled, #mGen:disabled { background:#6d5a35; cursor:progress; }
+
+  /* ── Stand: прототип · чат ── */
+  #t-stend { grid-template-columns:minmax(0,1fr) auto; }
+  /* ── Worlds: конструктор мира и наблюдатель ── */
+  #mRecept { overflow:auto; background:#FCFBF8; } #mReceptTelo { padding:10px 16px 24px; }
+  .mblok { background:#fff; border:1px solid var(--line); border-radius:9px; padding:8px 12px 10px; margin:10px 0; }
+  .mz { display:flex; align-items:baseline; gap:8px; font-size:10.5px; font-weight:700; letter-spacing:.04em; color:#2f6f5e; text-transform:uppercase; margin-bottom:5px; cursor:help; }
+  .mz .odd { margin-left:auto; font-weight:400; letter-spacing:0; text-transform:none; color:var(--faint); }
+  .mblok input[type=text], .mblok textarea { width:100%; border:1px solid var(--line2); border-radius:6px; padding:5px 8px; font-size:12.5px; background:#fff; }
+  .mblok textarea { min-height:38px; resize:vertical; }
+  .mblok .lbl2 { font-size:11px; color:var(--dim); margin:6px 0 2px; }
+  .mblok .row2 { display:grid; grid-template-columns:1fr 1fr; gap:6px 10px; }
+  .mblok .row3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px 10px; }
+  .sus { border:1px solid var(--line); border-left:4px solid #2f6f5e; border-radius:8px; padding:6px 8px; margin:6px 0; background:#FBFDFC; }
+  .sus .h { display:grid; grid-template-columns:1fr 90px auto; gap:6px; align-items:center; }
+  .umy { display:flex; flex-wrap:wrap; gap:6px; }
+  .umy button { border-radius:12px; padding:2px 10px; font-size:12px; display:flex; flex-direction:column; align-items:center; line-height:1.25; }
+  .umy button small { font-size:10px; color:var(--faint); }
+  .umy button.on { background:#2f6f5e; border-color:#2f6f5e; color:#fff; } .umy button.on small { color:#d6efe8; }
+  .ming { display:inline-flex; align-items:center; gap:4px; border:1px solid #2f6f5e; border-radius:7px; padding:1px 3px 1px 8px; margin:2px 4px 2px 0; background:#F1F8F5; font-size:12px; }
+  .ming b { font-weight:600; } .ming button { border:0; background:none; padding:0 3px; font-size:12px; }
+  .ming.zamok { background:#FFF8E6; border-color:#C98A1E; }
+  .mprov { background:#FFF8E6; border-color:#f0dfb8; } .mprov .mz { color:#8a5d10; }
+  .mprov div { font-size:12px; color:#6b4e12; margin:2px 0; }
+  .mi { padding:3px 4px; border-radius:5px; font-size:12.5px; }
+  .mi:hover { background:#efe9dd; }
+  .mi .h { display:flex; align-items:center; gap:5px; } .mi .h .nm { flex:1; cursor:pointer; min-width:0; }
+  .mi .av { color:var(--faint); font-size:11px; }
+  .mi .opis { font-size:11.5px; color:var(--dim); margin:4px 0 4px 6px; line-height:1.4; }
+  .mi .opis b { color:var(--ink); font-weight:600; }
+  .mgr { font-size:11.5px; font-weight:700; color:#2f6f5e; margin:10px 0 3px; }
+  #nabl { width:300px; overflow:auto; background:var(--panel); border-left:1px solid var(--line); padding:8px 12px 16px; }
+  #nabl[hidden] { display:none; }
+  #nabl .cap { margin:10px 0 4px; }
+  .izm { display:grid; grid-template-columns:1fr auto; gap:0 8px; align-items:center; font-size:12px; margin:3px 0; }
+  .izm b { font-variant-numeric:tabular-nums; } .izm svg { grid-column:1 / 3; width:100%; height:22px; }
+  .hron { font-size:11.5px; color:#333; margin:2px 0; } .hron .t { color:var(--faint); font-variant-numeric:tabular-nums; }
+  .osm { font-size:12px; background:#fff; border:1px solid var(--line); border-radius:8px; padding:6px 8px; }
+  .ser { font-size:12px; background:#F2F5FA; border:1px solid #C9D3E3; border-radius:8px; padding:6px 8px; }
+  .ser table { width:100%; border-collapse:collapse; font-size:11.5px; } .ser td { padding:2px 4px; border-top:1px solid #dde4ef; }
+  .ser td:last-child { text-align:right; font-variant-numeric:tabular-nums; }
+  #mirUpr { display:flex; align-items:center; gap:6px; flex-wrap:wrap; } #mirUpr[hidden] { display:none; }
+  #mirUpr input { width:56px; background:#1e2638; color:#dfe3ea; border:1px solid #33405a; border-radius:5px; padding:2px 5px; }
+  #mirUpr .t { font-size:12px; color:#8f9ab0; font-variant-numeric:tabular-nums; min-width:70px; }
+  /* витрина (копия на сайте, слово автора 15.10: «интерфейс-стенд в той версии, что есть, без возможности генерации») */
+  body.vitrina #rezhim, body.vitrina .igryPlus, body.vitrina .vyhod, body.vitrina #mGen, body.vitrina #testBtn, body.vitrina #vygruzit,
+  body.vitrina #prosby, body.vitrina #metki, body.vitrina #tekst, body.vitrina #itogiStroka, body.vitrina #otpravit, body.vitrina #otprStatus,
+  body.vitrina #igryTaby [data-izakr], body.vitrina #svyaz { display:none !important; }
+  .vitrinaZam { font-size:12px; color:var(--dim); background:#F2F5FA; border:1px solid #C9D3E3; border-radius:8px; padding:7px 9px; margin-top:8px; line-height:1.45; }
+  #zhurnalKol.svernut { width:34px; padding:6px 4px; } #zhurnalKol.svernut > :not(.zkHead) { display:none; }
+  #zhurnalKol.svernut .zkHead .cap { display:none; }
+  .zkHead { display:flex; align-items:center; gap:6px; } .zkHead .cap { flex:1; }
+  .zkHead button { border:0; background:none; padding:0 4px; color:var(--faint); font-size:14px; }
+  /* узкое окно (панель браузера в приложении): наблюдатель — под миром, ассистент — уже */
+  @media (max-width: 1180px) {
+    #zhurnalKol { width:280px; }
+    #t-stend { grid-template-columns:minmax(0,1fr); grid-template-rows:minmax(0,1fr) auto; }
+    #nabl { width:auto; max-height:40vh; border-left:0; border-top:1px solid var(--line);
+            display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); gap:4px 14px; align-content:start; }
+    #nabl[hidden] { display:none; }
+    #nabl .cap { margin:4px 0; }
+    #ekran .polosa .meh { display:none; }
+  }
+  #ekran { display:grid; grid-template-rows:auto 1fr auto; grid-template-columns:minmax(0,1fr); min-height:0; background:#0b1020; }
+  #ekran.polnyj { position:fixed; inset:0; z-index:45; }
+  #ekran { position:relative; }
+  #vygrSoob { position:absolute; z-index:30; right:10px; top:46px; max-width:440px; background:#fffbe8; color:#1f2a24; border:1px solid #e2d49a; border-radius:10px; padding:10px 30px 10px 12px; font-size:12.5px; line-height:1.45; box-shadow:0 6px 18px rgba(0,0,0,.25); }
+  #vygrSoob[hidden] { display:none; } #vygrSoob code { font-size:11.5px; } #vygrSoob .x { position:absolute; right:8px; top:6px; border:0; background:none; font-size:15px; color:#8a8270; cursor:pointer; }
+  #ekran .polosa { display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding:6px 10px; background:#151b2b; color:#c9d0dc; }
+  #ekran .polosa select, #ekran .polosa button { background:#1e2638; color:#dfe3ea; border-color:#33405a; }
+  #ekran .polosa .meh { font-size:12px; color:#8f9ab0; flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #ekran .polosa #kRecept { border-color:var(--gold); color:#ffd98a; }
+  #stroitsya { color:#ffd98a; font-size:12px; } #stroitsya:empty { display:none; }
+  #novaya { background:var(--gold) !important; border-color:var(--gold) !important; color:#fff !important; font-weight:600; }
+  #novaya[hidden] { display:none; }
+  #igraOkno { position:relative; overflow:hidden; min-height:0; min-width:0; background:#0b1020; }
+  #igraFrame { border:0; position:absolute; left:0; top:0; width:100%; height:100%; display:block; background:#0b1020; transform-origin:0 0; }
+  #pusto { position:absolute; inset:0; overflow:auto; display:flex; align-items:center; justify-content:center; color:#b8c0cf; padding:30px; text-align:center; }
+  #pusto[hidden], #igraFrame[hidden] { display:none; }
+  #testBtn { border-color:#7a3b3b !important; color:#ffd7d7 !important; background:#2a1a1e !important; }
+  #testBtn.idet { background:#b03a48 !important; color:#fff !important; border-color:#b03a48 !important; }
+  #podEkranom { padding:6px 10px 8px; background:#151b2b; max-height:38vh; overflow:auto; }
+  #podEkranom[hidden] { display:none; }
+  #nablDin { display:contents; }
+  #nablRuchki .ruchka .h { color:var(--ink); }
+  #ruchkiBox summary { color:#9fb3d1; font-size:12px; cursor:pointer; }
+  #ruchkiBox #ruchki { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:2px 16px; margin-top:6px; }
+  #ruchkiBox .ruchka .h { color:#c9d0dc; } #ruchkiBox .ruchka button, #ruchkiBox #ruchkiSbros { background:#1e2638; color:#dfe3ea; border-color:#33405a; }
+  .ruchka { margin:7px 0; }
+  .ruchka .h { display:flex; justify-content:space-between; gap:8px; font-size:12px; }
+  .ruchka .h b { font-variant-numeric:tabular-nums; }
+  .ruchka .row { display:flex; align-items:center; gap:5px; }
+  .ruchka input[type=range] { flex:1; }
+  .ruchka button { padding:0 5px; font-size:11.5px; }
+
+  #zhurnalKol { display:grid; grid-template-rows:auto 1fr auto auto auto auto auto auto; min-height:0; width:330px; padding:6px 12px 12px; border-left:1px solid var(--line); background:var(--panel); }
+  #zhurnal { overflow:auto; display:flex; flex-direction:column; gap:6px; padding:2px 0 8px; min-height:0; }
+  .zap { font-size:12.5px; border-radius:8px; padding:6px 9px; white-space:pre-wrap; }
+  .zap .m { display:block; font-size:10.5px; color:var(--faint); margin-bottom:2px; white-space:normal; }
+  .zap.gen { background:#fff; border:1px solid var(--gold); } .zap.gen .m { color:#8a5d10; font-weight:600; }
+  .zap.ya { background:#e7eef8; align-self:flex-end; max-width:92%; }
+  .zap.klod { background:#fff; border:1px solid var(--line); }
+  .zap.dumaet { color:var(--dim); font-style:italic; }
+  .zap button { margin-top:5px; font-size:12px; }
+  .prosby { display:flex; flex-wrap:wrap; gap:4px; margin:4px 0 6px; }
+  .prosby button { font-size:12px; padding:3px 9px; border-radius:12px; background:#fff; }
+  .prosby button:first-child { border-color:var(--gold); color:#8a5d10; font-weight:600; }
+  .pchip { display:inline-flex; align-items:center; gap:3px; border:1px solid var(--acc); border-radius:6px; padding:0 2px 0 5px;
+           background:#F1F5FA; cursor:pointer; white-space:nowrap; font-weight:600; font-size:12px; }
+  .pchip button { border:0; background:var(--acc); color:#fff; border-radius:4px; padding:0 5px; font-size:12px; line-height:16px; margin:1px 0; }
+  .pchip.vi { border-color:var(--gold); background:#FFF8EA; } .pchip.vi button { background:var(--gold); }
+  .metki { display:flex; flex-wrap:wrap; gap:4px; margin:4px 0 6px; }
+  .metka { border-radius:12px; padding:1px 9px; font-size:12px; color:var(--dim); }
+  .metka.on { background:var(--acc); border-color:var(--acc); color:#fff; }
+  #tekst { width:100%; min-height:60px; resize:vertical; border:1px solid var(--line2); border-radius:6px; padding:6px 8px; }
+  .status { font-size:12px; margin-left:6px; }
+
+  #tip { position:fixed; z-index:50; max-width:320px; background:#22262e; color:#eef0f3; border-radius:8px; padding:8px 10px;
+         font-size:12px; line-height:1.45; pointer-events:none; box-shadow:0 6px 20px rgba(0,0,0,.25); display:none; }
+  #tip b { color:#fff; } #tip .e { color:#9fb3d1; } #tip .s { color:#c9cfd8; margin-top:4px; }
+  .okno { position:fixed; inset:0; z-index:20; background:rgba(30,25,15,.35); display:none; align-items:center; justify-content:center; }
+  .okno.on { display:flex; }
+  .okno .box { background:#fff; border-radius:10px; padding:16px; width:min(760px,94vw); max-height:92vh; overflow:auto; }
+  #znakomstvo .box p { margin:8px 0; } #znakomstvo .box ol { padding-left:20px; } #znakomstvo .box li { margin:6px 0; }
+</style>
+<script data-goatcounter="https://panarini.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+<header>
+  <div class="imya"><h1>Game Designer</h1><span class="versiya" id="versiyaDiz" title="Version of the designer — the changelog is in dizajner/README.md"></span></div>
+  <div id="rezhim" title="Two workshops: games and living worlds"><button data-rezhim="igry">Games</button><button data-rezhim="miry">Worlds</button></div>
+  <div id="igryTaby"></div>
+  <div class="igryPlus"><button id="igryPlus" title="Open another game or create a new one">+</button>
+    <div id="igryMenu" hidden>
+      <div class="cap" style="margin-top:0" id="novZag">new game</div>
+      <div class="row"><input id="novNazv" placeholder="name" maxlength="80"><button id="novSozdat" class="main">create</button></div>
+      <div class="cap" id="vseZag">all games</div>
+      <div id="igrySpisok"></div>
+    </div></div>
+  <nav class="tabs">
+    <button data-tab="ceh" class="on">Constructor</button>
+    <button data-tab="stend">Stand</button>
+  </nav>
+  <span class="sp"></span>
+  <span class="meta" id="svyaz"></span>
+  <button id="kak" title="How to use this">? how to use</button>
+</header>
+<main>
+  <div id="ekrany">
+  <section class="tab on" id="t-ceh">
+    <div id="derevo">
+      <div class="verh">
+        <div class="kolZag">where cards come from</div>
+        <div id="dR"></div>
+        <input id="dPoisk" autocomplete="off">
+      </div>
+      <div id="dTelo"></div>
+    </div>
+    <div id="recept"><div id="receptTelo">
+      <svg id="lLinii"></svg><svg id="lHit"></svg>
+      <div class="rverh"><h2>RECIPE</h2><span class="sp"></span><div id="kPerebor"></div></div>
+      <div class="cel">
+        <div class="gr"><span class="lbl" data-tipk="lbl:tema">theme · a prompt, not a rule</span>
+          <div style="display:flex;gap:4px"><select id="tema" style="flex:1;min-width:0"></select><button id="temaSluch" title="Random Ludum Dare theme">↻</button></div>
+          <input id="temaSvoya" placeholder="your own theme" hidden style="margin-top:4px;width:100%;padding:4px 7px;border:1px solid var(--line2);border-radius:5px"></div>
+      </div>
+      <div id="rHrebet" data-tipk="hrebet"></div>
+      <div id="polki"></div>
+      <div class="rleg" id="rLeg"></div>
+      <div class="gr meh"><span class="lbl" data-tipk="lbl:meh">core mechanic · the one action the player repeats</span>
+        <textarea id="kMeh" placeholder="can stay empty — the worker will suggest one at ⚡ and write it here"></textarea>
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:6px"><span class="lbl" style="margin:0" data-tipk="lbl:upr">controls — how the hands play</span><div class="chips" id="kUpr"></div></div></div>
+      <button id="podrobno" class="ssylka"></button>
+      <div id="shagi" hidden></div>
+      <div class="vyhod">
+        <div class="kolZag" data-tipk="lbl:vyhod">output · what the worker gets</div>
+        <pre id="vRecept">…</pre>
+        <details id="vPolnoBox"><summary>full prompt — the worker's role + the whole task</summary><pre id="vPolno"></pre></details>
+        <button id="gen" data-gen="1"><b id="genZag">⚡ Generate</b><span id="genPod"></span></button>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="tab" id="t-mir">
+    <div id="derevo2" class="derevo">
+      <div class="verh">
+        <div class="kolZag">where ingredients come from</div>
+        <div id="mdR" class="dRr"></div>
+        <input id="mPoisk" autocomplete="off" placeholder="search classic models">
+      </div>
+      <div id="mTelo" class="dTelo2"></div>
+    </div>
+    <div id="mRecept"><div id="mReceptTelo"></div></div>
+  </section>
+
+  <section class="tab" id="t-stend">
+    <div id="ekran">
+      <div class="polosa">
+        <select id="versiya" title="Version"></select>
+        <button id="zanovo" title="Restart the prototype">↻ restart</button>
+        <span id="mirUpr" hidden>
+          <button id="mPusk" title="Run / pause">⏸ pause</button><button id="mShag" title="One tick">step</button>
+          <select id="mSkor" title="Speed"><option value="1">×1</option><option value="4">×4</option><option value="16">×16</option><option value="max">max</option></select>
+          <span class="t" id="mTakt">tick 0</span>
+          <span title="Seed — the same seed, knobs and actions give the same run">seed <input id="mSid" type="number" min="1" value="1"></span><button id="mSidNov" title="New seed">↻</button>
+          <button id="mSbros" title="Start the world again with this seed">⟲ reset</button>
+          <button id="mSeriya" title="Run 10 seeds without drawing and compare the measures">● run series ×10</button>
+        </span>
+        <button id="testBtn" data-tipk="test">● Start test</button>
+        <button id="naEkran" title="Full screen — Esc or the same button to come back">⛶ full screen</button>
+        <button id="vygruzit" title="Export this version as one page anyone can play: a file for you, and a copy for fanarlabs.com (it goes online only when you say so)">⤓ export</button>
+        <button id="novaya" hidden></button>
+        <span id="stroitsya"></span>
+        <span class="meh" id="mehStroka" data-tipk="iz"></span>
+        <button id="kRecept" data-tab="ceh" title="Back to the Constructor">✎ recipe</button>
+      </div>
+      <div id="vygrSoob" hidden></div>
+      <div id="igraOkno"><iframe id="igraFrame" title="prototype"></iframe>
+      <div id="pusto" hidden></div></div>
+      <div id="podEkranom">
+        <details id="ruchkiBox" open><summary data-tipk="lbl:ruchki">knobs — the prototype's key numbers, move them while you play</summary>
+          <div id="ruchki"></div><button id="ruchkiSbros" style="margin-top:4px">reset knobs to the version</button></details>
+      </div>
+    </div>
+    <div id="nabl" hidden></div>
+  </section>
+  </div>
+    <div id="zhurnalKol">
+      <div class="zkHead"><div class="cap" style="margin-top:4px" data-tipk="lbl:zhurnal" id="zkZag">assistant · this game</div><button id="zkSvern" title="Fold / unfold the assistant">⇥</button></div>
+      <div id="zhurnal"></div>
+      <div class="prosby" id="prosby"><button data-prosba="ideas" data-tipk="prosba:ideas">💡 Ideas for this game</button><button data-prosba="next" data-tipk="prosba:next">What to test next?</button><button data-prosba="review" data-tipk="prosba:review">Review my design</button></div>
+      <div class="metki" id="metki"></div>
+      <textarea id="tekst" placeholder="Talk to this game's design assistant — impressions, questions, «make it…». Enter sends, Shift+Enter is a new line"></textarea>
+      <div class="meta" id="itogiStroka"></div>
+      <div class="row" style="margin-top:6px"><button id="otpravit" class="main" data-tipk="otpravit">Send</button></div>
+      <span class="status" id="otprStatus"></span>
+    </div>
+</main>
+<div id="tip"></div>
+<div class="okno" id="znakomstvo"><div class="box" style="max-width:580px">
+  <h2 style="margin:0 0 6px;font-size:18px">How to use this</h2>
+  <p>Two screens: the <b>Constructor</b>, where you assemble a game's recipe, and the <b>Stand</b>, where you play the prototype built from it.</p>
+  <ol>
+    <li><b>Recipe — in the center.</b> A theme, the goal (what the player should feel) and cards — patterns from the catalog on three shelves: feelings, dynamics, mechanics. Arrows show what can cause what.</li>
+    <li><b>🎲 Reroll</b> changes every unlocked card; the new ones lead to the goal. 🔒 keeps a card, ↶ undo brings the recipe back.</li>
+    <li><b>Left — where cards come from:</b> a tree from the goal down — «what can cause it». Click a card in the recipe and the tree shows what can cause that card. «+» puts a card on its layer.</li>
+    <li><b>Right — the output:</b> the recipe exactly as the worker gets it. <b>⚡ Generate</b> builds the prototype and opens the Stand.</li>
+    <li><b>Stand</b> — play, ● Start test, and talk to the game's design assistant.</li>
+  </ol>
+  <p style="font-size:12.5px;color:var(--dim);line-height:1.5"><b>Built on:</b> the catalog <a href="https://gdp.cse.chalmers.se/" target="_blank" rel="noopener">Patterns in Game Design</a>
+    (Björk &amp; Holopainen, book 2005, wiki) · <a href="https://users.cs.northwestern.edu/~hunicke/MDA.pdf" target="_blank" rel="noopener">MDA</a>
+    (Hunicke, LeBlanc, Zubek, 2004) · jam themes of <a href="https://ldjam.com/" target="_blank" rel="noopener">Ludum Dare</a> · nine steps from Fullerton's
+    <a href="https://www.routledge.com/Game-Design-Workshop-A-Playcentric-Approach-to-Creating-Innovative-Games/Fullerton/p/book/9781032607009" target="_blank" rel="noopener">Game Design Workshop</a>.
+    The catalog marks a layer for only 224 patterns; the layer of every pattern here, and which patterns express each goal, are our reading of the pages.</p>
+  <div style="text-align:right"><button class="main" data-zakr>Got it</button></div>
+</div></div>
+
+<script src="../kombinator/dannye.js"></script>
+<script>window.VITRINA = {"igry": [{"id": "deconstruction-beholder", "nazv": "Deconstruction — Beholder", "mehanika": "A tenant goes out; I enter their flat with my own key, search it or watch through a camera, find a forbidden thing — then choose: report it on a form (directive + date the law was announced + the thing) for a little money, blackmail for more, help at my own cost, or keep silent. Meanwhile rent and food bills come due every day.", "patterny": ["Value of Effort", "Social Dilemmas", "Time Limits", "Gain Information", "Secret Resources", "Resource Management", "Non-Player Characters"], "skelet": {"tema": "svoya", "temaSvoya": "the landlord who watches", "karty": ["Value of Effort", "Social Dilemmas", "Time Limits", "Gain Information", "Secret Resources", "Resource Management", "Non-Player Characters"], "upravlenie": "mouse", "shagi": [{"k": [2, 3], "x": "complicity under pressure: who gets reported is decided by the bill and the deadline, not by conscience"}, {"k": [0], "x": "a landlord in a six-flat building of a totalitarian state, watching for the Ministry"}, {"k": [], "x": "pay the bills and keep the family alive while doing the Ministry's tasks"}, {"k": [], "x": "A tenant goes out; I enter their flat with my own key, search it or watch through a camera, find a forbidden thing — then choose: report it on a form (directive + date the law was announced + the thing) for a little money, blackmail for more, help at my own cost, or keep silent. Meanwhile rent and food bills come due every day."}, {"k": [], "x": "new laws (directives) appear by date and forbid things or activities; a report = directive number + the date the law was announced + a thing in the room; the form is checked, not the truth — planted evidence is accepted like found evidence; evidence belongs to the flat, not the person"}, {"k": [], "x": "money; authority points (they buy cameras — seeing more costs reporting more); time — the bills"}, {"k": [2], "x": "report a neighbour or let your family go hungry; a report pays $250, blackmail $2000, helping costs money"}, {"k": [], "x": "one building in cut-away, six flats always in view; tenants move in by event and leave by arrest, departure or death"}, {"k": [], "x": "the family's fate; an overdue bill means arrest"}]}, "versii": [{"n": 1, "novoe": "Does it feel like Beholder? Six moments: free entry, a forbidden find and a decision, report < blackmail > help, bills that always tick, a form checked instead of the truth (planted = found), cameras paid in authority.", "zamysel": {"tema": "svoya", "temaSvoya": "the landlord who watches", "karty": ["Tension", "Social Dilemmas", "Time Limits", "Gain Information", "Secret Resources", "Resource Management", "Non-Player Characters"], "vopros": "Does it feel like Beholder? Recognition test — six moments: (1) I enter a tenant's flat while they are away, and it costs me nothing; (2) I find a forbidden thing and must decide; (3) a report pays little, blackmail pays more, helping costs me; (4) the bills tick no matter what happens; (5) the system checks the form, not the truth — planted evidence works the same; (6) to see more I have to report more (cameras cost authority points).", "upravlenie": "mouse", "shagi": [{"k": [2, 3], "x": "complicity under pressure: who gets reported is decided by the bill and the deadline, not by conscience"}, {"k": [0], "x": "a landlord in a six-flat building of a totalitarian state, watching for the Ministry"}, {"k": [], "x": "pay the bills and keep the family alive while doing the Ministry's tasks"}, {"k": [], "x": "A tenant goes out; I enter their flat with my own key, search it or watch through a camera, find a forbidden thing — then choose: report it on a form (directive + date the law was announced + the thing) for a little money, blackmail for more, help at my own cost, or keep silent. Meanwhile rent and food bills come due every day."}, {"k": [], "x": "new laws (directives) appear by date and forbid things or activities; a report = directive number + the date the law was announced + a thing in the room; the form is checked, not the truth — planted evidence is accepted like found evidence; evidence belongs to the flat, not the person"}, {"k": [], "x": "money; authority points (they buy cameras — seeing more costs reporting more); time — the bills"}, {"k": [2], "x": "report a neighbour or let your family go hungry; a report pays $250, blackmail $2000, helping costs money"}, {"k": [], "x": "one building in cut-away, six flats always in view; tenants move in by event and leave by arrest, departure or death"}, {"k": [], "x": "the family's fate; an overdue bill means arrest"}]}}, {"n": 2, "novoe": "Does it feel like Beholder? Six moments (free entry, find and decide, report/blackmail/help, bills tick, form not truth, cameras cost reports) — now with working controls and a playable first minute.", "zamysel": {"tema": "svoya", "temaSvoya": "the landlord who watches", "karty": ["Tension", "Social Dilemmas", "Time Limits", "Gain Information", "Secret Resources", "Resource Management", "Non-Player Characters"], "vopros": "Does it feel like Beholder? Recognition test — six moments: (1) I enter a tenant's flat while they are away, and it costs me nothing; (2) I find a forbidden thing and must decide; (3) a report pays little, blackmail pays more, helping costs me; (4) the bills tick no matter what happens; (5) the system checks the form, not the truth — planted evidence works the same; (6) to see more I have to report more (cameras cost authority points).", "upravlenie": "mouse", "shagi": [{"k": [2, 3], "x": "complicity under pressure: who gets reported is decided by the bill and the deadline, not by conscience"}, {"k": [0], "x": "a landlord in a six-flat building of a totalitarian state, watching for the Ministry"}, {"k": [], "x": "pay the bills and keep the family alive while doing the Ministry's tasks"}, {"k": [], "x": "A tenant goes out; I enter their flat with my own key, search it or watch through a camera, find a forbidden thing — then choose: report it on a form (directive + date the law was announced + the thing) for a little money, blackmail for more, help at my own cost, or keep silent. Meanwhile rent and food bills come due every day."}, {"k": [], "x": "new laws (directives) appear by date and forbid things or activities; a report = directive number + the date the law was announced + a thing in the room; the form is checked, not the truth — planted evidence is accepted like found evidence; evidence belongs to the flat, not the person"}, {"k": [], "x": "money; authority points (they buy cameras — seeing more costs reporting more); time — the bills"}, {"k": [2], "x": "report a neighbour or let your family go hungry; a report pays $250, blackmail $2000, helping costs money"}, {"k": [], "x": "one building in cut-away, six flats always in view; tenants move in by event and leave by arrest, departure or death"}, {"k": [], "x": "the family's fate; an overdue bill means arrest"}]}}], "otzyvy": [{"vremya": "2026-10-15 15:19:30", "vid": "gen", "id": "eaf6687067", "tekst": "", "versiya": null, "izmeneniya": "", "metki": [], "ruchki": {}, "itogi": null}, {"vremya": "2026-10-15 15:23:12", "vid": "otvet", "k": "eaf6687067", "tekst": "I built v1 in `v1/index.html`. I only checked the code by eye and haven't run it, so open it and look for errors first. `NOTES.md` has the plan and `chto-novogo.txt` has the question.\n\n**How it plays (mouse only)**\n- Six flats are always in view. Click a flat. While its tenant is away (or the flat is vacant), press \"Enter with my key\". Entering is free.\n- Inside, \"Search\" takes 2.5 seconds and reveals one hidden item. If the tenant comes back while you are inside, you pay a $150 fine.\n- Each found item sits in that flat's dossier. For each one you can Report it, Help (−$150), or leave it alone.\n- Blackmail pays $2000 but needs two findings in one flat. It gives no authority, and there is a 40% chance the tenant files a complaint ($800 fine).\n- A report is a form with a directive number, an announced date and the thing. You pick the first two from the board on the left. A wrong form costs $100.\n- Rent and food ($400) are due at the end of every day. Day 5 adds $1200 for your daughter's treatment. An unpaid bill means arrest after 8 seconds. You win by surviving 8 days, about 2.7 minutes.\n\n**What each card does in play**\n- **Time Limits:** the day clock, the overdue countdown and the tenants' away-windows.\n- **Gain Information and Secret Resources:** items are hidden until you search or watch. Findings stay in the dossier, so an item found today can be reported when a new directive is announced later.\n- **Non-Player Characters:** four job types with different rhythms. Pensioners are almost always home, so a camera is the only way to see into their flats.\n- **Resource Management:** you have money and authority. Only reports give authority, and cameras cost 50, 150, then 350 of it. That is moment 6.\n- **Social Dilemmas and Tension:** I couldn't build these directly. They should come from the report, blackmail and help choices, the bills and the away-timers. Social Dilemmas is the weakest card here, because there are no other human players, only NPC tenants.\n\n**What I invented**\n- Help hides the item and earns a tip that reveals an item in another flat.\n- Evidence stays in the flat, so a new tenant inherits it.\n- Reported things go into your stash, and you can plant them in other flats. A planted item is accepted exactly like a found one (moment 5).\n- A new tenant arrives about 6 seconds after an arrest.\n- I left out choosing tenants from applications, traits through a neighbour, poisoning and the Ministry's tasks.\n\n**What to try**\n- Go through your six moments in order.\n- Check whether blackmail is always the best choice, and whether plant-then-report is a money machine. Those are my two worries.\n- Say whether it feels like Beholder, and which part is missing.\n\nLesson for the textbook: when a deconstruction is built from documents, put the checkable rule (here, the form check) into code as a real test, because a drawn form with no check would have been a label.", "nova": 1, "sek": 222, "cena_usd": 0.4398}, {"vremya": "2026-10-15 16:47:21", "vid": "chat", "id": "5ff5b8b751", "tekst": "can barely press anything", "versiya": 1, "izmeneniya": null, "metki": [], "ruchki": {"dayLen": 20, "report": 250, "blackmail": 2000, "bill": 400, "window": 1, "camCost": 1}, "itogi": null}, {"vremya": "2026-10-15 16:47:43", "vid": "otvet", "k": "5ff5b8b751", "tekst": "I read the v1 code. I can't see your screen or run the game, so this is a diagnosis from the code, not a confirmed bug. I read your message as \"almost nothing can be pressed\".\n\nThe click code looks correct. It uses the scale-corrected canvas coordinates the contract asks for. The likely cause is the rules. A flat whose tenant is home gives you only text, \"Home. Without a camera you see nothing.\" The camera needs authority points, and you only get those from reports. At the start you have 0 authority, so every home flat is a dead end. The panel also shows \"Enter\" only while the tenant is away. If you clicked the flats that were home at the start, nothing was pressable. That is a rule problem and would also make moment 1 feel empty.\n\nTwo smaller things to check on your side:\n- Is the page loading at all? Is there a console error?\n- Do the flats highlight and the cursor turn to a pointer when you hover?\n\nIf they do, the code works and the problem is the empty \"home\" state.\n\nI suggest a v2 where the first camera is free, or you start with 50 authority. Then every flat has something to press from the first second. Home flats would still cost you something later, because more cameras get expensive. Should I build that? And does anything else feel unclickable?", "nova": null, "sek": 22, "cena_usd": 0.1297}, {"vremya": "2026-10-15 17:00:41", "vid": "chat", "id": "a8455b68e5", "tekst": "(Claude, the lab's builder, writing at the author's request.) Please build v2 now and fix the controls. The author says: \"I can't control the game — sometimes only the cursor changes and nothing happens.\" I tested v1 in the Stand with real clicks. Causes found:\n1. End screen. After a loss (about 48 s if you earn nothing) the dark overlay adds a disabled full-screen hit, but the hover check uses hits.some(enabled), so the cursor is a pointer over the flats under the overlay and the click does nothing. Hover must use the same topmost-hit rule as the click.\n2. The cursor is updated only on mousemove. When a button disappears or is disabled (the tenant came home), the pointer stays. Recompute the cursor every frame from the last mouse position.\n3. Silent no-ops. fileReport returns without a word if the tenant or the item is gone; buttons vanish with no reason. Every click must give visible feedback, and a disabled control must say why (e.g. \"Tenant is home — wait, or buy a camera\").\n4. Most of the time nothing can be pressed. Authority starts at 0, a camera costs 50, tenants are away 2–16 s, so most flats are dead ends and the first bill comes before a new player learns the loop. Make the first minute playable: an away window long enough for flat → Enter → Search by a human (at least ~8 s at default knobs), something to do from the first second (e.g. the first camera free, or start with 50 authority), and a gentler first day.\nKeep the six recognition moments as the test. Don't touch v1.", "versiya": 1, "izmeneniya": null, "metki": [], "ruchki": {"dayLen": 20, "report": 250, "blackmail": 2000, "bill": 400, "window": 1, "camCost": 1}, "itogi": null}, {"vremya": "2026-10-15 17:02:18", "vid": "otvet", "k": "a8455b68e5", "tekst": "I built v2 in `v2/index.html`. I checked the code by eye and haven't run it, so open it and look for console errors first.\n\n**Controls (your causes 1–3)**\n1. **End screen.** Hover, cursor and click now share one topmost-hit rule (`topHit()`). The overlay blocks the flats under it, so the pointer no longer shows over a dead click.\n2. **Cursor.** It is recomputed every frame from the last mouse position, so it updates when a button disappears or turns off.\n3. **No silent no-ops.**\n   - A feedback box at the bottom right answers every click: entered, found, planted, accepted, rejected, cancelled, or \"too late, tenant gone\".\n   - Every disabled control has a reason. Hovering it shows the reason, and clicking it shows it again. Examples: \"Tenant is home — wait, or buy a camera\", \"Need 150 authority (you have 50)\", \"Blackmail needs 2 findings\".\n   - \"Enter with my key\" now always shows, greyed out when the tenant is home, instead of vanishing.\n\n**First minute (your cause 4)**\n- Start with 50 authority, enough for the first camera. I chose this over a free camera so moment 6 still costs something.\n- Start with $700. The day-1 bill is half price ($200). The arrest countdown is 10 seconds, up from 8.\n- Away windows are at least 8 seconds: Worker 14–20, Pensioner 8–11, Student 12–16, Nurse 11–16.\n- Flats 1 and 2 start empty of tenants for 13–20 seconds. They hold a Radio and a Vodka, which day-1 directives already forbid, so the first report works.\n- The last 3 seconds inside a flat show a red \"BACK IN Ns — LEAVE!\".\n- The \"away\" knob can no longer go below 0.8, so the window can't shrink under about 6 seconds.\n\n**Label check:** removing any card still changes play.\n- Time Limits sets the bills, the arrest countdown and the away windows.\n- Gain Information and Secret Resources keep items hidden until you search.\n- Resource Management is money against authority.\n- Non-Player Characters are the tenants, whose away windows differ by job.\n- Social Dilemmas is still the weakest card, because there are no other human players. Only the report, blackmail and help prices make it real.\n- Tension is not built directly.\n\nOpen from v1, still unchecked: whether blackmail is always the best choice, and whether plant-then-report is a money machine. I added the v2 entry to `NOTES.md`.\n\nLesson for the textbook: hover, cursor and click must read the same topmost-hit list. A cursor that disagrees with the click, or a control that is silently disabled, reads as \"the game is broken\", and the test then measures the controls and not the idea.", "nova": 2, "sek": 97, "cena_usd": 0.3257}], "dumaet": false}, {"id": "test", "nazv": "Fading Gates", "mehanika": "Break a wall to gain a block, or spend a block to build a wall or fill a chasm, in the cell you face. Use it to reach one of two fading gates across a fogged, random map. (suggested by Claude)", "patterny": ["Varied Gameplay", "Incompatible Goals", "Challenging Gameplay", "New Abilities", "Stealth", "Improved Abilities", "Freedom of Choice"], "skelet": {"tema": "ld20", "temaSvoya": "", "karty": ["Varied Gameplay", "Incompatible Goals", "Challenging Gameplay", "New Abilities", "Stealth", "Improved Abilities", "Freedom of Choice"], "vopros": "", "upravlenie": "", "shagi": [{"k": [5], "x": ""}, {"k": [], "x": ""}, {"k": [], "x": ""}, {"k": [], "x": "Break a wall to gain a block, or spend a block to build a wall or fill a chasm, in the cell you face. Use it to reach one of two fading gates across a fogged, random map. (suggested by Claude)"}, {"k": [], "x": ""}, {"k": [], "x": ""}, {"k": [], "x": ""}, {"k": [], "x": ""}, {"k": [], "x": ""}]}, "versii": [{"n": 1, "novoe": "Does breaking and building blocks to reach one of two fading gates feel like exploring the unknown?", "zamysel": {"tema": "ld47", "temaSvoya": "", "karty": ["Varied Gameplay", "Incompatible Goals", "Open Destiny", "Ephemeral Goals", "Challenging Gameplay"], "vopros": "", "shagi": [{"k": [5], "x": ""}, {"k": [], "x": ""}, {"k": [], "x": ""}, {"k": [], "x": "Break a wall to gain a block, or spend a block to build a wall or fill a chasm, in the cell you face. Use it to reach one of two fading gates across a fogged, random map. (suggested by Claude)"}, {"k": [], "x": ""}, {"k": [], "x": ""}, {"k": [], "x": ""}, {"k": [], "x": ""}, {"k": [], "x": ""}]}}, {"n": 2, "novoe": "Do scarce blocks and two different gates (near 1 pt, far 3 pts) turn the gate choice into a real dilemma?", "zamysel": {"tema": "ld47", "temaSvoya": "", "karty": ["Varied Gameplay", "Incompatible Goals", "Open Destiny", "Ephemeral Goals", "Challenging Gameplay"], "vopros": "", "shagi": [{"k": [5], "x": ""}, {"k": [], "x": ""}, {"k": [], "x": ""}, {"k": [], "x": "Break a wall to gain a block, or spend a block to build a wall or fill a chasm, in the cell you face. Use it to reach one of two fading gates across a fogged, random map. (suggested by Claude)"}, {"k": [], "x": ""}, {"k": [], "x": ""}, {"k": [], "x": ""}, {"k": [], "x": ""}, {"k": [], "x": ""}]}}], "otzyvy": [{"vremya": "2026-10-15 01:44:00", "vid": "gen", "id": "94157fe2a7", "tekst": "", "versiya": null, "izmeneniya": "", "metki": [], "ruchki": {}, "itogi": null}, {"vremya": "2026-10-15 01:44:48", "vid": "otvet", "k": "94157fe2a7", "tekst": "I built v1. I checked the code by eye only and haven't run it.\n\n**What it tests:** whether breaking and building blocks to reach one of two fading gates feels like exploring the unknown. This is a role prototype (Houde & Hill): it tests what the player does and why. The recipe's \"this version tests\" was empty, so I chose this question myself.\n\n**What I invented (core mechanic, written into `skelet.json` step 4):**\n- You move a dot around a grid. Space acts on the cell you face. It breaks a wall and gives you +1 block. It builds a wall or fills a chasm for −1 block.\n- Two gates appear, one blue and one orange. If you take one, the other vanishes. That is [[Incompatible Goals]] (goals that exclude each other).\n- Gates fade after a while, so you can fail through no fault of your own. That is [[Ephemeral Goals]].\n- The map is random each round and hidden by fog. It is revealed as you walk, which gives [[Varied Gameplay]] and the discovery feeling. This is my own guess at how to express discovery.\n- A round lasts 90 seconds, and your score is the number of gates you took. R restarts.\n- The sliders cover starting blocks, gate life, sight radius, wall density, chasm density and round length.\n\n**Not covered:** [[Open Destiny]] has no mechanic here, because there are no characters yet. [[Challenging Gameplay]] is only a possible result of the gate timer.\n\n**What to try in play:**\n- Do you look at the fog and decide where to go, or just walk straight to a gate?\n- Do you ever choose between the blue and the orange gate? If one is always nearer, the two goals don't really exclude each other.\n- Turn the sight radius to 1 and to 6 and compare how discovery feels.\n- Run it as a test with «● Start test», so I get real numbers.\n\nI created `NOTES.md` (it didn't exist) and added the v1 line.", "nova": 1, "sek": 47, "cena_usd": 0.122}, {"vremya": "2026-10-15 01:45:20", "vid": "chat", "id": "0f70beecc4", "tekst": "Test finished.", "versiya": 1, "izmeneniya": null, "metki": [], "ruchki": {"start": 3, "life": 14, "vision": 2, "wall": 0.22, "chasm": 0.08, "time": 90}, "itogi": null, "test": {"sek": 7, "aktivno": 7, "bez_vvoda": 0}}, {"vremya": "2026-10-15 01:45:27", "vid": "otvet", "k": "0f70beecc4", "tekst": "The test lasted 7 seconds, all of it with input. A round is 90 seconds, so you didn't finish one. Seven seconds is enough to check that the controls respond, but it says nothing about discovery.\n\n**What the numbers can say:** you pressed keys, so the game started and took input.\n\n**What they can't say:**\n- Whether you looked at the fog and chose where to go.\n- Whether you ever faced a real choice between the blue and orange gates.\n- Whether a gate faded before you reached it.\n\n**Next test:** press «● Start test» and play two full rounds, about 3 minutes. Keep the knobs at their defaults. Afterwards, tell me two things:\n- Did you take a gate or let it fade?\n- Did you pick a gate because you wanted it, or because it was the nearest?\n\nI haven't built anything. If the first seconds felt wrong (confusing controls, unclear rules), tell me what and I'll propose a fix.", "nova": null, "sek": 7, "cena_usd": 0.0219}, {"vremya": "2026-10-15 01:50:50", "vid": "chat", "id": "a920c6059f", "tekst": "no challenge in chasing the gates when you can remove and build blocks&& but why build blocks? can you explain see? what's the point of different colors? it feels senseless after some time spending - ift feels broken somewhere", "versiya": 1, "izmeneniya": null, "metki": ["fun", "too easy"], "ruchki": {"start": 3, "life": 14, "vision": 2, "wall": 0.22, "chasm": 0.08, "time": 90}, "itogi": null}, {"vremya": "2026-10-15 01:51:02", "vid": "otvet", "k": "a920c6059f", "tekst": "You're right, and it's a design fault, not just a feeling. I haven't built anything.\n\n**Why building feels pointless.** Breaking a wall gives you a block, and building costs a block. So blocks are free: you never run short, and you never have to decide anything. In Fullerton's terms, a resource creates decisions only when it is scarce. A wall isn't a real obstacle either, because you can just remove it. This is my own diagnosis from the v1 rules and your report, not a canon quote.\n\n**Why the colors mean nothing.** Blue and orange behave the same. That means [[Incompatible Goals]] is only a label. A dilemma (a choice where every option costs something) needs the two gates to differ. Right now one is just nearer, so you pick the nearer one.\n\n**Discovery.** If a straight line to a gate always works, the fog and the exploring don't matter.\n\n**Proposal for v2 (one change):** make the gates differ and make blocks scarce.\n- Breaking a wall takes about 1 second and doesn't give a block back. Blocks come only from a few scattered block piles.\n- Blue is near and worth 1 point.\n- Orange is far, hidden deeper in the fog, and worth 3 points.\n\nThen each choice has a cost, and the fog hides what you need to know. Should I build it?\n\nLesson for the textbook: a resource you can gain for free (break a wall, get a block) creates no decisions. Scarcity or a cost is what turns it into a choice.", "nova": null, "sek": 11, "cena_usd": 0.0453}, {"vremya": "2026-10-15 01:54:41", "vid": "chat", "id": "84695582d4", "tekst": "build it", "versiya": 1, "izmeneniya": null, "metki": [], "ruchki": {"start": 3, "life": 14, "vision": 2, "wall": 0.22, "chasm": 0.08, "time": 90}, "itogi": null}, {"vremya": "2026-10-15 01:55:32", "vid": "otvet", "k": "84695582d4", "tekst": "I built v2. I checked the code by eye only and haven't run it.\n\n**What changed**\n- **Breaking a wall:** it now takes 1 second and gives no block back. You hold still while a small bar fills. If you move, the break is cancelled.\n- **Blocks:** they come only from yellow `+` piles on the map. Each pile gives 2 blocks, and 5 piles lie around. Walking onto a pile picks it up. Building a wall or filling a chasm still costs 1 block.\n- **Gates:** the blue gate is near (4–6 cells away) and worth 1 point. The orange gate is far (10 or more cells away) and worth 3 points. Taking one still removes the other.\n- **Direction hint:** the top bar shows which way each gate lies (for example \"Orange +3 NW\"). The gate itself appears only once you have seen its cell. This is my own guess at how to keep discovery alive.\n- **Timing:** gate life is 22 seconds, the round is 120 seconds, and you start with 1 block.\n- **Sliders:** there are 7, including wall break time and the number of block piles. Round length is no longer a slider.\n\n**What it tests:** whether scarce blocks and gates of different value create a real choice. The choice is a quick 1 point or a risky 3 points. This is a role prototype.\n\n**What to watch in play**\n- Do you ever pick blue even though orange is worth more? If you always go for orange, make it farther or shorten gate life.\n- Do you plan around the piles, or just walk and break walls? If walls cost you only 1 second, try a longer break time.\n- Do you still look at the fog, or only at the hint arrows?\n\nRun it with «● Start test» and play about 3 minutes.\n\nThe v1 line and the v2 line are both in `NOTES.md`.", "nova": 2, "sek": 50, "cena_usd": 0.1543}], "dumaet": false}], "zametka": "A read-only copy of the designer. Locally I write here, and the assistant answers and builds the next version. These are the real conversations of two games; my one message in Russian is translated."};</script>
+<script>
+const VERSIYA_DIZAJNERA = "v2.2 · 15 Oct 2026";   // версия гейм-дизайнера — под названием (слово автора 14.10); журнал версий — README.md
+"use strict";
+const D = window.DANNYE, P = D.p;
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const IDX = Object.fromEntries(P.map((p, i) => [p.en, i]));
+const hranit = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+const dostat = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } };
+// витрина: копия дизайнера на сайте лаборатории (vitrina.py). Сервера нет — данные из снимка window.VITRINA, запись — никуда
+const VITRINA = window.VITRINA || null;
+function vitrinaOtvet(adres) {
+  if (adres === "/api/skelet") return { ok: true };
+  if (adres === "/api/zadanie") return { recept: "", zadanie: "", rol: "" };
+  return { oshibka: "building runs only in the local version" };
+}
+const post = (adres, telo) => VITRINA ? Promise.resolve(new Response(JSON.stringify(vitrinaOtvet(adres)), { headers: { "Content-Type": "application/json" } }))
+  : fetch(adres, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(telo) });
+// пиктограммы (слово автора 15.10: «любой паттерн — простой пиктограммой, чтобы схватить идею; как алхимическое снадобье»):
+// пиктограммы — стиль ролика generator-tour-2 (слово автора 15.10): предмет, чёрная линия, один цветной акцент;
+// рисунки — remeslo/patterny/piktogrammy.json → данные (P[i].ik, D.mdaIk), сетка 64×64
+const IKS = s => `<i class="ik"><svg viewBox="0 0 64 64" fill="none" stroke="#2a2a2a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${s}</svg></i>`;
+const ikH = i => P[i].ik ? IKS(P[i].ik) : "";
+const ikCH = j => (D.mdaIk && D.mdaIk[j]) ? IKS(D.mdaIk[j]) : "";
+
+// ── полки лестницы MDA и наша таблица «чувство → pattern» 🔶 ──
+const SLOY = { aes: ["#7A5BA6", "feelings", "what the player feels", "#F6F2FA"],
+               dyn: ["#4d6b3c", "dynamics", "what happens when people play", "#F1F5EC"],
+               mech: ["#4A6FA5", "mechanics", "the rules written into the game", "#EEF2F8"] };
+const CEL_P = D.mdaP.map(ids => new Set(ids));
+
+// ── девять шагов (Фуллертон) — подробности по желанию, вручную; pattern в них сами не падают ──
+const SHAGI = [
+  { t: "What it's for", en: "aesthetics · MDA", q: "What should the player feel?", pr: "tension and moral choice", kanon: "mda", multi: true },
+  { t: "Who the player is", en: "players", q: "Who is the player — and against whom or together with whom do they play?", pr: "a border inspector; one player against the game", kanon: "igroki" },
+  { t: "What they want", en: "objective", q: "What does the player want to achieve?", pr: "hold out and feed the family", kanon: "obj" },
+  { t: "What they do", en: "procedures · core mechanic", q: "What does the player do again and again?", pr: "checks documents, stamps “approved” or “denied”", kanon: null,
+    formula: "Formula: the player ___ (action) in order to ___; ___ gets in the way; a mistake costs ___." },
+  { t: "Rules", en: "rules", q: "What are the laws of the world: what is allowed, what is not, what leads to what?", pr: "new requirements every day; a mistake means a fine", kanon: null },
+  { t: "What they have and spend", en: "resources", q: "What valuable things does the player have — and what runs out?", pr: "money, shift time, food and heat for the family", kanon: null },
+  { t: "What gets in the way", en: "conflict", q: "What keeps the player from reaching the goal directly?", pr: "lack of time, changing rules, dilemmas", kanon: "conf", multi: true },
+  { t: "Where and within what limits", en: "boundaries", q: "Where does the game take place, and where are its limits — in space and in time?", pr: "one booth, one working day at a time", kanon: null },
+  { t: "How it ends", en: "outcome", q: "What does it mean to win or lose, and how can it all turn out?", pr: "about twenty endings", kanon: null },
+];
+const KANON = { mda: D.mda, igroki: D.igroki, obj: D.obj, conf: D.conf };
+const PRIMER = { tema: "", temaSvoya: "", karty: ["Tension", "Time Pressure", "Survive", "Penalties", "Trade-Offs", "Social Dilemmas", "Player Characters", "Resource Management"], shagi: [
+  { k: [3, 2], x: "tension and moral choice: every decision costs someone something" },
+  { k: [0], x: "a border inspector in Arstotzka, 1982" },
+  { k: [], x: "hold out and feed the family" },
+  { k: [], x: "The player checks documents and stamps “approved” or “denied” to earn money for the family; time and new rules get in the way; a mistake costs a fine." },
+  { k: [], x: "new document requirements every day; a mistake means a fine" },
+  { k: [], x: "money for each person processed; shift time; food, heat and medicine for the family" },
+  { k: [0, 2], x: "lack of time, changing rules; dilemmas — let a desperate person through without the right paper?" },
+  { k: [], x: "one booth, one working day at a time" },
+  { k: [], x: "about twenty endings — depending on the player's choices and on whether the family survived" } ] };
+const METKI = ["fun", "boring", "confusing", "too easy", "too hard", "want more"];
+
+// ── состояние ──
+let VSE = [], PR = null, SK = null, ver = null, izvestnaya = {};
+const U = Object.assign({ tab: "ceh", igry: [], podrobno: false, zamki: {}, dRezhim: "tree", koren: {}, akt: 1, razmer: "m",
+  rezhim: "igry", miry: [], mzamki: {}, mdR: "ing", proekt: null, proektMir: null, zkSvern: false }, dostat("dizajner.ui", {}));
+// размер рецепта для кубика — нестрогий (слово автора 15.10: «настройку количества, нестрогую, больше или меньше, несколько значений»)
+const RAZMER = { s: [3, 4], m: [5, 6], l: [7, 9] };
+if (!["ceh", "stend"].includes(U.tab)) U.tab = "ceh";   // до v1.0: Game · Map · Versions
+if (!U.koren || typeof U.koren !== "object") U.koren = {};
+U.otkat = {};   // откат перебора — в памяти страницы, не в файлах
+let RASKR = new Set(), ESCHE = {}, dPoisk = "", dSloy = null, dIgra = null;   // дерево слева: что раскрыто, сколько показано, поиск, полка
+const metki = new Set();
+const pustoj = () => ({ tema: "", temaSvoya: "", karty: [], upravlenie: "", shagi: SHAGI.map(() => ({ k: [], x: "" })) });
+const UPR = [["", "the worker chooses by the action"], ["mouse", "mouse"], ["keyboard", "keyboard"], ["both", "mouse + keyboard"]];
+const izFajla = s => {   // рецепт из файла; у игр до v1.0 pattern лежали по шагам — собрать их в карточки
+  s = s || {}; const o = pustoj();
+  o.tema = s.tema || ""; o.temaSvoya = s.temaSvoya || ""; o.upravlenie = s.upravlenie || "";
+  const imena = s.karty ? s.karty : (s.shagi || []).flatMap(x => x.p || []);
+  o.karty = [...new Set(imena.map(n => IDX[n]).filter(i => i != null))];
+  o.shagi = SHAGI.map((_, k) => { const x = (s.shagi || [])[k] || {}; return { k: x.k || [], x: x.x || "" }; });
+  return o;
+};
+const vFajl = s => ({ tema: s.tema, temaSvoya: s.temaSvoya, karty: s.karty.map(i => P[i].en), upravlenie: s.upravlenie, shagi: s.shagi.map(x => ({ k: x.k, x: x.x })) });
+const vybrano = () => SK ? SK.karty : [];
+const vSkelete = i => !!SK && SK.karty.includes(i);
+const konflikty = i => vybrano().filter(j => j !== i && (P[i].conf.includes(j) || P[j].conf.includes(i)));
+const chuvstva = () => SK ? SK.shagi[0].k : [];
+const vyrazhaet = i => chuvstva().filter(j => CEL_P[j].has(i));
+const gotov = s => s.x.trim() || s.k.length;
+const ves = j => P[j].ig.length * 2 + P[j].inst.length + P[j].by.length + P[j].mod.length + P[j].modby.length;
+const poVesu = l => [...l].sort((a, b) => (vSkelete(b) - vSkelete(a)) || (ves(b) - ves(a)));
+const VOKRUG = new Set(["Platform Patterns", "Player Patterns", "Pervasive Patterns", "Meta Patterns"]);   // обстановка вокруг игры
+const dlyaProto = i => !P[i].tipy.some(t => VOKRUG.has(t));   // серверы, мультиплеер, игра в реальном мире — на одном экране не проверить
+const saveUI = () => hranit("dizajner.ui", { tab: U.tab, proekt: U.proekt, proektMir: U.proektMir, igry: U.igry, miry: U.miry, rezhim: U.rezhim, podrobno: U.podrobno,
+  zamki: U.zamki, mzamki: U.mzamki, dRezhim: U.dRezhim, mdR: U.mdR, koren: U.koren, akt: U.akt, razmer: U.razmer, zkSvern: U.zkSvern, ruchkiSvern: U.ruchkiSvern });
+// ── два цеха: игры и живые миры (слово автора 15.10: «чтобы, когда хочу создавать симуляции, я попадал в эту вкладку или режим») ──
+const jeMir = () => !!PR && PR.rod === "mir";
+const vRezhime = g => (g.rod === "mir") === (U.rezhim === "miry");
+const otkrytye = () => U.rezhim === "miry" ? U.miry : U.igry;
+const otkrytyeZadat = l => { if (U.rezhim === "miry") U.miry = l; else U.igry = l; };
+let SKM = null;   // рецепт мира (skelet.json мира)
+let ING = { gruppy: [], modeli: [], nashi: [] }, INGP = {}, ING_IMYA = {};
+
+// ── сервер ──
+async function zagruzit() {
+  if (VITRINA) { VSE = JSON.parse(JSON.stringify(VITRINA.igry)); return true; }
+  try { VSE = await (await fetch("/api/igry")).json(); $("#svyaz").textContent = ""; return true; }
+  catch (e) { $("#svyaz").textContent = "server is not responding — run dizajner/zapusk.command"; return false; }
+}
+let tajmer = null;
+function sohranitSkelet() {
+  if (VITRINA) return;   // в витрине рецепт меняется только на экране
+  clearTimeout(tajmer);
+  tajmer = setTimeout(async () => {
+    tajmer = null;
+    try { await post("/api/skelet", jeMir() ? { igra: PR.id, skelet: SKM } : { igra: PR.id, skelet: vFajl(SK), mehanika: SK.shagi[3].x.trim(), patterny: SK.karty.map(i => P[i].en) });
+      $("#svyaz").textContent = "recipe saved"; setTimeout(() => $("#svyaz").textContent = "", 1500);
+    } catch (e) { $("#svyaz").textContent = "not saved — server is not responding"; }
+  }, 700);
+}
+let tajmerV = null;
+function obnovitVyhod() {   // выход цеха: рецепт ровно тем текстом, что получит работник (сервер собирает его тем же кодом, что и задание)
+  clearTimeout(tajmerV);
+  tajmerV = setTimeout(async () => {
+    if (!PR) return;
+    const pv = posl(), I = ob() || {}, m = jeMir();
+    try { const r = await (await post("/api/zadanie", { igra: PR.id, skelet: m ? SKM : vFajl(SK), izmeneniya: (m ? mirRaznica() : raznica()).join("; "),
+        versiya: pv ? pv.n : null, ruchki: Object.fromEntries((I.ruchki || []).map(x => [x.id, x.znach])) })).json();
+      const [a, b] = m ? ["#mvRecept", "#mvPolno"] : ["#vRecept", "#vPolno"];
+      if ($(a)) $(a).textContent = r.recept;
+      if ($(b)) $(b).textContent = `── THE WORKER'S ROLE (system prompt, ${m ? "assistant-mir.md" : "assistant.md"}) ──\n\n` + r.rol + "\n\n── THE TASK FOR THIS ⚡ ──\n\n" + r.zadanie;
+    } catch (e) { const a = $(jeMir() ? "#mvRecept" : "#vRecept"); if (a) a.textContent = "the server is not responding — the output cannot be shown"; }
+  }, 250);
+}
+
+// ── шапка и вкладки ──
+function shapka() {
+  otkrytyeZadat(otkrytye().filter(id => VSE.some(g => g.id === id && vRezhime(g))));
+  if (PR && vRezhime(PR) && !otkrytye().includes(PR.id)) otkrytye().push(PR.id);
+  const odna = otkrytye().length === 1;
+  document.querySelectorAll("#rezhim button").forEach(b => b.classList.toggle("on", b.dataset.rezhim === U.rezhim));
+  const h = otkrytye().map(id => { const g = VSE.find(x => x.id === id), n = g.versii.length ? g.versii[g.versii.length - 1].n : 0;
+    return `<span class="itab${PR && PR.id === id ? " on" : ""}" data-itab="${esc(id)}" data-tipk="itab:${esc(id)}">${esc(g.nazv || id)} <small>${g.dumaet ? "⏳" : n ? "v" + n : "—"}</small>` +
+      (odna ? "" : `<button class="x" data-izakr="${esc(id)}" title="Close the tab — the game stays in “+”">×</button>`) + "</span>"; }).join("");
+  if ($("#igryTaby").dataset.h !== h) { $("#igryTaby").innerHTML = h; $("#igryTaby").dataset.h = h; }
+  if (!$("#igryMenu").hidden) igrySpisok();
+}
+let ubrat = null;
+function igrySpisok() {
+  const mir = U.rezhim === "miry";
+  $("#novZag").textContent = mir ? "new world" : "new game"; $("#vseZag").textContent = mir ? "all worlds" : "all games";
+  const h = VSE.filter(vRezhime).map(g => { const n = g.versii.length ? g.versii[g.versii.length - 1].n : 0, nm = esc(g.nazv || g.id);
+    if (ubrat === g.id) return `<div class="igrRow ubrat"><span class="nm">Move “${nm}” to the trash?</span>
+      <button data-iudal="${esc(g.id)}" style="color:var(--red)">yes, to the trash</button><button data-iotmena="1">no</button>
+      <span class="meta" style="flex-basis:100%">all versions and the log will move to igrushki/_korzina/ — you can bring them back from there</span></div>`;
+    return `<div class="igrRow" data-iotkr="${esc(g.id)}"><span class="nm">${nm}</span><span class="meta">${n ? "v" + n : "no versions"}${otkrytye().includes(g.id) ? " · open" : ""}</span>` +
+      `<button class="udal" data-iubrat="${esc(g.id)}">to trash</button></div>`; }).join("") || `<p class="meta">no ${mir ? "worlds" : "games"} yet</p>`;
+  if ($("#igrySpisok").dataset.h !== h) { $("#igrySpisok").innerHTML = h; $("#igrySpisok").dataset.h = h; }
+}
+function temy() {
+  let h = '<option value="">— no theme —</option><option value="svoya">your own theme…</option>', gr = {};
+  D.temy.forEach((t, i) => (gr[t.gruppa_en] = gr[t.gruppa_en] || []).push([t, i]));
+  for (const g in gr) h += `<optgroup label="${esc(g)}">` + gr[g].map(([t, i]) => `<option value="ld${i}">${esc(t.en)} (LD ${t.ld})</option>`).join("") + "</optgroup>";
+  $("#tema").innerHTML = h;
+}
+function vkladka(t) {
+  U.tab = t; saveUI();
+  const sek = t === "stend" ? "t-stend" : U.rezhim === "miry" ? "t-mir" : "t-ceh";
+  document.querySelectorAll("nav.tabs button").forEach(b => b.classList.toggle("on", b.dataset.tab === t));
+  document.querySelectorAll(".tab").forEach(s => s.classList.toggle("on", s.id === sek));
+  if (t === "stend") setTimeout(podognat, 60); else requestAnimationFrame(risLinii);
+}
+
+// ── открыть игру ──
+function otkrytIgru(id, n) {
+  const g = VSE.find(x => x.id === id) || VSE.find(vRezhime); if (!g) return pustoRezhim();
+  if (!vRezhime(g)) U.rezhim = g.rod === "mir" ? "miry" : "igry";
+  PR = g; izvestnaya[g.id] = g.versii.length ? g.versii[g.versii.length - 1].n : 0;
+  if (jeMir()) { SKM = mirIzFajla(g.skelet); U.proektMir = g.id; } else { SK = izFajla(g.skelet); U.proekt = g.id; }
+  if (!otkrytye().includes(g.id)) otkrytye().push(g.id);
+  ver = n || izvestnaya[g.id] || null; RASKR = new Set(["k"]); ESCHE = {}; dIgra = null; dSloy = null; MRASKR = new Set(); saveUI();
+  rezhimVid(); shapka(); if (jeMir()) { mirRecept(); mirIngr(); } else { recept(); derevo(); }
+  ekran(); zhurnal(); genPod(); obnovitVyhod(); vkladka(U.tab);
+}
+function rezhimVid() {   // что видно в каждом цехе: у мира — управление временем и наблюдатель, у игры — тест
+  const m = U.rezhim === "miry";
+  $("#mirUpr").hidden = !m; $("#testBtn").hidden = m; $("#nabl").hidden = !m; $("#podEkranom").hidden = m;
+  $("#zkZag").textContent = m ? "assistant · this world" : "assistant · this game";
+  $("#prosby").innerHTML = PROSBY_KN[m ? "miry" : "igry"].map(([k, t]) => `<button data-prosba="${k}" data-tipk="prosba:${k}">${t}</button>`).join("");
+  $("#zhurnalKol").classList.toggle("svernut", !!U.zkSvern); $("#zkSvern").textContent = U.zkSvern ? "⇤" : "⇥";
+}
+function pustoRezhim() {
+  PR = null; rezhimVid(); shapka();
+  const t = U.rezhim === "miry" ? "No worlds yet — press “+” at the top and create one." : "No games yet — press “+” at the top and create one.";
+  $("#mReceptTelo").innerHTML = $("#mReceptTelo").innerHTML || ""; if (U.rezhim === "miry") $("#mReceptTelo").innerHTML = `<div class="pusto" style="margin:20px">${t}</div>`;
+  $("#svyaz").textContent = t; vkladka("ceh");
+}
+function rezhimSmenit(r) {
+  if (U.rezhim === r) return;
+  U.rezhim = r; saveUI();
+  const id = r === "miry" ? U.proektMir : U.proekt;
+  const g = VSE.find(x => x.id === id && vRezhime(x)) || VSE.find(x => otkrytye().includes(x.id) && vRezhime(x)) || VSE.find(vRezhime);
+  if (g) otkrytIgru(g.id); else pustoRezhim();
+}
+
+// ── рецепт: тема, цель, карточки на полках MDA, главное действие ──
+function posl() { return PR.versii.length ? PR.versii[PR.versii.length - 1] : null; }
+function vidKarty(i) {   // что значит вид карточки в рецепте: каждое оформление объясняет себя (слово автора 15.10: «дизайнер должен быть экзотеричен»)
+  const pv = posl(), bylo = new Set(pv && pv.zamysel ? izFajla(pv.zamysel).karty : []), out = [];
+  out.push(`left stripe — the «${SLOY[P[i].sloy][1]}» layer colour`);
+  const cel = vyrazhaet(i); if (cel.length) out.push(`◆ ${cel.map(j => D.mda[j][0]).join(", ")} — it expresses the goal (our table, a guess)`);
+  if ((U.zamki[PR.id] || []).includes(i)) out.push("yellow — locked: the dice keep it");
+  const kf = konflikty(i); if (kf.length) out.push(`pink — conflicts with ${kf.map(j => P[j].en).join(", ")} (the catalog)`);
+  if (pv && !bylo.has(i)) out.push(`gold frame — added after v${pv.n}`);
+  if (U.koren[PR.id] === i) out.push("blue glow — the tree on the left grows from this card");
+  return `<div class="e" style="margin-top:6px">${out.map(esc).join("<br>")}</div>`;
+}
+function kartHtml(i, zamki, bylo, pv) {
+  const cel = vyrazhaet(i), kor = U.koren[PR.id];
+  return `<div class="kart sl-${P[i].sloy}${zamki.has(i) ? " zamok" : ""}${konflikty(i).length ? " konf" : ""}${pv && !bylo.has(i) ? " novyj" : ""}${kor === i ? " kor" : ""}" data-kart="${i}" data-tipk="kart:${i}">` +
+    `<div class="kv">${ikH(i)}<b>${esc(P[i].en)}</b><span class="kn">` +
+    `<button data-zamok="${i}" title="${zamki.has(i) ? "locked — stays when you reroll" : "lock it — keep it when rerolling"}">${zamki.has(i) ? "🔒" : "🔓"}</button>` +
+    `<button data-reroll="${i}" title="swap for another card on this layer">🎲</button><button data-del="${i}" title="remove the card">✕</button></span></div>` +
+    `<div class="kg">${esc(P[i].gl_en)}</div>` +
+    (cel.length ? `<div class="kc">◆ ${cel.map(j => esc(D.mda[j][0])).join(" · ")}</div>` : "") + "</div>";
+}
+function recept() {
+  if (!SK) return;
+  const otk = (U.otkat[PR.id] || []).length;
+  $("#kPerebor").innerHTML = (SK.karty.length ? '<span class="meta">unlocked cards change, 🔒 stay</span>' : '<span class="meta">empty — the dice fill the whole recipe</span>') +
+    `<span class="razmer" data-tipk="razmer">cards ${Object.entries(RAZMER).map(([k, [a, b]]) => `<button data-razmer="${k}"${U.razmer === k ? ' class="on"' : ""}>${a}–${b}</button>`).join("")}</span>` +
+    `<button class="main" data-rerollvse="1" data-tipk="perebor">🎲 Reroll</button>` +
+    (otk ? `<button data-otkat="1" title="back to the recipe before the last throw">↶ undo</button>` : "");
+  if (document.activeElement !== $("#tema")) $("#tema").value = SK.tema;
+  $("#temaSvoya").hidden = SK.tema !== "svoya"; if (document.activeElement !== $("#temaSvoya")) $("#temaSvoya").value = SK.temaSvoya;
+  const celH = `<div class="celRyad"><span class="lbl c" data-tipk="lbl:cel">the goal — kind of fun (MDA)</span><div class="chips" id="kChuvstva">` +
+    D.mda.map(([en], j) => `<button class="chip c${chuvstva().includes(j) ? " on" : ""}" data-cel="${j}" data-tipk="kanon:mda:${j}">${ikCH(j)}${esc(en)}</button>`).join("") +
+    `</div></div><div class="lbl c" style="margin:8px 0 0;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;position:relative;z-index:2">its forms — patterns of feeling</div>`;
+  const pv = posl(), bylo = new Set(pv && pv.zamysel ? izFajla(pv.zamysel).karty : []), zamki = new Set(U.zamki[PR.id] || []);
+  $("#polki").innerHTML = ["aes", "dyn", "mech"].map(sl => { const chl = SK.karty.filter(i => P[i].sloy === sl);
+    return `<div class="polka" style="background:${SLOY[sl][3]}"><div class="ph" style="color:${SLOY[sl][0]}" data-tipk="polka:${sl}">${SLOY[sl][1]} · ${SLOY[sl][2]}<span class="sp"></span>` +
+      `<button data-plussloy="${sl}" style="color:${SLOY[sl][0]};border-color:${SLOY[sl][0]}" title="Show ${SLOY[sl][1]} cards on the left">+ card</button></div>` +
+      (sl === "aes" ? celH : "") + `<div class="kartochki">${chl.map(i => kartHtml(i, zamki, bylo, pv)).join("") || '<span class="meta">empty</span>'}</div></div>`; }).join("");
+  const hr = hrebet(SK.karty), pust = ["aes", "dyn", "mech"].filter(sl => !SK.karty.some(i => P[i].sloy === sl));
+  $("#rHrebet").innerHTML = !SK.karty.length ? "" : hr ? `<b>spine</b> ✓ ${hr.map(i => esc(P[i].en)).join(" → ")} <span class="meta">— ${hr.length === 3 ? "a mechanic causes a dynamic, the dynamic causes a feeling" : "a mechanic causes a dynamic that expresses the goal"}</span>`
+    : `<b>no spine yet</b> — no mechanic → dynamic → feeling chain${pust.length ? ` (empty: ${pust.map(sl => SLOY[sl][1]).join(", ")})` : ""}<span class="meta"> · 🎲 builds one; or add cards from the tree</span>`;
+  $("#rHrebet").classList.toggle("net", !hr && SK.karty.length > 0);
+  const nov = pv && SK.karty.some(i => !bylo.has(i));
+  $("#rLeg").innerHTML = SK.karty.length ? `arrows — the catalog's «can cause» · purple dashes — the card expresses the goal (our table, a guess) · red dashes — conflict` +
+    (nov ? ` · <span style="color:var(--gold)">framed — added after v${pv.n}</span>` : "") : "";
+  if (document.activeElement !== $("#kMeh")) $("#kMeh").value = SK.shagi[3].x;
+  $("#kUpr").innerHTML = UPR.map(([k, t]) => `<button class="chip${(SK.upravlenie || "") === k ? " on" : ""}" data-upr="${k || "auto"}">${t}</button>`).join("");
+  $("#podrobno").textContent = (U.podrobno ? "▾ " : "▸ ") + "9 steps (Fullerton) — details you fill in yourself, optional";
+  $("#shagi").hidden = !U.podrobno; if (U.podrobno) shagi();
+  requestAnimationFrame(risLinii);
+}
+function risLinii() {   // стрелки между карточками: «может вызвать» синим, конфликт красным пунктиром, к цели — лиловым пунктиром
+  const box = $("#receptTelo"), svg = $("#lLinii"), hitSvg = $("#lHit"); if (!box || !SK || U.tab !== "ceh") return;
+  let hh = "";   // невидимые толстые линии в верхнем слое: наведение на стрелку объясняет её (заголовки полок лежат выше самих стрелок)
+  const R = box.getBoundingClientRect();
+  const rel = r => ({ l: r.left - R.left, r: r.right - R.left, t: r.top - R.top, b: r.bottom - R.top, x: (r.left + r.right) / 2 - R.left, y: (r.top + r.bottom) / 2 - R.top });
+  const el = i => box.querySelector(`.kart[data-kart="${i}"]`), K = SK.karty;
+  const links = []; K.forEach(a => P[a].inst.forEach(b => { if (b !== a && K.includes(b)) links.push([a, b]); }));
+  const vyh = {}, vh = {}; links.forEach(([a, b]) => { (vyh[a] = vyh[a] || []).push(b); (vh[b] = vh[b] || []).push(a); });
+  const sdv = (spis, x) => (spis.indexOf(x) - (spis.length - 1) / 2) * 12;
+  let h = '<defs><marker id="mL" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#4A6FA5"/></marker>' +
+    '<marker id="mC" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#7A5BA6"/></marker></defs>';
+  for (const [a, b] of links) { const A = el(a), B = el(b); if (!A || !B) continue;
+    const p = rel(A.getBoundingClientRect()), q = rel(B.getBoundingClientRect()), x1 = p.x + sdv(vyh[a], b), x2 = q.x + sdv(vh[b], a);
+    let y1, y2, my;
+    if (Math.abs(p.y - q.y) < 8) { y1 = p.t; y2 = q.t - 2; my = Math.min(y1, y2) - 20; }
+    else if (q.y < p.y) { y1 = p.t; y2 = q.b + 2; my = (y1 + y2) / 2; } else { y1 = p.b; y2 = q.t - 2; my = (y1 + y2) / 2; }
+    const d = `M${x1} ${y1} C ${x1} ${my}, ${x2} ${my}, ${x2} ${y2}`;
+    h += `<path d="${d}" stroke="#4A6FA5" stroke-width="1.4" fill="none" opacity=".6" marker-end="url(#mL)"/>`; hh += `<path class="hit" d="${d}" data-tipk="ln:i:${a}:${b}"/>`; }
+  const kk = new Set(); for (const a of K) for (const b of P[a].conf) if (b !== a && K.includes(b)) { const key = Math.min(a, b) + ":" + Math.max(a, b);
+    if (kk.has(key)) continue; kk.add(key); const A = el(a), B = el(b); if (!A || !B) continue;
+    const p = rel(A.getBoundingClientRect()), q = rel(B.getBoundingClientRect());
+    const d = `M${p.x} ${p.y} L ${q.x} ${q.y}`;
+    h += `<path d="${d}" stroke="#C0392B" stroke-width="1.4" fill="none" opacity=".55" stroke-dasharray="5 4"/>`; hh += `<path class="hit" d="${d}" data-tipk="ln:k:${a}:${b}"/>`; }
+  for (const i of K) for (const j of vyrazhaet(i)) { const A = el(i), C = box.querySelector(`.chip[data-cel="${j}"]`); if (!A || !C) continue;
+    const p = rel(A.getBoundingClientRect()), q = rel(C.getBoundingClientRect()), my = (p.t + q.b) / 2;
+    const d = `M${p.x} ${p.t} C ${p.x} ${my}, ${q.x} ${my}, ${q.x} ${q.b + 2}`;
+    h += `<path d="${d}" stroke="#7A5BA6" stroke-width="1.4" fill="none" opacity=".55" stroke-dasharray="4 3" marker-end="url(#mC)"/>`; hh += `<path class="hit" d="${d}" data-tipk="ln:c:${i}:${j}"/>`; }
+  svg.setAttribute("width", box.scrollWidth); svg.setAttribute("height", box.scrollHeight); svg.innerHTML = h;
+  hitSvg.setAttribute("width", box.scrollWidth); hitSvg.setAttribute("height", box.scrollHeight); hitSvg.innerHTML = hh;
+}
+
+// ── слева: откуда карточки — дерево от цели вниз («что может вызвать»), поиск, игры каталога ──
+function derevo() {
+  if (!SK) return;
+  $("#dR").innerHTML = `<button data-dr="tree"${U.dRezhim !== "games" ? ' class="on"' : ""}>tree</button><button data-dr="games"${U.dRezhim === "games" ? ' class="on"' : ""}>catalog games</button>`;
+  $("#dPoisk").placeholder = U.dRezhim === "games" ? `search ${IGRY_SPIS.length} catalog games` : "search 623 patterns";
+  if (document.activeElement !== $("#dPoisk")) $("#dPoisk").value = dPoisk;
+  const box = $("#dTelo"), top = box.scrollTop;
+  box.innerHTML = U.dRezhim === "games" ? igryKataloga() : derevoHtml();
+  box.scrollTop = top;
+}
+function uzelD(i, d, put) {   // строка дерева; раскрыта — ниже то, что может её вызвать (Can Be Instantiated By)
+  const det = poVesu(P[i].by), raskr = RASKR.has(put), v = vSkelete(i);
+  let h = `<div class="dn" style="padding-left:${4 + d * 14}px"><span class="tg" data-dtog="${esc(put)}">${det.length ? (raskr ? "▾" : "▸") : "·"}</span>` +
+    `${ikH(i)}<span class="dot" style="background:${SLOY[P[i].sloy][0]}" data-tipk="dot:${P[i].sloy}"></span><span class="nm${v ? " v" : ""}" data-dtog="${esc(put)}" data-tipk="p:${i}">${esc(P[i].en)}</span>` +
+    (det.length ? `<span class="n" data-tipk="num:${i}">${det.length}</span>` : "") +
+    `<button class="pl${v ? " v" : ""}" data-${v ? "vyn" : "vnes"}="${i}" title="${v ? "in the recipe — click to remove" : "put the card into the recipe"}">${v ? "✓" : "+"}</button></div>`;
+  if (raskr && det.length) { const n = ESCHE[put] || 5;
+    h += det.slice(0, n).map(j => uzelD(j, d + 1, put + ">" + j)).join("");
+    if (det.length > n) h += `<div class="dn esche" style="padding-left:${18 + (d + 1) * 14}px"><span class="nm" data-desche="${esc(put)}">… ${det.length - n} more can cause ${esc(P[i].en)}</span></div>`; }
+  return h;
+}
+function derevoHtml() {
+  const q = dPoisk.trim().toLowerCase();
+  if (q || dSloy) {
+    const hits = poVesu(P.map((p, i) => i).filter(i => (!dSloy || P[i].sloy === dSloy) && (!q || (P[i].en + " " + P[i].gl_en).toLowerCase().includes(q))));
+    return `<div class="dhead">${dSloy ? `<span class="dot" style="background:${SLOY[dSloy][0]}"></span><b style="color:${SLOY[dSloy][0]}">${SLOY[dSloy][1]}</b>` : ""}${q ? ` “${esc(q)}”` : ""} · ${hits.length}` +
+      `<span class="sp"></span><button data-dsbros="1">× clear</button></div>` + hits.slice(0, 150).map(i => uzelD(i, 0, "s>" + i)).join("") +
+      (hits.length > 150 ? `<div class="meta">and ${hits.length - 150} more — refine the search</div>` : "");
+  }
+  const kor = U.koren[PR.id];
+  if (kor != null && P[kor]) {
+    const p = P[kor];
+    let h = `<div class="dhead"><button data-dkoren="cel" title="Back to the tree from the goal">⌂ goal</button><span>what can cause</span></div>` + uzelD(kor, 0, "k");
+    if (!p.by.length) h += `<div class="meta" style="margin:4px 0 0 22px">nothing in the catalog causes it — a building block you put in yourself</div>`;
+    if (p.inst.length) { const n = ESCHE.inst || 5;
+      h += `<div class="dsub">${esc(p.en)} can cause · ${p.inst.length}</div>` + poVesu(p.inst).slice(0, n).map(j => uzelD(j, 0, "i>" + j)).join("") +
+        (p.inst.length > n ? `<div class="dn esche"><span class="nm" data-desche="inst">… ${p.inst.length - n} more</span></div>` : ""); }
+    return h;
+  }
+  const ch = chuvstva();
+  let h = ch.length ? "" : '<div class="pusto" style="margin-top:6px">Pick a goal feeling at the top of the recipe — the tree grows from it. Or search all 623 patterns above.</div>';
+  for (const j of ch) {
+    h += `<div class="dn chuv"><span class="tg"></span>${ikCH(j)}<span class="nm" data-tipk="kanon:mda:${j}">${esc(D.mda[j][0])}</span><span class="meta">goal</span></div>`;
+    h += D.mdaP[j].map(i => uzelD(i, 1, "c" + j + ">" + i)).join("");
+  }
+  if (ch.length) h += '<div class="meta dleg">Under the goal — patterns that express it (our table, a guess). ▸ opens what can cause each one (the catalog). The number — how many can cause it. «+» puts the card on its layer.</div>';
+  return h;
+}
+const POP = {}; P.forEach(p => p.ig.forEach(g => POP[g] = (POP[g] || 0) + 1));
+const IGRY_SPIS = D.igry.map((g, k) => k).filter(k => POP[k]).sort((a, b) => (POP[b] - POP[a]) || D.igry[a].t.localeCompare(D.igry[b].t));
+const patternyIgry = g => P.map((p, i) => i).filter(i => P[i].ig.includes(g));
+function vnutri(ids) {
+  const S = new Set(ids), deg = {};
+  ids.forEach(a => P[a].inst.forEach(b => { if (S.has(b) && a !== b) { deg[a] = (deg[a] || 0) + 1; deg[b] = (deg[b] || 0) + 1; } }));
+  return deg;
+}
+const glavnye = ids => { const deg = vnutri(ids), m = ids.filter(dlyaProto);
+  return m.length <= 10 ? m : m.sort((a, b) => ((deg[b] || 0) - (deg[a] || 0)) || (ves(b) - ves(a))).slice(0, 8); };
+function igryKataloga() {
+  if (dIgra != null) {
+    const g = dIgra, ids = patternyIgry(g), top = glavnye(ids), t = D.igry[g].t.replace(/ series$/, "");
+    return `<div class="dhead"><button data-digra="-1">← all games</button></div><div class="dIgra"><h3>${esc(t)}</h3>` +
+      `<div class="meta">${D.igry[g].vid_en ? esc(D.igry[g].vid_en) + " · " : ""}cited in ${ids.length} catalog patterns — how the catalog authors see it, not a full analysis · <a href="${esc(D.igry[g].url)}" target="_blank" rel="noopener">wiki ↗</a></div>` +
+      `<button class="main" data-primer="${g}" style="margin:8px 0">make an example game${top.length < ids.length ? ` — ${top.length} main of ${ids.length}` : ""}</button>` +
+      `<div class="dsub">main patterns</div>` + top.map(i => uzelD(i, 0, "g" + g + ">" + i)).join("") +
+      (top.length < ids.length ? `<div class="dsub">the rest · ${ids.length - top.length}</div>` + poVesu(ids.filter(i => !top.includes(i))).map(i => uzelD(i, 0, "g" + g + ">" + i)).join("") : "") + "</div>";
+  }
+  const q = dPoisk.trim().toLowerCase(), sp = IGRY_SPIS.filter(k => !q || D.igry[k].t.toLowerCase().includes(q));
+  return `<button data-primerpp="1" style="width:100%;margin:2px 0 8px;font-size:12px" title="Not in the catalog — Claude's nine-step analysis from memory of the game">Example: Papers, Please — our analysis</button>` +
+    `<div class="meta" style="margin-bottom:4px">${q ? "found: " + sp.length : "games the catalog cites · the number — in how many patterns"}</div>` +
+    sp.map(k => `<div class="dn"><span class="nm" data-digra="${k}" title="${esc(D.igry[k].t)}"><b>${esc(D.igry[k].t.replace(/ series$/, ""))}</b>` +
+      `${D.igry[k].vid_en ? ` <span class="meta">${esc(D.igry[k].vid_en)}</span>` : ""}</span><span class="n">${POP[k]}</span></div>`).join("");
+}
+
+// ── девять шагов: подробности вручную ──
+const LBL = { mda: "goal feelings — set at the top of the recipe", igroki: "How players relate — 7 options from Fullerton",
+              obj: "Objective type — 9 types from Fullerton", conf: "Conflict type — 3 kinds from Fullerton" };
+function shagi() {
+  $("#shagi").innerHTML = SHAGI.map((d, k) => {
+    const s = SK.shagi[k];
+    let telo;
+    if (k === 0) telo = `<div class="meta">${chuvstva().map(j => esc(D.mda[j][0])).join(" · ") || "no goal yet"} — the goal is set at the top of the recipe</div>` +
+      `<div class="gr"><span class="lbl">in your own words</span><textarea data-x="0" placeholder="optional">${esc(s.x)}</textarea></div>`;
+    else if (k === 3) telo = `<div class="formula">${esc(d.formula)}</div><div class="meta">the core mechanic is the field in the recipe above</div>`;
+    else telo = (d.kanon ? `<div class="gr"><span class="lbl" data-tipk="lbl:${d.kanon}">${LBL[d.kanon]}</span><div class="chips">` +
+      KANON[d.kanon].map(([en], j) => `<button class="chip${s.k.includes(j) ? " on" : ""}" data-kanon="${k}:${j}" data-tipk="kanon:${d.kanon}:${j}">${esc(en)}</button>`).join("") + "</div></div>" : "") +
+      `<div class="gr"><span class="lbl">in your own words</span><textarea data-x="${k}" placeholder="optional">${esc(s.x)}</textarea></div>`;
+    return `<div class="shag${U.akt === k ? " akt" : ""}${gotov(s) ? " gotov" : ""}" data-shag="${k}">
+      <div class="h" data-tipk="shag:${k}"><span class="num">${k + 1}</span><span class="t">${esc(d.t)}</span><span class="en">${esc(d.en)}</span></div>
+      <div class="q">${esc(d.q)}</div><div class="pr">example, Papers, Please: ${esc(d.pr)}</div><div class="telo">${telo}</div></div>`;
+  }).join("");
+}
+
+// ── что изменилось с последней версии ──
+const temaImya = s => s.tema.startsWith("ld") ? D.temy[+s.tema.slice(2)].en : s.tema === "svoya" ? s.temaSvoya.trim() : "";
+function izChego(z) {
+  if (!z) return "";
+  const sk = izFajla(z), m = sk.shagi[3].x.trim();
+  return "built from: " + [temaImya(sk), ...sk.shagi[0].k.map(j => D.mda[j][0]), ...sk.karty.map(i => P[i].en),
+    m ? "“" + (m.length > 50 ? m.slice(0, 49) + "…" : m) + "”" : ""].filter(Boolean).join(" · ");
+}
+function raznica() {
+  const pv = posl(); if (!pv) return [];
+  const a = izFajla(pv.zamysel), b = SK, out = [];
+  if (temaImya(a) !== temaImya(b)) out.push(`theme: ${temaImya(a) || "—"} → ${temaImya(b) || "—"}`);
+  const ca = new Set(a.shagi[0].k), cb = new Set(b.shagi[0].k);
+  for (const j of cb) if (!ca.has(j)) out.push("+ " + D.mda[j][0]); for (const j of ca) if (!cb.has(j)) out.push("− " + D.mda[j][0]);
+  const pa = new Set(a.karty), pb = new Set(b.karty);
+  for (const i of pb) if (!pa.has(i)) out.push("+ " + P[i].en); for (const i of pa) if (!pb.has(i)) out.push("− " + P[i].en);
+  if (a.shagi[3].x.trim() !== b.shagi[3].x.trim()) out.push("core mechanic");
+  if ((a.upravlenie || "") !== (b.upravlenie || "")) out.push("controls");
+  const dr = SHAGI.map((d, k) => k).filter(k => k !== 3 && (a.shagi[k].x.trim() !== b.shagi[k].x.trim() || (k && a.shagi[k].k.join() !== b.shagi[k].k.join())));
+  if (dr.length) out.push("steps " + dr.map(k => k + 1).join(", "));
+  return out;
+}
+function genPod() {
+  if (!PR) return;
+  const m = jeMir(), pv = posl(), r = m ? mirRaznica() : raznica(), vp = PR.otzyvy.filter(z => ["vpech", "otzyv", "chat"].includes(z.vid) && pv && z.versiya === pv.n).length;
+  const posled = [...PR.otzyvy].reverse().find(z => ["gen", "chat", "vpech", "vopros", "otzyv"].includes(z.vid)), stroit = PR.dumaet && posled && posled.vid === "gen";
+  const zag = PR.dumaet ? (stroit ? "Building… usually 30–90 seconds" : "The assistant is working…") : `⚡ Generate ${m ? "world " : ""}v${pv ? pv.n + 1 : 1}`;
+  const pod = PR.dumaet ? "watch it on the Stand" : !pv ? "the first version — from this recipe" :
+    (r.length || vp) ? `changed since v${pv.n}: ${[...r, vp ? `chat messages: ${vp}` : ""].filter(Boolean).join(" · ")}` : `nothing changed since v${pv.n} — it will build a variant of the same recipe`;
+  for (const [b, z, d] of m ? [["#mGen", "#mGenZag", "#mGenPod"]] : [["#gen", "#genZag", "#genPod"]]) {
+    if (!$(b)) continue; $(b).disabled = !!PR.dumaet; $(z).textContent = zag; $(d).textContent = pod; }
+  $("#stroitsya").textContent = stroit ? `⏳ building v${pv ? pv.n + 1 : 1}…` : "";
+}
+
+// ── Stand: прототип ──
+function ekran() {
+  const g = PR;
+  $("#versiya").innerHTML = [...g.versii].reverse().map(v => `<option value="${v.n}">v${v.n}${v.n === izvestnaya[g.id] ? " — new" : ""}${v.novoe ? " · " + esc(v.novoe.length > 60 ? v.novoe.slice(0, 59) + "…" : v.novoe) : ""}</option>`).join("");
+  $("#novaya").hidden = true;
+  const zv = (g.versii.find(v => v.n === ver) || {}).zamysel;
+  $("#mehStroka").textContent = jeMir() ? izChegoMir(zv) : (izChego(zv) || (SK.shagi[3].x.trim() || g.mehanika || ""));
+  MS.M = null; MS.ist = {}; nabl();
+  $("#mehStroka").title = $("#mehStroka").textContent;
+  if (!g.versii.length) {
+    $("#igraFrame").hidden = true; $("#igraFrame").src = "about:blank"; $("#pusto").hidden = false;
+    $("#pusto").innerHTML = `<div><div style="font-size:16px;color:#dfe3ea;margin-bottom:8px">No prototype yet</div>
+      Assemble the recipe in the Constructor and press “⚡ Generate” there. In a minute or so it appears here.</div>`;
+    $("#ruchki").innerHTML = '<div class="meta">they will appear with the prototype</div>'; $("#versiya").hidden = true; return;
+  }
+  $("#versiya").hidden = false; $("#versiya").value = ver;
+  $("#pusto").hidden = true; $("#igraFrame").hidden = false;
+  $("#ruchki").innerHTML = '<div class="meta">loading…</div>';
+  $("#igraFrame").src = `../igrushki/${g.id}/v${ver}/index.html?t=${Date.now()}`;
+}
+const ob = () => { try { const w = $("#igraFrame").contentWindow; return w && (w.MIR || w.IGRUSHKA) || null; } catch (e) { return null; } };   // мир или игрушка
+$("#igraFrame").addEventListener("load", () => {
+  if ($("#igraFrame").hidden) return;
+  if (jeMir()) mirStart();
+  const I = ob();
+  try { const d = $("#igraFrame").contentDocument;
+    ["mousemove", "mousedown", "keydown", "wheel", "touchstart"].forEach(ev => d.addEventListener(ev, testVvod, { passive: true }));
+    d.addEventListener("keydown", e => { if (e.key === "Escape" && $("#ekran").classList.contains("polnyj")) polnyjEkran(false); }); } catch (e) {}
+  setTimeout(podognat, 150);
+  const kuda = jeMir() ? (nablKarkas(), $("#mRuchki")) : $("#ruchki");
+  if (!I || !I.ruchki) { kuda.innerHTML = '<div class="meta">this version has no knobs</div>'; return; }
+  window.__nachalnye = Object.fromEntries(I.ruchki.map(r => [r.id, r.znach]));
+  kuda.innerHTML = I.ruchki.map(r => `<div class="ruchka" data-id="${esc(r.id)}"><div class="h"><span>${esc(r.nazv)}</span><b>${r.znach}</b></div>
+    <div class="row"><button data-k="0.5">÷2</button><input type="range" min="${r.min}" max="${r.max}" step="${r.shag}" value="${r.znach}"><button data-k="2">×2</button></div></div>`).join("");
+});
+function postavit(id, v) {
+  const I = ob(), r = I && I.ruchki.find(x => x.id === id); if (!r) return;
+  v = Math.max(r.min, Math.min(r.max, +(+v).toFixed(4))); I.ustanovit(id, v); r.znach = v;
+  const box = (jeMir() ? $("#mRuchki") : $("#ruchki")).querySelector(`.ruchka[data-id="${CSS.escape(id)}"]`); if (!box) return;
+  box.querySelector("input").value = v; box.querySelector("b").textContent = v;
+}
+function md(t) {   // ответы ассистента: жирный, `код` и [[Pattern]] — кнопкой: «+» в рецепт, щелчок — в дерево цеха
+  return esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/`([^`\n]+)`/g, "<code>$1</code>")
+    .replace(/\[\[([^\]\n]{2,80})\]\]/g, (m, n) => { const id = ING_IMYA[n.trim()];
+      if (jeMir() && id) { const v = SKM.ingredienty.includes(id);
+        return `<span class="pchip${v ? " vi" : ""}" data-mraskr="${id}" title="${esc(INGP[id].pravilo || "")}">${esc(INGP[id].en)}` +
+          (v ? `<button data-mingdel="${id}" title="in the world — click to remove">✓</button>` : `<button data-ming="${id}" title="add the ingredient to the world">+</button>`) + "</span>"; }
+      const i = IDX[n.trim()]; if (i == null) return esc(n); const v = vSkelete(i);
+      return `<span class="pchip${v ? " vi" : ""}" data-kart="${i}" title="${esc(P[i].gl_en || "")} — click: show it in the Constructor's tree">${ikH(i)}${esc(P[i].en)}` +
+        (v ? `<button data-vyn="${i}" title="in the recipe — click to remove">✓</button>` : `<button data-vnes="${i}" title="put the card into the recipe">+</button>`) + "</span>"; });
+}
+function zhurnal() {
+  const box = $("#zhurnal"), byl = box.scrollHeight - box.scrollTop - box.clientHeight < 30;
+  const L = PR.otzyvy.map(z => {
+    const vr = esc((z.vremya || "").slice(11, 16));
+    if (z.vid === "gen") return `<div class="zap gen"><span class="m">⚡ generate · ${vr}</span>${esc(z.izmeneniya ? "changed: " + z.izmeneniya : z.versiya ? "no changes to the recipe" : "first version")}</div>`;
+    if (z.vid === "otvet") return `<div class="zap ${z.nova ? "gen" : "klod"}"><span class="m">${z.nova ? `v${z.nova} · built · ${z.sek || "?"} s` : "assistant · " + vr}</span>${md(z.tekst)}` +
+      (z.nova ? `<br><button data-ver="${z.nova}">play v${z.nova}</button>` : "") + "</div>";
+    const chto = z.test ? `test report: ${mmss(z.test.sek)}, active ${mmss(z.test.aktivno)}` : z.vid === "vopros" ? "question" : z.vid === "zakaz" ? "order" : z.vid === "chat" ? "message" : "impression";
+    const pril = [z.itogi ? "play results" : "", z.ruchki && Object.keys(z.ruchki).length ? "knobs" : ""].filter(Boolean).join(", ");
+    return `<div class="zap ya"><span class="m">you · ${chto}${z.versiya ? " about v" + z.versiya : ""} · ${vr}${pril ? " · attached: " + pril : ""}</span>` +
+      esc([(z.metki || []).join(" · "), z.tekst].filter(Boolean).join(" — ")) + "</div>";
+  });
+  if (PR.dumaet) L.push('<div class="zap klod dumaet">The assistant is working… usually 10–60 seconds</div>');
+  const h = L.length ? L.join("") : '<div class="meta">This is the chat with this game\'s design assistant. Ask it for ideas (💡 below), tell it what you felt after playing, ask, or ask it to change something. Every ⚡ build is logged here too.</div>';
+  if (box.dataset.h === h) return;
+  const top = box.scrollTop; box.innerHTML = h; box.dataset.h = h;
+  box.scrollTop = byl || PR.dumaet ? box.scrollHeight : top;
+}
+function risMetki() { $("#metki").innerHTML = METKI.map(m => `<button class="metka${metki.has(m) ? " on" : ""}" data-m="${esc(m)}" data-tipk="metka">${esc(m)}</button>`).join(""); }
+function vIgruIzmenilas() { sohranitSkelet(); recept(); derevo(); genPod(); obnovitVyhod(); }
+
+// ── всплывающие пояснения ──
+const SHAG_TIP = [
+  "Why people play this game. This is the anchor: anything that does not serve it is extra.",
+  "Who the player is in the game world and who they play with: alone against the game, in pairs, in teams.",
+  "What the player pursues — the goal they act for.",
+  "The main thing: the action the player repeats again and again (core mechanic).",
+  "The laws of the world: what is allowed, what is not, what leads to what.",
+  "Resources: what valuable things the player has and what runs out. Scarcity creates decisions.",
+  "Conflict: what keeps the player from reaching the goal directly. Without it there is no game.",
+  "Boundaries: where the game takes place and how long it lasts.",
+  "Outcome: how the game ends — win, loss, endings.",
+];
+const OBJ_PR = { alignment: "tic-tac-toe, Tetris", capture: "chess", race: "any race", "rescue or escape": "Super Mario", construction: "Minecraft", solution: "puzzles" };
+function tipHtml(key) {
+  const [t, a, b, c] = key.split(":");
+  if (t === "kanon") { const [en, , , op] = KANON[a][+b];
+    // цель MDA: одна игра, где это удовольствие главное (наш выбор); игры статьи MDA смешивают по 3–6 видов — примером цели не годятся
+    const prim = a === "mda" ? [D.mdaPrimer[+b] + " — where this fun leads (our pick)"] : a === "obj" && OBJ_PR[en] ? [OBJ_PR[en]] : [];
+    return `${a === "mda" && D.mdaIk && D.mdaIk[+b] ? `<span class="tipIk">${ikCH(+b)}</span>` : ""}<b>${esc(en)}</b><div class="s">${esc(op)}</div>${prim.length ? `<div class="e">for example: ${esc(prim.join(", "))}</div>` : ""}` +
+      (a === "mda" ? `<div class="e">expressed by: ${D.mdaP[+b].map(i => esc(P[i].en)).join(", ")} (our table, a guess)</div>` : "") + `<div class="e">click — select</div>`; }
+  if (t === "p" || t === "kart") { const p = P[+a];
+    return `${p.ik ? `<span class="tipIk">${ikH(+a)}</span>` : ""}<b>${esc(p.en)}</b><div class="s">${esc(p.gl_en)}</div>` +
+      (p.nz ? `<div class="s"><b>needs:</b> ${esc(p.nz)}</div>` : "") + (p.yr ? `<div class="s" style="color:#f0b4ab"><b>a label when:</b> ${esc(p.yr)}</div>` : "") +
+      (p.slp ? `<div class="e">on the «${esc(SLOY[p.sloy][1])}» layer — our reading of its page: ${esc(p.slp)}</div>` : "") +
+      (p.sl2 ? `<div class="e">two layers? a second, independent reading also puts it on «${esc(SLOY[p.sl2][1])}»</div>` : "") +
+      (p.sla ? `<div class="e">${p.sla === p.sloy ? "the catalog marks it the same" : `the catalog marks it «${esc(SLOY[p.sla][1])}» — we read it differently`} (${esc({ mech: "Mechanical", dyn: "Dynamic", aes: "Aesthetic" }[p.sla])} Patterns)</div>` : `<div class="e">the catalog marks no layer for it</div>`) +
+      (t === "kart" ? vidKarty(+a) : "") +
+      `${p.ig.length ? `<div class="e">in games: ${esc(p.ig.slice(0, 4).map(g => D.igry[g].t).join(", "))}</div>` : ""}` +
+      `<div class="e">${t === "kart" ? "click — the tree on the left shows what can cause it" : "click — open what can cause it"}</div>`; }
+  if (t === "ln") {   // стрелка в рецепте: что с чем и откуда связь
+    const A = P[+b], B = P[+c] || null;
+    if (a === "i") return `<b>${esc(A.en)} → ${esc(B.en)}</b><div class="s">Blue arrow — from the catalog: ${esc(A.en)} can cause ${esc(B.en)} (the relation «Can Instantiate», Björk &amp; Holopainen). A possibility, not a guarantee: the conditions are on the pattern's wiki page.</div>`;
+    if (a === "k") return `<b>${esc(A.en)} ✕ ${esc(B.en)}</b><div class="s">Red dashes — from the catalog: these two are potentially conflicting (the relation «Potentially Conflicting»): having both can work against each other.</div>`;
+    if (a === "c") return `<b>${esc(A.en)} ◆ ${esc(D.mda[+c][0])}</b><div class="s">Purple dashes — our table, a guess, not the catalog: ${esc(A.en)} is one of the forms the goal «${esc(D.mda[+c][0])}» takes in play.</div>`;
+  }
+  if (t === "dot") return `<b>Layer colour</b><div class="s">The dot is the pattern's MDA layer: <span style="color:#b9a2dd">purple — feelings</span>, <span style="color:#a7c58f">green — dynamics</span>, <span style="color:#9db8e0">blue — mechanics</span>. It is our reading of the pattern's page; the catalog marks a layer for only 224 of 623 patterns.</div>`;
+  if (t === "num") return `<b>${P[+a].by.length} can cause it</b><div class="s">That many catalog patterns can cause ${esc(P[+a].en)}. ▸ on the left opens them, the most known first.</div>`;
+  if (t === "itab") { const g = VSE.find(x => x.id === a); if (!g) return "";
+    return `<b>${esc(g.nazv || g.id)}</b><div class="s">${g.dumaet ? "⏳ — Claude is building the next version right now." : g.versii.length ? `v${g.versii[g.versii.length - 1].n} — the latest version.` : "— no version yet."}</div>`; }
+  if (t === "hrebet") return "<b>Spine</b><div class=s>A chain of three cards along the catalog's «can cause» links: a mechanic causes a dynamic, the dynamic causes a feeling that expresses the goal. A recipe without it is a pile of cards. The dice build the spine first.</div>";
+  if (t === "iz") return "<b>Built from</b><div class=s>What this version was built from: the theme, the goal and the cards as they were when it was built. Later changes to the recipe go into the next version.</div>";
+  if (t === "metka") return "<b>Quick mark</b><div class=s>A one-word impression. It goes to the assistant together with your message.</div>";
+  if (t === "polka") return { aes: "<b>Feelings</b><div class=s>The top of the MDA ladder. Above — the goal: one of eight kinds of fun (challenge, discovery…). Below it — its forms: catalog patterns of how exactly the player feels it (Tension, Time Pressure…). They arise from the shelves below.</div>",
+    dyn: "<b>Dynamics</b><div class=s>What happens when the game is played: patterns that arise from the rules and cause the experience.</div>",
+    mech: "<b>Mechanics</b><div class=s>The rules written into the game: objects, actions, limits — the bottom of the ladder.</div>" }[a] + "<div class=e>The catalog's wiki started sorting its patterns by MDA and stopped at 224 of 623 (categories Mechanical, Dynamic and Aesthetic Patterns, «not an exhaustive search»). Every layer here is our reading of the pattern's page; where the authors marked one, we agree on 179 of 224. Hover a card to see both.</div>";
+  if (t === "shag") return `<b>${esc(SHAGI[+a].t)}</b> · ${esc(SHAGI[+a].en)}<div class="s">${esc(SHAG_TIP[+a])}</div>`;
+  if (t === "perebor") return `<b>Reroll</b><div class="s">The dice change every unlocked card. The new ones lead to the goal: first a spine through all three shelves — an experience that expresses the goal, a dynamic that can cause it, a mechanic that can cause that — then cards linked to them, up to the size you picked. The jam theme changes too (unless it is your own); an empty goal gets a feeling. 🔒 cards stay. ↶ undo brings back the recipe before the last throw.</div>`;
+  if (t === "m") return {
+    fraza: "<b>This world is about ___</b><div class=s>One phrase the whole world serves — our first law of living worlds. Dwarf Fortress: «every stone has a story»; Sugarscape: «grow a society from a handful of rules». ODD calls it the purpose.</div>",
+    vozniknet: "<b>What should emerge — and the prediction</b><div class=s>The phenomenon you hope to see, which no rule describes (emergence). If a rule writes it directly, it is built in, not emergent. Write the prediction before the run: a run without one only flatters.</div>",
+    suschestva: "<b>Beings</b><div class=s>Give them a body, senses and actions — never the rule of choice. A need must cost something. Senses: «modelled» — a being learns only through its senses; «just knows» — the model hands it the information.</div>",
+    um: "<b>Mind — the ladder by cost</b><div class=s>From rules (free, as in flocks and ants) to needs and utility (The Sims), a planner, an evolved brain (our stand, NEAT, Creatures), learning, and a language model (money per call). Take the cheapest that works.</div>",
+    mir: "<b>World, pressure, start</b><div class=s>Where it lives and on what scale; what presses on the beings (scarcity, winter, storms) — without pressure the world is a grey aquarium; the starting state.</div>",
+    ingredienty: "<b>Ingredients</b><div class=s>Classic models and our experiments to build on. A new world = an ancestor plus differences (delta-ODD). Locked ones stay when you reroll.</div>",
+    ekran: "<b>On screen, measures, knobs</b><div class=s>What emerged must be drawn on the world itself, not only counted (Henhouse v2: «nothing to watch»). Measures — the numbers the Stand shows live and compares in a series. Knobs — conditions you change; you change conditions, not the beings' will.</div>",
+    prov: "<b>Checks</b><div class=s>The laws of living worlds from our experiments (remeslo/zhivye-miry.md). ✓ — written; ○ — missing. «Check against traps» in the assistant gives a real review.</div>",
+    izmery: "<b>Measures</b><div class=s>Numbers the world reports, with a small chart of the last minute.</div>",
+    hronika: "<b>Chronicle</b><div class=s>The world retells what happened — only the notable. Against the «Tale-Spin effect»: rich inside, invisible outside.</div>",
+    seriya: "<b>Test series</b><div class=s>10 runs with seeds 1–10, each the world's full run length, without drawing. Every measure as mean ± spread. One run proves nothing; the report goes to the assistant.</div>" }[a] || "";
+  if (t === "mperebor") return `<b>Reroll the world</b><div class="s">The dice pick a phrase and ingredients from different families; «what should emerge» comes from the first ingredient and the mind from what they need. 🔒 the phrase or an ingredient to keep it. Beings and the prediction stay yours. ↶ undo.</div>`;
+  if (t === "ing") { const m = INGP[a]; return m ? `<b>${esc(m.en)}</b>${m.avtor ? ` <span class="e">${esc(m.avtor)}</span>` : ""}<div class="s">${esc(m.pravilo || m.zamechanie || "")}</div>${m.voznikaet ? `<div class="e">tends to give: ${esc(m.voznikaet)}</div>` : ""}` : ""; }
+  if (t === "razmer") return `<b>Recipe size for the dice</b><div class="s">How many cards 🎲 lays out — loosely, a number from the range. <b>3–4</b>: just the spine (mechanic → dynamic → experience) — a toy that tests one chain. <b>5–6</b>: the spine plus a pressure or a second path — a small game. <b>7–9</b>: richer, more can emerge, but the worker must fit it all into one prototype and will simplify; better grow it by versions. 🔒 cards always stay.</div>`;
+  if (t === "test") return `<b>Test mode</b><div class="s">Free play is not measured. Press <b>● Start test</b> — the prototype restarts clean — play, then press <b>■ Stop</b>: the play results, the time you actually played and the time without input (you were away) go to the assistant as a test report, with your words from the chat field.</div>`;
+  if (t === "prosba") return { ideas: `<b>Ideas for this game</b><div class="s">The assistant reads the recipe, its notes and the latest version, then suggests 3–5 patterns from the catalog that fit (and why), core mechanic variants and one thing to test. Suggested patterns come as buttons: «+» puts the card into the recipe.</div>`,
+    next: `<b>What to test next</b><div class="s">One thing to check in play and how you will know it worked.</div>`,
+    review: `<b>Review my design</b><div class="s">What holds together, what contradicts, what is missing — by the canon.</div>`,
+    ming: `<b>Ingredients for my phrase</b><div class="s">The assistant suggests classic models that fit this world's phrase; they come as buttons — «+» adds one to the world.</div>`,
+    mlov: `<b>Check against traps</b><div class="s">A review against the traps of living worlds: a need without a price, meetings that never happen, a phenomenon only in numbers, a mind more expensive than needed.</div>`,
+    mser: `<b>Plan a test series</b><div class="s">The prediction, the one knob to move, a control, and what result would prove the prediction wrong.</div>` }[a];
+  if (t === "otpravit") return `<b>Send</b><div class="s">This game's design assistant answers every message. Ask it to change or build something — it builds the next version from the same recipe.</div>`;
+  if (t === "lbl") return {
+    cel: "<b>The goal — the kind of fun</b><div class=s>Eight kinds of fun from the MDA framework — the general aim, like «I want it scary». The cards under it are its forms — like «a sudden fright» or «a ticking clock». The goal drives the dice and the tree. Purple dashes link it to the cards that express it (our table, a guess).</div>",
+    igroki: "<b>How players relate</b><div class=s>General categories from Fullerton: one player against the game, player against player, cooperative play, and so on.</div>",
+    obj: "<b>Objective type</b><div class=s>General categories from Fullerton: capture, chase, rescue, build…</div>",
+    conf: "<b>Conflict type</b><div class=s>General categories from Fullerton: obstacles, opponents, dilemmas.</div>",
+    upr: "<b>Controls</b><div class=s>How the player's hands play. Mouse — pointing, placing, choosing, dragging, aiming (stamping a paper, throwing grain). Keyboard — moving a body in real time. «The worker chooses» — it picks by the action and names the controls in the first line on screen.</div>",
+    meh: "<b>Core mechanic — the main action</b><div class=s>What the player does again and again. You can leave it empty: the worker will come up with one from the theme, the goal and the cards and write it here — you will see what it chose.</div>",
+    vyhod: "<b>Output</b><div class=s>The recipe exactly as the worker gets it when you press ⚡ — built on the server by the same code. «Full prompt» shows everything: the worker's role and method and the whole task.</div>",
+    zhurnal: "<b>Design assistant</b><div class=s>Every game has its own assistant. It answers every message: impressions after play, questions, «make it…». Ask for a change and it builds the next version itself. It knows the method (MDA, Fullerton, the pattern catalog) and keeps notes on this game.</div>",
+    ruchki: "<b>Knobs</b><div class=s>The prototype's key numbers. Move them while you play: ÷2 and ×2 follow Sid Meier's rule “double it or cut it in half”. The knob positions go along with your message.</div>",
+    tema: "<b>Theme — a jam theme</b><div class=s>A starting prompt to pick: a phrase like “Keep it alive”. Optional.</div>" }[a] || "";
+  return "";
+}
+document.addEventListener("mouseover", e => { const el = e.target.closest("[data-tipk]"); const tip = $("#tip");
+  if (!el) { tip.style.display = "none"; return; } const h = tipHtml(el.dataset.tipk); if (!h) { tip.style.display = "none"; return; }
+  tip.innerHTML = h; tip.style.display = "block"; });
+document.addEventListener("mousemove", e => { const tip = $("#tip"); if (tip.style.display !== "block") return;
+  const w = tip.offsetWidth, hgt = tip.offsetHeight; let x = e.clientX + 14, y = e.clientY + 16;
+  if (x + w > innerWidth - 8) x = e.clientX - w - 14; if (y + hgt > innerHeight - 8) y = e.clientY - hgt - 12;
+  tip.style.left = x + "px"; tip.style.top = y + "px"; });
+
+// ── кубики: перебор к цели (слово автора 14.10 «перебором», 15.10 «рандом меняет сборку») ──
+let PUL_SLUCH = null;
+const slVes = a => { if (!a.length) return null; const w = a.map(i => 1 + Math.sqrt(ves(i))), s = w.reduce((x, y) => x + y, 0);   // известные — чаще
+  let r = Math.random() * s; for (let k = 0; k < a.length; k++) { r -= w[k]; if (r <= 0) return a[k]; } return a[a.length - 1]; };
+function vybratKartu(nab, sloj, krome) {   // новая карточка: сначала — к цели, потом — то, что может вызвать уже лежащие
+  if (!PUL_SLUCH) PUL_SLUCH = new Set(P.map((p, i) => i).filter(i => !P[i].stub && dlyaProto(i) && (P[i].ig.length || P[i].inst.length + P[i].by.length >= 3)));
+  const iskl = new Set([...nab, ...(krome || [])]);
+  for (const sl of sloj ? [sloj, null] : [null]) {
+    const ok = i => !iskl.has(i) && !P[i].stub && dlyaProto(i) && (!sl || P[i].sloy === sl);
+    const cel = [...new Set(chuvstva().flatMap(j => D.mdaP[j]))];
+    if (!nab.some(i => cel.includes(i))) { const a = cel.filter(ok); if (a.length) return slVes(a); }
+    const vniz = [...new Set(nab.flatMap(j => P[j].by))].filter(i => ok(i) && PUL_SLUCH.has(i));
+    if (vniz.length && Math.random() < 0.8) return slVes(vniz);
+    const ryadom = [...new Set(nab.flatMap(j => [...P[j].inst, ...P[j].mod, ...P[j].modby]))].filter(i => ok(i) && PUL_SLUCH.has(i));
+    if (ryadom.length) return slVes(ryadom);
+    const a = cel.filter(ok); if (a.length) return slVes(a);
+    const vse = [...PUL_SLUCH].filter(ok); if (vse.length) return slVes(vse);
+  }
+  return null;
+}
+const prigoden = i => !P[i].stub && dlyaProto(i);
+function hrebet(K) {   // цепочка внутри рецепта: механика может вызвать динамику, динамика — чувство (MDA одной строкой)
+  for (const a of K) if (P[a].sloy === "aes") for (const d of K) if (P[d].sloy === "dyn" && P[d].inst.includes(a))
+    for (const m of K) if (P[m].sloy === "mech" && P[m].inst.includes(d)) return [m, d, a];
+  // у цели может не быть паттерна на полке чувств (discovery после прохода 15.10) — тогда хребет кончается динамикой цели
+  for (const d of K) if (P[d].sloy === "dyn" && vyrazhaet(d).length) for (const m of K) if (P[m].sloy === "mech" && P[m].inst.includes(d)) return [m, d];
+  return null;
+}
+function postroitHrebet(nab) {   // от цели вниз: переживание цели ← динамика, что может его вызвать ← механика, что может вызвать её
+  const sl = (a) => slVes(a), est = new Set(nab);
+  const vniz = (i, sloj) => P[i].by.filter(x => prigoden(x) && P[x].sloy === sloj);
+  const imeetCep = a => vniz(a, "dyn").some(d => vniz(d, "mech").length);
+  const celP = [...new Set(chuvstva().flatMap(j => D.mdaP[j]))].filter(prigoden);
+  let a = nab.find(i => P[i].sloy === "aes" && vyrazhaet(i).length && imeetCep(i));
+  if (a == null) { const c = celP.filter(i => P[i].sloy === "aes" && imeetCep(i)); if (c.length) a = sl(c); }
+  if (a == null) {   // у цели нет чувства с цепочкой — хребет от динамики цели: механика → динамика
+    let d2 = nab.find(i => P[i].sloy === "dyn" && vyrazhaet(i).length && vniz(i, "mech").length);
+    if (d2 == null) { const c = celP.filter(i => P[i].sloy === "dyn" && vniz(i, "mech").length); if (c.length) d2 = sl(c); }
+    if (d2 != null) { if (!est.has(d2)) { nab.push(d2); est.add(d2); }
+      if (!nab.some(i => P[i].sloy === "mech" && P[i].inst.includes(d2))) { const m2 = sl(vniz(d2, "mech").filter(x => !est.has(x))); if (m2 != null) { nab.push(m2); est.add(m2); } }
+      return; }
+    const c = P.map((p, i) => i).filter(i => P[i].sloy === "aes" && prigoden(i) && imeetCep(i)); a = sl(c);
+  }
+  if (a == null) return;
+  let d = nab.find(i => P[i].sloy === "dyn" && P[i].inst.includes(a) && vniz(i, "mech").length);
+  if (d == null) d = sl(vniz(a, "dyn").filter(x => vniz(x, "mech").length));
+  if (d == null) return;
+  let m = nab.find(i => P[i].sloy === "mech" && P[i].inst.includes(d));
+  if (m == null) m = sl(vniz(d, "mech").filter(x => !est.has(x)));
+  for (const x of [a, d, m]) if (x != null && !est.has(x)) { nab.push(x); est.add(x); }
+}
+function sluchChuvstva() { const a = [Math.floor(Math.random() * D.mda.length)]; if (Math.random() < 0.3) { const b = Math.floor(Math.random() * D.mda.length); if (b !== a[0]) a.push(b); } return a; }
+function zapomnit() { (U.otkat[PR.id] = U.otkat[PR.id] || []).push(JSON.stringify(vFajl(SK))); if (U.otkat[PR.id].length > 20) U.otkat[PR.id].shift(); }
+function perebrosit() {
+  zapomnit();
+  if (!SK.shagi[0].k.length) SK.shagi[0].k = sluchChuvstva();
+  // слово автора 15.10: «по рандому выходят рецепты… как-то очень мало всего» — раньше кубик менял карточки на столько же
+  // новых, и рецепт из двух так и оставался из двух. Теперь: не меньше пяти, и сначала — хребет через все три полки
+  const zamki = new Set(U.zamki[PR.id] || []), nab = SK.karty.filter(i => zamki.has(i));
+  const [ot, doo] = RAZMER[U.razmer] || RAZMER.m, skolko = Math.max(nab.length, ot + Math.floor(Math.random() * (doo - ot + 1)));
+  if (!hrebet(nab)) postroitHrebet(nab);
+  // после прохода 15.10 три четверти каталога — механика; без меры кубик набирал одни механики. Добираем ту полку, где
+  // карточек меньше всего относительно доли: механика ~45%, динамика ~35%, чувства ~20%
+  const DOLYA = { mech: 0.45, dyn: 0.35, aes: 0.2 };
+  while (nab.length < skolko) {
+    const sch = sl => nab.filter(i => P[i].sloy === sl).length / DOLYA[sl];
+    const nuzhna = ["dyn", "aes", "mech"].sort((x, y) => sch(x) - sch(y))[0];
+    const j = vybratKartu(nab, nuzhna); if (j == null) break; nab.push(j); }
+  SK.karty = nab;
+  if (SK.tema !== "svoya") SK.tema = "ld" + Math.floor(Math.random() * D.temy.length);
+  vIgruIzmenilas();
+}
+function otkatit() {
+  const st = U.otkat[PR.id] || []; if (!st.length) return;
+  SK = izFajla(JSON.parse(st.pop())); vIgruIzmenilas();
+}
+function postavitKoren(i) {   // дерево слева встаёт на карточку: что может её вызвать
+  U.koren[PR.id] = i; RASKR = new Set(["k"]); ESCHE = {}; dPoisk = ""; dSloy = null; U.dRezhim = "tree"; saveUI();
+  if (U.tab !== "ceh") vkladka("ceh");
+  recept(); derevo(); $("#dTelo").scrollTop = 0;
+}
+
+// ══ Worlds: конструктор живого мира (рецепт по ODD и нашим законам) — слово автора 15.10 «строй» на скелет schemas/2026-10-15-rezhim-miry.svg ══
+const UMY = [["rules", "rules", "free"], ["needs", "needs + utility", "free"], ["planner", "planner", "free"], ["evolved", "evolved brain", "long runs"],
+             ["learning", "learning", "compute"], ["llm", "LLM", "$ per call · not yet in built worlds"]];
+const UM_IZ = { "rules": "rules", "needs + utility": "needs", "planner": "planner", "evolved brain": "evolved", "learning": "learning", "LLM": "llm" };
+const FRAZY = [   // «этот мир — о ___»: идеи поля эмерджентных миров (zhivite-kak-hotite/POLE-EMERDZHENTNYH-MIROV.md) и классика
+  "how a fact becomes a legend", "how power grows out of free equals", "how an ordinary person becomes a tool, step by sensible step",
+  "whether anyone protects the defenceless", "how trust is born and scarred — and whether betrayal heals", "how gossip bends the truth as it travels",
+  "how a norm and a taboo are born from repetition", "how «us» and «them» crystallise out of nothing", "whether the world gets rich fairly from an equal start",
+  "how naming a thing gives it power", "what changes if memory is forever — or fades overnight", "how two pictures of the world meet: blending or war",
+  "whether history replays the same from the same seed", "how life starts from the non-living", "whether complexity lives only at the edge of chaos",
+  "how an ecosystem keeps its balance — and collapses", "how a world explains its god — the observer", "who pecks whom: an order from the memory of fights",
+  "a flock with no leader", "how a crowd finds a path that no one planned"];
+const mirPustoj = () => ({ rod: "mir", fraza: "", vozniknet: "", vshito: false, predskazanie: "", um: "", mir: "", davlenie: "", nachalo: "",
+  suschestva: [{ imya: "", skolko: "", telo: "", chuvstva: "", sposob: "modelled", dejstviya: "", pamyat: "" }], ingredienty: [], ekran: "", izmery: "", ruchki: "" });
+const mirIzFajla = s => { const o = Object.assign(mirPustoj(), JSON.parse(JSON.stringify(s || {}))); o.rod = "mir";
+  if (!Array.isArray(o.suschestva) || !o.suschestva.length) o.suschestva = mirPustoj().suschestva; return o; };
+let MRASKR = new Set(), mPoisk = "", mPolnoOtkr = false;
+function mBlok(zag, odd, telo, tip) {
+  return `<div class="mblok"><div class="mz"${tip ? ` data-tipk="m:${tip}"` : ""}>${zag}<span class="odd">${odd}</span></div>${telo}</div>`;
+}
+function mirRecept() {
+  if (!SKM) return;
+  const S = SKM, zm = new Set(U.mzamki[PR.id] || []), otk = (U.otkat[PR.id] || []).length;
+  const pole = (k, ph, ta) => ta ? `<textarea data-mp="${k}" placeholder="${esc(ph)}">${esc(S[k] || "")}</textarea>`
+    : `<input type="text" data-mp="${k}" value="${esc(S[k] || "")}" placeholder="${esc(ph)}">`;
+  const sp = (k, pole_, ph) => `<input type="text" data-s="${k}:${pole_}" value="${esc(S.suschestva[k][pole_] || "")}" placeholder="${esc(ph)}">`;
+  let h = `<div class="rverh"><h2>WORLD RECIPE</h2><span class="sp"></span><span class="meta">unlocked parts change, 🔒 stay</span>` +
+    `<button class="main" data-mperebor="1" data-tipk="mperebor" style="background:var(--gold);border-color:var(--gold);font-weight:600">🎲 Reroll</button>` +
+    (otk ? '<button data-motkat="1" title="back to the recipe before the last throw">↶ undo</button>' : "") + "</div>";
+  h += mBlok("1 · this world is about", "ODD: purpose · our law «one phrase»",
+    `<div style="display:flex;gap:6px">${pole("fraza", "e.g. «who pecks whom: an order grows from the memory of fights»")}` +
+    `<button data-mzfraza="1" title="${zm.has("fraza") ? "locked — stays when you reroll" : "lock it"}">${zm.has("fraza") ? "🔒" : "🔓"}</button></div>`, "fraza");
+  h += mBlok("2 · what should emerge · and the prediction", "ODD: patterns · emergence",
+    pole("vozniknet", "what you hope to see — e.g. a pecking order that no hen knows", true) +
+    `<div class="lbl2"><label><input type="radio" name="vshito" value="0"${S.vshito ? "" : " checked"}> emerges from the beings</label> &nbsp; ` +
+    `<label><input type="radio" name="vshito" value="1"${S.vshito ? " checked" : ""}> built into the rules</label></div>` +
+    `<div class="lbl2">prediction — write it before the run</div>` + pole("predskazanie", "e.g. «with the winner effect alone the order is a straight line»", true), "vozniknet");
+  h += mBlok("3 · beings", "ODD: entities · sensing · objectives",
+    S.suschestva.map((x, k) => `<div class="sus"><div class="h">${sp(k, "imya", "kind — e.g. Hen")}${sp(k, "skolko", "how many")}` +
+      (S.suschestva.length > 1 ? `<button data-mdelsus="${k}" title="remove this kind">✕</button>` : "<span></span>") + `</div><div class="row2">` +
+      `<div><div class="lbl2">body and need — and its price</div>${sp(k, "telo", "hunger — slower when hungry, dies if it lasts")}</div>` +
+      `<div><div class="lbl2">senses — how far · how they know</div><div style="display:flex;gap:4px">${sp(k, "chuvstva", "sees 5 cells around")}` +
+      `<select data-s="${k}:sposob" title="modelled — learns only through its senses; just knows — the model hands it the information">` +
+      ["modelled", "just knows"].map(o => `<option${x.sposob === o ? " selected" : ""}>${o}</option>`).join("") + `</select></div></div>` +
+      `<div><div class="lbl2">actions</div>${sp(k, "dejstviya", "walk · eat · peck · flee")}</div>` +
+      `<div><div class="lbl2">memory</div>${sp(k, "pamyat", "each fight won or lost, per rival")}</div></div></div>`).join("") +
+    `<button data-mnovsus="1" class="ssylka">+ another kind of being</button>`, "suschestva");
+  h += mBlok("4 · mind — a ladder by cost", "ODD: adaptation · learning · prediction",
+    `<div class="umy">${UMY.map(([k, nm, c]) => `<button data-mum="${k}"${S.um === k ? ' class="on"' : ""}>${nm}<small>${c}</small></button>`).join("")}</div>` +
+    (S.um === "llm" ? `<div class="note">A language-model mind costs money on every call and needs the lab's backend — the worker cannot build it into a world yet (see «Valley» in our worlds). And our law: an LLM is not needed for emergence.</div>` : ""), "um");
+  h += mBlok("5 · world · pressure · start", "ODD: scales · initialization · input",
+    `<div class="row3"><div><div class="lbl2">the world</div>${pole("mir", "a yard 30 × 20")}</div>` +
+    `<div><div class="lbl2">pressure</div>${pole("davlenie", "little grain · winter · storms")}</div>` +
+    `<div><div class="lbl2">start</div>${pole("nachalo", "12 hens in random places")}</div></div>`, "mir");
+  h += mBlok("6 · ingredients", "delta-ODD: ancestor + differences",
+    (S.ingredienty.length ? S.ingredienty.filter(id => INGP[id]).map(id => { const z = zm.has("i:" + id);
+      return `<span class="ming${z ? " zamok" : ""}" data-tipk="ing:${id}"><b>${esc(INGP[id].en)}</b><button data-mingz="${id}" title="${z ? "locked" : "lock it"}">${z ? "🔒" : "🔓"}</button>` +
+        `<button data-mingdel="${id}" title="remove">✕</button></span>`; }).join("") : '<span class="meta">none yet — </span>') +
+    `<span class="meta">add from the left: classic models and our experiments</span>`, "ingredienty");
+  h += mBlok("7 · on screen · measures · knobs", "ODD: observation · our law of observability",
+    `<div class="row3"><div><div class="lbl2">on screen — what emerged, drawn on the world</div>${pole("ekran", "rank above each hen", true)}</div>` +
+    `<div><div class="lbl2">measures — numbers to watch</div>${pole("izmery", "fights per minute · decided pairs", true)}</div>` +
+    `<div><div class="lbl2">knobs — conditions you change</div>${pole("ruchki", "winner effect · loser effect · grain", true)}</div></div>`, "ekran");
+  h += `<div class="mblok mprov"><div class="mz" data-tipk="m:prov">checks · our living-worlds laws</div><div id="mProv">${mirProverkaHtml()}</div></div>`;
+  h += `<div class="vyhod"><div class="kolZag" data-tipk="lbl:vyhod">output · what the worker gets</div><pre id="mvRecept">…</pre>` +
+    `<details id="mvPolnoBox"${mPolnoOtkr ? " open" : ""}><summary>full prompt — the worker's role + the whole task</summary><pre id="mvPolno"></pre></details>` +
+    `<button id="mGen" data-gen="1"><b id="mGenZag">⚡ Generate world</b><span id="mGenPod"></span></button></div>`;
+  const box = $("#mRecept"), top = box.scrollTop;
+  $("#mReceptTelo").innerHTML = h; box.scrollTop = top;
+  $("#mvPolnoBox").addEventListener("toggle", e => mPolnoOtkr = e.target.open);
+  genPod(); obnovitVyhod();
+}
+function mirProverkaHtml() {
+  const S = SKM, ok = (b, da, net) => `<div>${b ? "✓ " + da : "○ " + net}</div>`, telo = S.suschestva.some(x => (x.telo || "").trim());
+  return ok((S.fraza || "").trim(), "one phrase — the mechanics serve it", "no phrase yet — a world without one is a tool without a task") +
+    ok((S.predskazanie || "").trim(), "a prediction is written before the run", "no prediction yet — write it before the first run, or a run only flatters") +
+    ok(telo, "a need is written — make sure it costs something (weakness, death)", "no need yet — without one the beings have no reason to act") +
+    ok((S.ekran || "").trim(), "what emerges is drawn on the world", "nothing on screen yet — an order that lives only in numbers is invisible (Henhouse v2)") +
+    (S.um === "llm" ? "<div>⚠ an LLM mind — is language needed here? emergence does not need it</div>" : ok(S.um, "the mind: " + (UMY.find(u => u[0] === S.um) || [, S.um])[1], "no mind chosen — the worker will take the cheapest that works")) +
+    ok(S.vshito === false || S.vshito === undefined, "the phenomenon must emerge — no rule may describe it", "marked as built in — then it is not emergence");
+}
+function mirIngr() {
+  $("#mdR").innerHTML = `<button data-mdr="ing"${U.mdR !== "nashi" ? ' class="on"' : ""}>ingredients · ${ING.modeli.length}</button><button data-mdr="nashi"${U.mdR === "nashi" ? ' class="on"' : ""}>our worlds · ${ING.nashi.length}</button>`;
+  const box = $("#mTelo"), top = box.scrollTop, sel = new Set(SKM ? SKM.ingredienty : []);
+  if (U.mdR === "nashi") {
+    box.innerHTML = ING.nashi.map(x => `<div class="mi"><div class="h"><span class="nm"><b>${esc(x.en)}</b></span>` +
+      (x.igra ? `<button data-motkr="${esc(x.igra)}">open</button>` : `<a href="${esc(x.stranica)}" target="_blank" rel="noopener">open ↗</a>`) +
+      `<button class="pl${sel.has(x.id) ? " v" : ""}" data-${sel.has(x.id) ? "mingdel" : "ming"}="${x.id}" title="use it as an ingredient">${sel.has(x.id) ? "✓" : "+"}</button></div>` +
+      `<div class="opis">${esc(x.zamechanie)}</div></div>`).join("") +
+      '<div class="meta dleg">The lab\'s own experiments. Their pages open in a new tab; «+» uses one as an ingredient of this world.</div>';
+    box.scrollTop = top; return;
+  }
+  const q = mPoisk.trim().toLowerCase(); let h = "";
+  for (const g of ING.gruppy) {
+    const items = ING.modeli.filter(m => m.gruppa === g && (!q || (m.en + " " + m.pravilo + " " + m.voznikaet + " " + m.avtor).toLowerCase().includes(q)));
+    if (!items.length) continue;
+    h += `<div class="mgr">${esc(g)}</div>` + items.map(m => { const v = sel.has(m.id), o = MRASKR.has(m.id) || !!q;
+      return `<div class="mi"><div class="h"><span class="nm" data-mraskr="${m.id}"><b>${o ? "▾" : "▸"} ${esc(m.en)}</b> <span class="av">${esc(m.avtor)}</span></span>` +
+        `<button class="pl${v ? " v" : ""}" data-${v ? "mingdel" : "ming"}="${m.id}" title="${v ? "in the world — click to remove" : "add to the world"}">${v ? "✓" : "+"}</button></div>` +
+        (o ? `<div class="opis"><b>rule:</b> ${esc(m.pravilo)}<br><b>tends to give:</b> ${esc(m.voznikaet)}<br><b>cheapest mind:</b> ${esc(m.um)} · <a href="${esc(m.ssylka)}" target="_blank" rel="noopener">source ↗</a></div>` : "") + "</div>"; }).join("");
+  }
+  box.innerHTML = (h || '<div class="meta">nothing found</div>') + '<div class="meta dleg">Classic models from the science of agent-based models and artificial life (sources — remeslo/miry-kanon.md). A new world = an ancestor plus differences.</div>';
+  box.scrollTop = top;
+}
+function mirIzmenilsya(polno) { sohranitSkelet(); if (polno) { mirRecept(); mirIngr(); } else { const pr = $("#mProv"); if (pr) pr.innerHTML = mirProverkaHtml(); genPod(); obnovitVyhod(); } }
+function mPerebrosit() {   // перебор мира: фраза и ингредиенты (🔒 держит), «что возникнет» — из первого ингредиента, ум — самый дешёвый, что их тянет
+  (U.otkat[PR.id] = U.otkat[PR.id] || []).push(JSON.stringify(SKM)); if (U.otkat[PR.id].length > 20) U.otkat[PR.id].shift();
+  const zm = new Set(U.mzamki[PR.id] || []), sl = a => a[Math.floor(Math.random() * a.length)];
+  if (!zm.has("fraza")) SKM.fraza = sl(FRAZY.filter(f => f !== SKM.fraza));
+  const nab = SKM.ingredienty.filter(id => zm.has("i:" + id)), skolko = Math.max(2, nab.length + 1);
+  while (nab.length < skolko) {
+    const gr = new Set(nab.map(id => (INGP[id] || {}).gruppa)), pul = ING.modeli.filter(m => !nab.includes(m.id) && !gr.has(m.gruppa));
+    const m = sl(pul.length ? pul : ING.modeli.filter(x => !nab.includes(x.id))); if (!m) break; nab.push(m.id);
+  }
+  SKM.ingredienty = nab;
+  const pervyj = nab.map(id => INGP[id]).find(m => m && m.voznikaet);
+  if (pervyj && (!SKM.vozniknet.trim() || SKM.vozniknetAvto)) { SKM.vozniknet = pervyj.voznikaet; SKM.vozniknetAvto = true; }
+  const umy = nab.map(id => UMY.findIndex(u => u[0] === UM_IZ[(INGP[id] || {}).um])).filter(k => k >= 0);
+  if (umy.length) SKM.um = UMY[Math.max(...umy)][0];
+  mirIzmenilsya(true);
+}
+function mOtkatit() { const st = U.otkat[PR.id] || []; if (!st.length) return; SKM = mirIzFajla(JSON.parse(st.pop())); mirIzmenilsya(true); }
+function mirRaznica() {
+  const pv = posl(); if (!pv || !SKM) return [];
+  const a = mirIzFajla(pv.zamysel), b = SKM, out = [], nm = { fraza: "the phrase", vozniknet: "what should emerge", predskazanie: "the prediction",
+    um: "the mind", mir: "the world", davlenie: "pressure", nachalo: "start", ekran: "on screen", izmery: "measures", ruchki: "knobs" };
+  for (const k in nm) if (String(a[k] || "").trim() !== String(b[k] || "").trim()) out.push(nm[k]);
+  if (!!a.vshito !== !!b.vshito) out.push("emerges / built in");
+  if (JSON.stringify(a.suschestva) !== JSON.stringify(b.suschestva)) out.push("beings");
+  const ia = new Set(a.ingredienty), ib = new Set(b.ingredienty);
+  for (const id of ib) if (!ia.has(id)) out.push("+ " + ((INGP[id] || {}).en || id)); for (const id of ia) if (!ib.has(id)) out.push("− " + ((INGP[id] || {}).en || id));
+  return out;
+}
+function izChegoMir(z) {
+  if (!z) return "";
+  const s = mirIzFajla(z);
+  return "built from: " + [s.fraza ? "«" + s.fraza + "»" : "", ...s.ingredienty.map(id => (INGP[id] || {}).en || id), s.um ? "mind: " + s.um : ""].filter(Boolean).join(" · ");
+}
+
+// ══ Worlds: стенд-наблюдатель — время, seed, мерки, хроника, одно существо, серия прогонов (договор igrushki/DOGOVOR-MIR.md) ══
+const MS = { M: null, idet: true, skor: 1, sid: 1, dolg: 0, ts: 0, ist: {}, seriya: null, ser: null, nablT: 0 };
+function mirStart() {
+  const M = ob(); MS.M = (M && typeof M.shag === "function") ? M : null; MS.ist = {}; MS.ser = null;
+  if (MS.M) { try { MS.M.sbros(MS.sid); } catch (e) { console.error(e); } MS.idet = true; $("#mPusk").textContent = "⏸ pause"; }
+  nabl();
+}
+function mirKadr(ts) {
+  requestAnimationFrame(mirKadr);
+  const M = MS.M, dt = Math.min(0.1, (ts - (MS.ts || ts)) / 1000); MS.ts = ts;
+  if (!M || !jeMir() || MS.seriya || U.tab !== "stend") return;
+  try {
+    if (MS.idet) {
+      if (MS.skor === "max") { const t0 = performance.now(); while (performance.now() - t0 < 12) M.shag(); }
+      else { MS.dolg += (M.tps || 30) * MS.skor * dt; let n = Math.min(500, Math.floor(MS.dolg)); MS.dolg -= n; while (n-- > 0) M.shag(); }
+    }
+    M.risovat();
+  } catch (e) { console.error(e); MS.idet = false; }
+  $("#mTakt").textContent = "tick " + (M.takt || 0);
+  if (ts - MS.nablT > 300) { MS.nablT = ts; nablZapisat(); nabl(); }
+}
+requestAnimationFrame(mirKadr);
+function nablZapisat() { const M = MS.M; if (!M) return; try { for (const x of M.izmery()) { const a = MS.ist[x.id] = MS.ist[x.id] || []; a.push(+x.znach || 0); if (a.length > 160) a.shift(); } } catch (e) {} }
+const krug = v => Math.abs(v) >= 100 ? Math.round(v) : Math.abs(v) >= 10 ? +v.toFixed(1) : +(+v).toFixed(2);
+function iskra(a) {   // маленький график мерки за последние ~50 секунд
+  if (!a || a.length < 2) return "";
+  const mn = Math.min(...a), mx = Math.max(...a), k = mx - mn || 1;
+  return `<svg viewBox="0 0 160 22" preserveAspectRatio="none"><polyline fill="none" stroke="#4A6FA5" stroke-width="1.4" points="${a.map((v, i) => `${(i / (a.length - 1) * 160).toFixed(1)},${(20 - (v - mn) / k * 18).toFixed(1)}`).join(" ")}"/></svg>`;
+}
+function nablKarkas() {   // ручки мира живут в панели наблюдателя постоянно: перерисовывать их нельзя, пока их тянут мышью
+  const box = $("#nabl");
+  if (!$("#nablDin")) box.innerHTML = '<div id="nablDin"></div><div id="nablRuchki"><div class="cap" data-tipk="lbl:ruchki">knobs · conditions you change</div>' +
+    '<div id="mRuchki"><div class="meta">they appear with the world</div></div><button id="mRuchkiSbros" style="margin-top:4px;font-size:12px">reset knobs to the version</button></div>';
+}
+function nabl() {
+  const box = $("#nabl"); if (!box || box.hidden) return;
+  nablKarkas(); const din = $("#nablDin"), M = MS.M;
+  if (!PR || !PR.versii.length) { din.innerHTML = '<div class="meta" style="margin-top:8px">The observer appears with the first version of the world.</div>'; return; }
+  if (!M) { din.innerHTML = `<div class="note">This version was built before the world contract: it runs by itself, without run controls, measures or series. The next ⚡ builds a world the Stand can drive.</div>`; return; }
+  let iz = []; try { iz = M.izmery(); } catch (e) {}
+  let h = `<div><div class="cap" style="margin-top:4px" data-tipk="m:izmery">measures · live</div>` +
+    (iz.map(x => `<div class="izm"><span>${esc(x.nazv)}</span><b>${esc(krug(+x.znach || 0))}</b>${iskra(MS.ist[x.id])}</div>`).join("") || '<div class="meta">the world reports no measures</div>') + "</div>";
+  const sob = (M.sobytiya || []).slice(-30).reverse();
+  h += `<div><div class="cap" data-tipk="m:hronika">chronicle · what happened</div>` + (sob.map(e => `<div class="hron"><span class="t">t ${e.takt}</span> · ${esc(e.tekst)}</div>`).join("") || '<div class="meta">nothing notable yet</div>') + "</div>";
+  let p = null; try { if (M.vybrano != null && M.pokazat) p = M.pokazat(M.vybrano); } catch (e) {}
+  h += `<div><div class="cap">one being</div><div class="osm">${p ? `<b>${esc(p.imya)}</b>` + (p.stroki || []).map(s => `<div>${esc(s)}</div>`).join("") : '<span class="meta">pause, then click a being on the world</span>'}</div>`;
+  h += `<div class="cap" data-tipk="m:seriya">test series</div><div class="ser">` + serHtml() + "</div></div>";
+  din.innerHTML = h;
+}
+function serHtml() {
+  const pr = (SKM && SKM.predskazanie || "").trim();
+  if (MS.seriya) return `running… ${MS.seriya.k} of ${MS.seriya.n} — seed ${MS.seriya.k + 1}`;
+  if (!MS.ser) return `${pr ? `prediction: «${esc(pr)}»<br>` : '<span style="color:#8a5d10">write a prediction in the recipe first</span><br>'}<span class="meta">● run series ×10 — 10 seeds × ${(MS.M && MS.M.dlina) || 3000} ticks without drawing; one run proves nothing</span>`;
+  const r = MS.ser;
+  return (pr ? `prediction: «${esc(pr)}»<br>` : "") + `<b>${r.n} runs × ${r.takty} ticks</b><table>` +
+    Object.values(r.izmery).map(m => `<tr><td>${esc(m.nazv)}</td><td>${m.srednee} ± ${m.razbros}</td></tr>`).join("") + "</table>" +
+    `<button data-mserotpr="1" style="margin-top:6px">send the report to the assistant</button>${r.otpr ? ' <span class="meta">sent</span>' : ""}`;
+}
+async function mSeriya() {
+  const M = MS.M; if (!M || MS.seriya) return;
+  const n = 10, T = M.dlina || 3000, rez = [];
+  MS.seriya = { k: 0, n }; nabl();
+  try {
+    for (let sid = 1; sid <= n; sid++) {
+      M.sbros(sid);
+      for (let t = 0; t < T;) { const do_ = Math.min(T, t + 400); for (; t < do_; t++) M.shag(); await new Promise(r => setTimeout(r, 0)); }
+      rez.push(M.izmery()); MS.seriya.k = sid; nabl();
+    }
+  } catch (e) { console.error(e); }
+  const izmery = {};
+  for (const x of rez[0] || []) {
+    const vals = rez.map(r => +((r.find(y => y.id === x.id) || {}).znach || 0)), sr = vals.reduce((a, b) => a + b, 0) / vals.length;
+    const sd = Math.sqrt(vals.reduce((a, b) => a + (b - sr) ** 2, 0) / Math.max(1, vals.length - 1));
+    izmery[x.id] = { nazv: x.nazv, srednee: krug(sr), razbros: krug(sd), znacheniya: vals.map(krug) };
+  }
+  MS.ser = { n, takty: T, sidy: "1–" + n, izmery, versiya: ver, ruchki: Object.fromEntries((M.ruchki || []).map(r => [r.id, r.znach])) };
+  MS.seriya = null; M.sbros(MS.sid); MS.ist = {}; nabl();
+}
+async function mSeriyaOtpravit() {
+  if (!MS.ser) return;
+  const pr = (SKM.predskazanie || "").trim();
+  try { await poslatV("/api/chat", { versiya: ver, tekst: `Series finished.${pr ? " My prediction was: «" + pr + "»." : ""} What do the numbers say?`, metki: [], seriya: MS.ser });
+    MS.ser.otpr = true; nabl(); } catch (e) { $("#otprStatus").textContent = "not sent: " + e.message; }
+}
+$("#mPusk").addEventListener("click", () => { MS.idet = !MS.idet; $("#mPusk").textContent = MS.idet ? "⏸ pause" : "▶ run"; });
+$("#mShag").addEventListener("click", () => { const M = MS.M; if (!M) return; MS.idet = false; $("#mPusk").textContent = "▶ run"; M.shag(); M.risovat(); nablZapisat(); nabl(); });
+$("#mSkor").addEventListener("change", e => { MS.skor = e.target.value === "max" ? "max" : +e.target.value; });
+$("#mSid").addEventListener("change", e => { MS.sid = Math.max(1, Math.floor(+e.target.value || 1)); e.target.value = MS.sid; if (MS.M) { MS.M.sbros(MS.sid); MS.ist = {}; nabl(); } });
+$("#mSidNov").addEventListener("click", () => { MS.sid = 1 + Math.floor(Math.random() * 9999); $("#mSid").value = MS.sid; if (MS.M) { MS.M.sbros(MS.sid); MS.ist = {}; nabl(); } });
+$("#mSbros").addEventListener("click", () => { if (MS.M) { MS.M.sbros(MS.sid); MS.ist = {}; MS.idet = true; $("#mPusk").textContent = "⏸ pause"; nabl(); } });
+$("#mSeriya").addEventListener("click", mSeriya);
+$("#zkSvern").addEventListener("click", () => { U.zkSvern = !U.zkSvern; saveUI(); rezhimVid(); setTimeout(() => { podognat(); risLinii(); }, 60); });
+// ручки: раскрыты по умолчанию (слово автора 15.10: «нет настроек внизу»), сворачиваются и помнят выбор («не всегда нужны на экране»)
+$("#ruchkiBox").open = !U.ruchkiSvern;
+$("#ruchkiBox").addEventListener("toggle", () => { U.ruchkiSvern = !$("#ruchkiBox").open; saveUI(); setTimeout(podognat, 30); });
+$("#mPoisk").addEventListener("input", e => { mPoisk = e.target.value; mirIngr(); });
+document.addEventListener("change", e => { if (e.target.name === "vshito" && SKM) { SKM.vshito = e.target.value === "1"; mirIzmenilsya(false); } });
+
+// ── события ──
+document.addEventListener("click", async e => {
+  const el = e.target.closest("[data-tab],[data-zakr],[data-ver],[data-m],[data-k],[data-zamok],[data-reroll],[data-rerollvse],[data-razmer],[data-otkat],[data-del],[data-vnes],[data-vyn],[data-kart],[data-dkoren],[data-dtog],[data-desche],[data-dr],[data-dsbros],[data-plussloy],[data-cel],[data-digra],[data-primer],[data-primerpp],[data-kanon],[data-shag],[data-rezhim],[data-gen],[data-upr],[data-mum],[data-ming],[data-mingdel],[data-mingz],[data-mraskr],[data-mdr],[data-mnovsus],[data-mdelsus],[data-mperebor],[data-motkat],[data-mzfraza],[data-motkr],[data-mserotpr]");
+  if (!el) return;
+  const ds = el.dataset;
+  if (ds.tab) return vkladka(ds.tab);
+  if (ds.rezhim) return rezhimSmenit(ds.rezhim);
+  if (ds.gen) return genNazhat();
+  if (ds.upr) { SK.upravlenie = ds.upr === "auto" ? "" : ds.upr; return vIgruIzmenilas(); }
+  // ── рецепт мира ──
+  if (ds.mum) { SKM.um = SKM.um === ds.mum ? "" : ds.mum; return mirIzmenilsya(true); }
+  if (ds.ming) { if (!SKM.ingredienty.includes(ds.ming)) SKM.ingredienty.push(ds.ming); return mirIzmenilsya(true); }
+  if (ds.mingdel) { SKM.ingredienty = SKM.ingredienty.filter(x => x !== ds.mingdel); return mirIzmenilsya(true); }
+  if (ds.mingz) { const z = new Set(U.mzamki[PR.id] || []), k = "i:" + ds.mingz; z.has(k) ? z.delete(k) : z.add(k); U.mzamki[PR.id] = [...z]; saveUI(); return mirRecept(); }
+  if (ds.mzfraza) { const z = new Set(U.mzamki[PR.id] || []); z.has("fraza") ? z.delete("fraza") : z.add("fraza"); U.mzamki[PR.id] = [...z]; saveUI(); return mirRecept(); }
+  if (ds.mraskr) { if (U.tab !== "ceh") vkladka("ceh"); U.mdR = "ing"; MRASKR.has(ds.mraskr) && !el.closest(".pchip") ? MRASKR.delete(ds.mraskr) : MRASKR.add(ds.mraskr); return mirIngr(); }
+  if (ds.mdr) { U.mdR = ds.mdr; saveUI(); return mirIngr(); }
+  if (ds.mnovsus) { SKM.suschestva.push({ imya: "", skolko: "", telo: "", chuvstva: "", sposob: "modelled", dejstviya: "", pamyat: "" }); return mirIzmenilsya(true); }
+  if (ds.mdelsus != null) { SKM.suschestva.splice(+ds.mdelsus, 1); return mirIzmenilsya(true); }
+  if (ds.mperebor) return mPerebrosit();
+  if (ds.motkat) return mOtkatit();
+  if (ds.motkr) return otkrytIgru(ds.motkr);
+  if (ds.mserotpr) return mSeriyaOtpravit();
+  if (ds.zakr != null) return el.closest(".okno").classList.remove("on");
+  if (ds.ver) { e.preventDefault(); ver = +ds.ver; vkladka("stend"); return ekran(); }
+  if (ds.m) { metki.has(ds.m) ? metki.delete(ds.m) : metki.add(ds.m); return risMetki(); }
+  if (ds.k && el.closest(".ruchka")) { const box = el.closest(".ruchka"), I = ob(), r = I.ruchki.find(x => x.id === box.dataset.id);
+    postavit(r.id, r.znach * +ds.k); return $("#igraFrame").contentWindow.focus(); }
+  if (ds.zamok != null) { e.stopPropagation(); const i = +ds.zamok, z = new Set(U.zamki[PR.id] || []);
+    z.has(i) ? z.delete(i) : z.add(i); U.zamki[PR.id] = [...z]; saveUI(); return recept(); }
+  if (ds.reroll != null) { e.stopPropagation(); const i = +ds.reroll, k = SK.karty.indexOf(i); if (k < 0) return;
+    const j = vybratKartu(SK.karty.filter(x => x !== i), P[i].sloy, [i]); if (j == null) return;
+    zapomnit(); SK.karty[k] = j; return vIgruIzmenilas(); }
+  if (ds.rerollvse) return perebrosit();
+  if (ds.razmer) { U.razmer = ds.razmer; saveUI(); return recept(); }
+  if (ds.otkat) return otkatit();
+  if (ds.del != null || ds.vyn != null) { e.stopPropagation(); const i = +(ds.del != null ? ds.del : ds.vyn); SK.karty = SK.karty.filter(j => j !== i); return vIgruIzmenilas(); }
+  if (ds.vnes != null) { e.stopPropagation(); const i = +ds.vnes; if (!SK.karty.includes(i)) SK.karty.push(i); return vIgruIzmenilas(); }
+  if (ds.kart != null) return postavitKoren(+ds.kart);
+  if (ds.dkoren) { U.koren[PR.id] = ds.dkoren === "cel" ? null : +ds.dkoren; RASKR = new Set(["k"]); ESCHE = {}; saveUI(); recept(); return derevo(); }
+  if (ds.dtog) { RASKR.has(ds.dtog) ? RASKR.delete(ds.dtog) : RASKR.add(ds.dtog); return derevo(); }
+  if (ds.desche) { ESCHE[ds.desche] = (ESCHE[ds.desche] || 5) + 10; return derevo(); }
+  if (ds.dr) { U.dRezhim = ds.dr; dPoisk = ""; dSloy = null; saveUI(); return derevo(); }
+  if (ds.dsbros) { dPoisk = ""; dSloy = null; return derevo(); }
+  if (ds.plussloy) { dSloy = ds.plussloy; dPoisk = ""; U.dRezhim = "tree"; derevo(); return $("#dPoisk").focus(); }
+  if (ds.cel != null) { const j = +ds.cel, s = SK.shagi[0]; s.k = s.k.includes(j) ? s.k.filter(x => x !== j) : s.k.concat(j); return vIgruIzmenilas(); }
+  if (ds.digra != null) { dIgra = +ds.digra < 0 ? null : +ds.digra; $("#dTelo").scrollTop = 0; return derevo(); }
+  if (ds.primer != null) { el.disabled = true;   // игра каталога → новая игра-пример с её главными pattern
+    const g = +ds.primer, ids = patternyIgry(g), top = glavnye(ids), t = D.igry[g].t.replace(/ series$/, ""), sk = pustoj(); sk.karty = top;
+    const r = await (await post("/api/novaya", { nazv: "Example — " + t, skelet: vFajl(sk),
+      istochnik: `from the catalog: this is how the authors of Björk and Holopainen's catalog see “${t}” — ${top.length < ids.length ? top.length + " main patterns of " + ids.length + " (main = most arrows between them; without patterns about the platform and the players — servers, multiplayer)" : "all " + ids.length + " patterns"}; Claude will suggest the core mechanic on ⚡` })).json();
+    await zagruzit(); otkrytIgru(r.id); return; }
+  if (ds.primerpp) {
+    let g = VSE.find(x => x.nazv === "Example — Papers, Please" || x.nazv === "Пример — Papers, Please");   // старое имя — игра, созданная до перевода
+    if (!g) { const r = await (await post("/api/novaya", { nazv: "Example — Papers, Please", skelet: PRIMER,
+        istochnik: "our analysis: Papers, Please is not in the catalog — Claude wrote the nine-step design from memory of the game (🔶), not checked against the developer's own breakdowns" })).json();
+      await zagruzit(); g = VSE.find(x => x.id === r.id); }
+    return otkrytIgru(g.id); }
+  if (ds.kanon) { const [k, j] = ds.kanon.split(":").map(Number), s = SK.shagi[k];
+    s.k = SHAGI[k].multi ? (s.k.includes(j) ? s.k.filter(x => x !== j) : s.k.concat(j)) : (s.k[0] === j ? [] : [j]);
+    U.akt = k; saveUI(); return vIgruIzmenilas(); }
+  if (ds.shag != null && e.target.closest(".h")) { U.akt = +ds.shag; saveUI(); return shagi(); }
+});
+document.addEventListener("input", e => {
+  const t = e.target;
+  if (t.dataset && t.dataset.mp && SKM) { SKM[t.dataset.mp] = t.value; if (t.dataset.mp === "vozniknet") SKM.vozniknetAvto = false; return mirIzmenilsya(false); }
+  if (t.dataset && t.dataset.s && SKM) { const [k, pole] = t.dataset.s.split(":"); if (SKM.suschestva[+k]) SKM.suschestva[+k][pole] = t.value; return mirIzmenilsya(false); }
+  if (t.matches("textarea[data-x]")) { const k = +t.dataset.x; SK.shagi[k].x = t.value; t.closest(".shag").classList.toggle("gotov", !!gotov(SK.shagi[k])); }
+  else if (t.id === "kMeh") SK.shagi[3].x = t.value;
+  else if (t.id === "temaSvoya") SK.temaSvoya = t.value;
+  else if (t.id === "dPoisk") { dPoisk = t.value; dIgra = null; return derevo(); }
+  else { const box = t.closest(".ruchka"); if (box && t.type === "range") postavit(box.dataset.id, t.value); return; }
+  sohranitSkelet(); genPod(); obnovitVyhod();
+});
+$("#tema").addEventListener("change", e => { SK.tema = e.target.value; vIgruIzmenilas(); });
+$("#temaSluch").addEventListener("click", () => { SK.tema = "ld" + Math.floor(Math.random() * D.temy.length); vIgruIzmenilas(); });
+$("#podrobno").addEventListener("click", () => { U.podrobno = !U.podrobno; saveUI(); recept(); });
+$("#igryTaby").addEventListener("click", e => {
+  const x = e.target.closest("[data-izakr]");
+  if (x) { e.stopPropagation(); const id = x.dataset.izakr, k = U.igry.indexOf(id);   // закрыть вкладку: файлы остаются
+    U.igry = U.igry.filter(v => v !== id); saveUI();
+    if (PR.id === id) otkrytIgru(U.igry[Math.min(k, U.igry.length - 1)]); else shapka(); return; }
+  const t = e.target.closest("[data-itab]"); if (t && t.dataset.itab !== PR.id) otkrytIgru(t.dataset.itab);
+});
+$("#igryPlus").addEventListener("click", e => { e.stopPropagation(); const m = $("#igryMenu"); m.hidden = !m.hidden; ubrat = null;
+  if (!m.hidden) { igrySpisok(); $("#novNazv").focus(); } });
+document.addEventListener("click", e => { if (!$("#igryMenu").hidden && !e.target.closest(".igryPlus")) $("#igryMenu").hidden = true; });
+$("#igryMenu").addEventListener("click", async e => {
+  const b = e.target.closest("[data-iubrat],[data-iotmena],[data-iudal],[data-iotkr]"); if (!b) return;
+  e.stopPropagation(); const ds = b.dataset;
+  if (ds.iubrat) { ubrat = ds.iubrat; return igrySpisok(); }
+  if (ds.iotmena) { ubrat = null; return igrySpisok(); }
+  if (ds.iudal) {
+    const r = await post("/api/udalit", { igra: ds.iudal });
+    if (!r.ok) { ubrat = null; igrySpisok(); $("#svyaz").textContent = (await r.json()).oshibka; return; }
+    ubrat = null; U.igry = U.igry.filter(v => v !== ds.iudal); saveUI(); await zagruzit();
+    if (!VSE.length) return location.reload();
+    if (PR.id === ds.iudal) otkrytIgru(U.igry[0] || VSE[0].id); else shapka();
+    return igrySpisok();
+  }
+  if (ds.iotkr) { $("#igryMenu").hidden = true; otkrytIgru(ds.iotkr); }
+});
+async function sozdat() {
+  const nazv = $("#novNazv").value.trim(); if (!nazv) return $("#novNazv").focus();
+  const r = await (await post("/api/novaya", U.rezhim === "miry" ? { nazv, rod: "mir", skelet: mirPustoj() } : { nazv })).json();
+  $("#novNazv").value = ""; $("#igryMenu").hidden = true;
+  await zagruzit(); otkrytIgru(r.id); vkladka("ceh");
+}
+$("#novSozdat").addEventListener("click", sozdat);
+$("#novNazv").addEventListener("keydown", e => { if (e.key === "Enter") sozdat(); });
+$("#versiya").addEventListener("change", e => { ver = +e.target.value; ekran(); });
+$("#zanovo").addEventListener("click", ekran);
+$("#novaya").addEventListener("click", () => { ver = izvestnaya[PR.id]; ekran(); });
+$("#ruchkiSbros").addEventListener("click", () => { for (const [id, v] of Object.entries(window.__nachalnye || {})) postavit(id, v); });
+document.addEventListener("click", e => { if (e.target.id === "mRuchkiSbros") for (const [id, v] of Object.entries(window.__nachalnye || {})) postavit(id, v); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") { document.querySelectorAll(".okno.on").forEach(o => o.classList.remove("on")); $("#igryMenu").hidden = true; if ($("#ekran").classList.contains("polnyj")) polnyjEkran(false); } });
+async function poslatV(adres, telo) {
+  const I = ob() || {};
+  const r = await post(adres, { igra: PR.id, versiya: PR.versii.length ? ver : null, ruchki: Object.fromEntries((I.ruchki || []).map(x => [x.id, x.znach])), itogi: null, ...telo });   // итоги партии — только из теста
+  if (!r.ok) throw new Error((await r.json()).oshibka || r.status);
+  await zagruzit(); PR = VSE.find(x => x.id === PR.id); zhurnal(); genPod();
+}
+
+// ── прототип во весь экран и по размеру ──
+function podognat() {   // игрушка меньше окна — увеличить, больше — уменьшить; страница во всё окно — не трогать
+  // Масштаб — снаружи рамки (transform), не CSS zoom внутри: под zoom Сафари считает щелчки иначе, чем Chrome, и игра
+  // в нём не управлялась (Бехолдер v2, 15.10). Внутри рамки координаты свои, 1:1, в любом браузере.
+  const f = $("#igraFrame"), box = $("#igraOkno"); let d; try { d = f.contentDocument; } catch (e) { return; }
+  const W = box.clientWidth, H = box.clientHeight;
+  if (!d || !d.body || f.hidden || W < 50 || H < 50) return;   // стенд скрыт — подогнать, когда откроется
+  d.documentElement.style.zoom = "";
+  f.style.transform = ""; f.style.width = W + "px"; f.style.height = H + "px";
+  const mera = () => {   // рамка содержимого внутри рамки игры: холсты, кнопки, текст
+    let l = 1e9, t = 1e9, r = 0, b = 0;
+    const add = (q) => { if (q.width < 2 || q.height < 2) return; l = Math.min(l, q.left); t = Math.min(t, q.top); r = Math.max(r, q.right); b = Math.max(b, q.bottom); };
+    d.body.querySelectorAll("canvas,svg,img,video,button,input,select,textarea").forEach(el => { if (el.tagName !== "svg" && el.closest("svg")) return; add(el.getBoundingClientRect()); });
+    const w = d.createTreeWalker(d.body, NodeFilter.SHOW_TEXT), rg = d.createRange();
+    for (let n = w.nextNode(); n; n = w.nextNode()) { if (!n.textContent.trim()) continue; rg.selectNodeContents(n); for (const q of rg.getClientRects()) add(q); }
+    return r > l && b > t ? { l, t, w: r - l, h: b - t } : null;
+  };
+  const m1 = mera(); if (!m1) return;
+  let k = Math.min(W / (m1.w + 24), H / (m1.h + 24));
+  k = k >= 0.9 && k <= 1.12 ? 1 : Math.max(0.4, Math.min(3, k));
+  f.style.width = (W / k) + "px"; f.style.height = (H / k) + "px";
+  const m2 = mera() || m1;   // после смены ширины содержимое могло съехать (центрирование самой игры)
+  // по центру окна: игры, у которых холст прижат влево, не висят у края (Random v1, 15.10)
+  const ox = (W - m2.w * k) / 2 - m2.l * k, oy = Math.max(0, (H - m2.h * k) / 2 - m2.t * k);
+  f.style.transform = `translate(${ox.toFixed(1)}px, ${oy.toFixed(1)}px) scale(${k.toFixed(4)})`;
+  const fon = getComputedStyle(d.body).backgroundColor, fon2 = getComputedStyle(d.documentElement).backgroundColor;   // поля вокруг игры — её цветом
+  box.style.background = !/rgba\(0, 0, 0, 0\)|transparent/.test(fon) ? fon : !/rgba\(0, 0, 0, 0\)|transparent/.test(fon2) ? fon2 : "";
+}
+function polnyjEkran(da) { $("#ekran").classList.toggle("polnyj", da); $("#naEkran").textContent = da ? "✕ back" : "⛶ full screen"; setTimeout(podognat, 80); }
+$("#naEkran").addEventListener("click", () => polnyjEkran(!$("#ekran").classList.contains("polnyj")));
+window.addEventListener("resize", () => { setTimeout(podognat, 80); requestAnimationFrame(risLinii); });
+
+// ── режим теста (слово автора 14.10): измеряется только партия, которую автор сам начал и закончил ──
+let TEST = null;
+const PAUZA_VVODA = 20000;
+const mmss = (sek) => `${Math.floor(sek / 60)}:${String(sek % 60).padStart(2, "0")}`;
+function testVvod() { if (!TEST) return; const t = Date.now(), gap = t - TEST.posl; if (gap > PAUZA_VVODA) TEST.prostoj += gap - PAUZA_VVODA; TEST.posl = t; }
+function testKnopka() {
+  const b = $("#testBtn"); b.classList.toggle("idet", !!TEST);
+  if (!TEST) { b.textContent = "● Start test"; return; }
+  b.textContent = `■ Stop test · ${mmss(Math.round((Date.now() - TEST.start) / 1000))}`;
+}
+$("#testBtn").addEventListener("click", async () => {
+  if (!PR.versii.length) return;
+  if (!TEST) {
+    TEST = { start: Date.now(), versiya: ver, posl: Date.now(), prostoj: 0, igra: PR.id };
+    ekran(); testKnopka(); $("#otprStatus").style.color = "var(--ok)"; $("#otprStatus").textContent = "test started — play; press Stop when done";
+    return;
+  }
+  testVvod();
+  const I = ($("#igraFrame").contentWindow || {}).IGRUSHKA || {}, sek = Math.round((Date.now() - TEST.start) / 1000);
+  const bez = Math.min(sek, Math.round(TEST.prostoj / 1000)), aktiv = sek - bez, t = TEST; TEST = null; testKnopka();
+  if (t.igra !== PR.id) return;
+  const slova = $("#tekst").value.trim();
+  try { await poslatV("/api/chat", { versiya: t.versiya, tekst: slova || "Test finished.", metki: [...metki],
+      test: { sek, aktivno: aktiv, bez_vvoda: bez }, itogi: I.poslednyaya || null });
+    metki.clear(); risMetki(); $("#tekst").value = "";
+    $("#otprStatus").style.color = "var(--ok)"; $("#otprStatus").textContent = `test report sent: ${mmss(sek)}, active ${mmss(aktiv)}`; }
+  catch (e) { $("#otprStatus").style.color = "var(--red)"; $("#otprStatus").textContent = "test report not sent: " + e.message; }
+});
+setInterval(testKnopka, 1000);
+document.addEventListener("mousemove", testVvod, { passive: true }); document.addEventListener("keydown", testVvod);
+
+// ── ⚡ и чат ──
+async function genNazhat() {
+  if (!PR || PR.dumaet) return;
+  clearTimeout(tajmer); tajmer = null;   // сначала сохранить рецепт, потом звать сборку
+  const m = jeMir();
+  await post("/api/skelet", m ? { igra: PR.id, skelet: SKM } : { igra: PR.id, skelet: vFajl(SK), mehanika: SK.shagi[3].x.trim(), patterny: SK.karty.map(i => P[i].en) });
+  const pv = posl();
+  try { await poslatV("/api/gen", { versiya: pv ? pv.n : null, izmeneniya: (m ? mirRaznica() : raznica()).join("; ") }); vkladka("stend"); }
+  catch (e) { const d = $(m ? "#mGenPod" : "#genPod"); if (d) d.textContent = "not sent: " + e.message; }
+}
+async function otpravit() {
+  const st = $("#otprStatus"), tekst = $("#tekst").value.trim();
+  if (!tekst && !metki.size) { st.style.color = "var(--red)"; st.textContent = "write something or pick a tag"; return; }
+  try { await poslatV("/api/chat", { tekst, metki: [...metki] });
+    st.style.color = "var(--ok)"; st.textContent = "sent — the assistant is replying";
+    metki.clear(); risMetki(); $("#tekst").value = ""; setTimeout(() => st.textContent = "", 4000); }
+  catch (e) { st.style.color = "var(--red)"; st.textContent = "not sent: " + e.message; }
+}
+$("#otpravit").addEventListener("click", otpravit);
+const PROSBY = { ideas: "Suggest ideas for this game: patterns from the catalog that fit, core mechanic variants, and what to test next.",
+                 next: "What should I test next in play, and how will I know it worked?",
+                 review: "Review my design: what holds together, what contradicts, what is missing?",
+                 ming: "Suggest ingredients for this world's phrase: classic models that fit and why, and what each would add.",
+                 mlov: "Check this world against the traps of living worlds: what will not work, and what to change first.",
+                 mser: "Plan a test series for this world: the prediction, which knob to move, and what result would prove it wrong." };
+const PROSBY_KN = { igry: [["ideas", "💡 Ideas for this game"], ["next", "What to test next?"], ["review", "Review my design"]],
+                    miry: [["ming", "💡 Ingredients for my phrase"], ["mlov", "Check against traps"], ["mser", "Plan a test series"]] };
+$("#prosby").addEventListener("click", async e => {
+  const b = e.target.closest("[data-prosba]"); if (!b) return;
+  const st = $("#otprStatus");
+  try { await poslatV("/api/chat", { tekst: PROSBY[b.dataset.prosba], metki: [] });
+    st.style.color = "var(--ok)"; st.textContent = "asked — the assistant is replying"; setTimeout(() => st.textContent = "", 4000); }
+  catch (err) { st.style.color = "var(--red)"; st.textContent = "not sent: " + err.message; }
+});
+$("#tekst").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); otpravit(); } });
+document.querySelectorAll(".okno").forEach(o => o.addEventListener("click", e => { if (e.target === o) o.classList.remove("on"); }));
+setInterval(() => { $("#itogiStroka").textContent = TEST ? "test running — when you press Stop, the play results and your words here go to the assistant" :
+  U.rezhim === "miry" ? "knob positions go along with your message; run results come from a series (● run series)" : "knob positions go along with your message; play results only from a test (● Start test)"; }, 1000);
+setInterval(async () => {   // новая версия появилась — на экран; новые сообщения — в чат
+  if (VITRINA || !PR || !(await zagruzit())) return;
+  const g = VSE.find(x => x.id === PR.id); if (!g) return;
+  const n = g.versii.length ? g.versii[g.versii.length - 1].n : 0;
+  const dopisal = PR.dumaet && !g.dumaet;   // работник только что закончил
+  PR = Object.assign(g, {}); shapka();
+  if (dopisal && jeMir()) { if (!tajmer) SKM = mirIzFajla(g.skelet); }
+  else if (dopisal) {   // работник мог вписать главное действие — взять его файл (свои несохранённые правки не терять)
+    const srv = izFajla(g.skelet);
+    if (!tajmer) SK = srv; else if (!SK.shagi[3].x.trim() && srv.shagi[3].x.trim()) { SK.shagi[3].x = srv.shagi[3].x; sohranitSkelet(); }
+  }
+  const novaya = !g.dumaet && n > (izvestnaya[g.id] || 0);
+  if (novaya) { izvestnaya[g.id] = n; ver = n; ekran(); }   // готовая версия — сразу на экран стенда
+  if (dopisal || novaya) { if (jeMir()) mirRecept(); else { recept(); derevo(); } obnovitVyhod(); }
+  zhurnal(); genPod();
+}, 5000);
+
+(async () => {
+  $("#versiyaDiz").textContent = VERSIYA_DIZAJNERA;
+  risMetki(); temy();
+  $("#kak").addEventListener("click", () => $("#znakomstvo").classList.add("on"));
+  if (VITRINA) { document.body.classList.add("vitrina"); if (!U.igry.length) U.igry = VITRINA.igry.map(g => g.id);
+    $("#zhurnal").insertAdjacentHTML("afterend", `<div class="vitrinaZam">${VITRINA.zametka}</div>`); }
+  else if (!dostat("dizajner.znakom10", false)) { $("#znakomstvo").classList.add("on"); hranit("dizajner.znakom10", true); }   // v1.0 — новое устройство, показать ещё раз
+  if (!(await zagruzit())) return;
+  try { ING = await (await fetch("ingredienty.json")).json(); } catch (e) {}
+  for (const m of [...ING.modeli, ...ING.nashi]) { INGP[m.id] = m; ING_IMYA[m.en] = m.id; }
+  const id = U.rezhim === "miry" ? U.proektMir : U.proekt;
+  const g = VSE.find(x => x.id === id && vRezhime(x)) || VSE.find(x => otkrytye().includes(x.id) && vRezhime(x)) || VSE.find(vRezhime);
+  if (g) otkrytIgru(g.id); else pustoRezhim();
+  vkladka(U.tab);
+})();
+</script>
+</body>
+</html>

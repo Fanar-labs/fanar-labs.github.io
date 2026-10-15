@@ -1,0 +1,82 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Game &amp; Sim Lab — Fanarlabs</title>
+<meta name="description" content="Инструмент, на котором я учусь геймдизайну: рецепт из игровых паттернов превращается в маленький играбельный прототип. Первый, разбор Beholder, можно попробовать.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Game &amp; Sim Lab — Fanarlabs">
+<meta property="og:description" content="Инструмент, на котором я учусь геймдизайну: рецепт из игровых паттернов превращается в маленький играбельный прототип. Первый, разбор Beholder, можно попробовать.">
+<meta property="og:image" content="https://fanarlabs.com/projects/img/game-lab/konstruktor.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/assets/hub.css">
+<script data-goatcounter="https://panarini.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head><body>
+<!-- СОБРАНО gen_pages.py из content/game-lab.txt — правьте источник, не эту страницу. -->
+<nav class="topbar">
+  <a class="me" href="/">Fanarlabs</a>
+  <span class="links">
+    <a href="mailto:hello@fanarlabs.com" aria-label="Email">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 3h13a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5Z" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M1.6 4.1 8 8.9l6.4-4.8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+    </a>
+    <a href="https://github.com/PanarinI" aria-label="GitHub">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+    </a>
+    <a href="https://bsky.app/profile/igorpanarin.bsky.social" aria-label="Bluesky">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 7.1C7.1 5.4 4.7 2.2 2.7 1.4 1.5.9.5 1.4.5 2.9c0 1.4.8 4.7 1.3 5.5.9 1.4 2.4 1.3 3.9 1.1-1.5.2-2.8.8-1.1 2.6.4.4 1 1 1.5 1.5.8.8 1.5.9 1.9.9s1.1-.1 1.9-.9c.5-.5 1.1-1.1 1.5-1.5 1.7-1.8.4-2.4-1.1-2.6 1.5.2 3 .3 3.9-1.1.5-.8 1.3-4.1 1.3-5.5 0-1.5-1-2-2.2-1.5-2 .8-4.4 4-5.3 5.7Z"/></svg>
+    </a>
+    <a href="https://t.me/bot_and_kot" aria-label="Telegram channel, in Russian">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M15.2 2.2 1.1 7.6c-.7.3-.7.9 0 1.1l3.5 1.1L13 4.4c.4-.2.8-.1.5.2l-6.8 6.2-.3 3.6c.4 0 .6-.2.8-.4l1.7-1.7 3.6 2.6c.7.4 1.1.2 1.3-.6l2.3-10.9c.2-.9-.3-1.3-.9-1.2Z"/></svg><span class="ru">RU</span>
+    </a>
+    <a class="lang" href="/projects/game-lab.html" hreflang="en">Eng</a>
+  </span>
+</nav>
+<div class="wrap page">
+
+<a class="back" href="../../">← Ко всем работам</a>
+
+<div class="head"><h1>Game &amp; Sim Lab</h1><span class="stage">в работе</span></div>
+
+<p class="lede">Я учусь геймдизайну, собирая игры инструментом, который сделал сам. Он превращает рецепт из игровых
+      паттернов в маленький играбельный прототип. <em>Я играю, говорю ИИ-ассистенту игры, что почувствовал,
+      и он собирает следующую версию.</em></p>
+<figure class="fig embed hero"><iframe src="/lab/dizajner/" title="Гейм-дизайнер, копия только для просмотра" loading="lazy" style="height:780px;width:100%;border:1px solid var(--line);border-radius:2px;background:#fff"></iframe><figcaption>Копия от 15 октября 2026: две игры и их настоящие чаты. Сборка отключена.</figcaption></figure>
+<p class="cta"><a href="game-lab-prototypes.html">Прототипы, в которые можно сыграть <span>↗</span></a></p>
+
+<h2>Из чего собирается прототип</h2>
+<div class="spec">
+  <div class="r"><b>Паттерны</b><span>623 из <a href="https://gdp.cse.chalmers.se/">каталога Бьорка и Холопайнена</a>, вместе со связями самого каталога: какой паттерн может вызвать какой. Time Pressure может вызвать Tension.</span><i>Patterns in Game Design, 2005, и его вики</i></div>
+  <div class="r"><b>Слои</b><span>каждый паттерн лежит на одном слое <a href="https://users.cs.northwestern.edu/~hunicke/MDA.pdf">MDA</a>: механика — правила, которые кладут руками, динамика — то, что происходит в игре, эстетика — то, что чувствует игрок</span><i>Ханике, Леблан, Зубек, 2004</i></div>
+  <div class="r"><b>Рецепт</b><span>тема из геймджема Ludum Dare, чувство-цель, от 3 до 9 паттернов, одно действие, которое игрок повторяет</span><i>кнопка-кубик собирает случайный по связям</i></div>
+  <div class="r"><b>Сборщик</b><span>ИИ-агент (сейчас Claude Sonnet), запущенный из командной строки, пишет одну HTML-страницу: серую игру на холсте 700×500 и 3–7 ручек для её главных чисел</span><i>от 30 секунд до 4 минут на версию</i></div>
+  <div class="r"><b>Ассистент</b><span>у каждой игры свой чат; он читает рецепт, записки и весь разговор и по просьбе собирает следующую версию</span><i>старые версии не перезаписываются</i></div>
+</div>
+<figure class="fig" style="max-width:460px"><span><img src="../../projects/img/game-lab/petlya.gif" alt="Схема растёт сверху вниз: тема, чувство и действие, паттерны со стрелками, ИИ, живая игра, записка «Первые секунды скучные», добавлен паттерн Lives, версия 2"></span><figcaption>Один круг на другом прототипе, плотине: v1, моя записка, добавлен один паттерн, v2.</figcaption></figure>
+
+<h2>Откуда взялся первый прототип</h2>
+<div class="how">
+<p>Перед сборкой я разобрал Beholder письменно: какие механики несут историю и что пропадает, если
+      одну из них убрать. В рецепт ушли три факта. У домовладельца свой ключ. Донос проверяют только по
+      форме. Камеры покупают за очки авторитета.</p>
+<p>Прототип я сужу по одному: узнаётся ли в нём Beholder.</p>
+</div>
+
+<div class="ext">
+  <a href="/dekonstrukcii/beholder.html">Читать разбор <span class="w">Beholder</span></a>
+</div>
+
+<h2>Разборы игр</h2>
+<div class="how">
+<p>Papers, Please и Beholder, разобранные по слоям: как механика связана со смыслом и какие решения
+      разработчики принимали по ходу. Первый прототип собран из второго разбора.</p>
+</div>
+
+<div class="ext">
+  <a href="/dekonstrukcii/">Открыть разборы <span class="w">Papers, Please · Beholder</span></a>
+</div>
+
+<footer>Сборка идёт на моём компьютере, поэтому копия выше собирать не умеет. Прототип попадает на страницу
+      прототипов, когда я решаю, что в него стоит сыграть.</footer>
+
+</div>
+<div id="lb" role="dialog" aria-modal="true" hidden><b>×</b><img alt=""></div>
+<script src="/assets/hub.js"></script>
+</body></html>

@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Site editor — how it works</title>
+<!-- Модель устройства редактора для страницы projects/redaktor.html (встраивается [embed]).
+     Надписи — из словаря T ниже, на двух языках (?lang=ru — русский, иначе английский). -->
+<style>
+:root{--paper:#F7F4EE;--ink:#14110E;--mute:#6B635A;--accent:#D93A00;--hair:#DBD4C7}
+*{box-sizing:border-box;margin:0}
+body{background:var(--paper);color:var(--ink);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;padding:16px}
+.board{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:0 28px}
+.col h3{font:600 10.5px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--mute);padding-bottom:8px;border-bottom:2px solid var(--ink);margin-bottom:14px}
+.node{position:relative;z-index:1;display:block;width:100%;text-align:left;background:#fff;border:2px solid var(--ink);
+  padding:10px 12px;margin-bottom:22px;font:inherit;color:inherit;cursor:pointer;transition:background .2s,color .2s,opacity .2s}
+.node b{display:block;font-weight:650}
+.node span{display:block;font-size:12.5px;color:var(--mute);margin-top:2px}
+.node.on{background:var(--ink);color:var(--paper)}
+.node.on span{color:#cfc7bb}
+.node.dim{opacity:.38}
+svg.wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible}
+svg.wires path{fill:none;stroke:var(--hair);stroke-width:2}
+svg.wires path.on{stroke:var(--accent);stroke-width:2.5;stroke-dasharray:6 5;animation:flow .6s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-11}}
+.steps{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 12px}
+.steps button{font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;
+  background:transparent;border:1.5px solid var(--ink);padding:7px 9px;cursor:pointer;color:var(--ink)}
+.steps button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.steps button.next{margin-left:auto;background:var(--ink);color:var(--paper)}
+.say{min-height:3.2em;border-left:3px solid var(--accent);padding:2px 0 2px 12px;max-width:62ch}
+.say i{display:block;font-style:normal;color:var(--mute);font-size:13px;margin-top:3px}
+@media (max-width:560px){.board{gap:0 12px}.node{padding:8px}.node span{display:none}}
+</style><script data-goatcounter="https://panarini.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head><body>
+
+<div class="steps" id="steps"></div>
+<p class="say" id="say"></p>
+
+<div class="board" id="board">
+  <svg class="wires" id="wires"></svg>
+  <div class="col"><h3 data-t="chrome"></h3>
+    <button class="node" data-n="page"><b></b><span></span></button>
+    <button class="node" data-n="ext"><b></b><span></span></button>
+  </div>
+  <div class="col"><h3 data-t="mac"></h3>
+    <button class="node" data-n="bridge"><b></b><span></span></button>
+    <button class="node" data-n="files"><b></b><span></span></button>
+    <button class="node" data-n="build"><b></b><span></span></button>
+  </div>
+  <div class="col"><h3 data-t="net"></h3>
+    <button class="node" data-n="model"><b></b><span></span></button>
+    <button class="node" data-n="github"><b></b><span></span></button>
+    <button class="node" data-n="live"><b></b><span></span></button>
+  </div>
+</div>
+
+<script>
+const LANG = new URLSearchParams(location.search).get('lang') === 'ru' ? 'ru' : 'en';
+document.documentElement.lang = LANG;
+
+const T = {
+  en: {
+    chrome: 'Chrome', mac: 'Mac', net: 'Internet', next: 'Next →', again: 'Again ↺',
+    nodes: {
+      page:   ['Page', 'the site, draft or live'],
+      ext:    ['Extension', 'side panel and tools on the page'],
+      bridge: ['Bridge', 'program at 127.0.0.1'],
+      files:  ['Source files', 'text the site is printed from'],
+      build:  ['Build', 'prints the HTML pages'],
+      model:  ['Model', 'Sonnet, Opus or Haiku 5.5'],
+      github: ['GitHub', 'history of every save'],
+      live:   ['Live site', 'fanarlabs.com'],
+    },
+    about: {
+      page:   ['The page you edit.', 'The editor works on the draft at 127.0.0.1 and on the live site.'],
+      ext:    ['A side panel with the conversation, and tools on the page itself.', 'A Chrome extension cannot touch files, so it sends everything to the bridge.'],
+      bridge: ['A program on the Mac that reads and edits the site’s files, runs the build and does git.', 'It writes only inside the project folder, never into .git.'],
+      files:  ['The text files the pages are printed from. Every edit goes here, never into the printed HTML.', 'Undo goes back up to 50 steps.'],
+      build:  ['Two scripts that print the pages in both languages from the source files.', 'An edit without a build does not appear on the page.'],
+      model:  ['Sonnet 5.5, Opus 5.5 or Haiku 5.5 through your own Anthropic API key, or a Claude subscription.', 'Called only where needed.'],
+      github: ['Every Save is a commit pushed here.', 'Other uncommitted changes in the repository stay as they are.'],
+      live:   ['The site everyone sees.', 'It never has what the history lacks.'],
+    },
+    steps: [
+      ['Point', ['page', 'ext'], [['page', 'ext']],
+        'You click an element on the page and say what to change.', 'Markup, path on the page, a screenshot and pieces of its text are taken.'],
+      ['Send', ['ext', 'bridge'], [['ext', 'bridge']],
+        'The extension sends the element and your words to the bridge on the Mac.', 'A page on https can reach 127.0.0.1 only from an extension.'],
+      ['Find', ['bridge', 'files'], [['bridge', 'files']],
+        'The bridge searches the source files by the pieces of text.', 'A card keeps name, description and link in different fields, so the whole text would not match.'],
+      ['Ask', ['bridge', 'model'], [['bridge', 'model']],
+        'The model gets the request, the source file and the site’s rules, and returns an edit.', ''],
+      ['Write', ['bridge', 'files', 'build'], [['bridge', 'files'], ['files', 'build']],
+        'The bridge writes the edit into the source file and runs the build.', 'One edit is one step; undo goes back up to 50.'],
+      ['Show', ['build', 'page'], [['build', 'page']],
+        'The draft page reloads with the change.', 'Nothing has left the Mac yet.'],
+      ['Save', ['bridge', 'github'], [['bridge', 'github']],
+        'A commit of the files the editor touched and the pages it printed, pushed to GitHub.', ''],
+      ['Publish', ['github', 'live'], [['github', 'live']],
+        'Save first, then the site goes live.', 'Only after you press the button.'],
+    ],
+  },
+  ru: {
+    chrome: 'Chrome', mac: 'Мак', net: 'Интернет', next: 'Дальше →', again: 'Сначала ↺',
+    nodes: {
+      page:   ['Страница', 'сайт, черновик или живой'],
+      ext:    ['Расширение', 'панель сбоку и инструменты на странице'],
+      bridge: ['Мост', 'программа на 127.0.0.1'],
+      files:  ['Исходные файлы', 'текст, из которого печатается сайт'],
+      build:  ['Сборка', 'печатает HTML-страницы'],
+      model:  ['Модель', 'Sonnet, Opus или Haiku 5.5'],
+      github: ['GitHub', 'история каждого сохранения'],
+      live:   ['Сайт в мире', 'fanarlabs.com'],
+    },
+    about: {
+      page:   ['Страница, которую правишь.', 'Редактор работает и на черновике 127.0.0.1, и на живом сайте.'],
+      ext:    ['Панель сбоку с беседой и инструменты прямо на странице.', 'Расширению Chrome файлы недоступны, поэтому всё уходит мосту.'],
+      bridge: ['Программа на Маке: читает и правит файлы сайта, запускает сборку, делает git.', 'Пишет только в папку проекта, не трогает .git.'],
+      files:  ['Текстовые файлы, из которых печатаются страницы. Правка идёт сюда, а не в напечатанный HTML.', '«↶» возвращает до 50 шагов.'],
+      build:  ['Две программы печатают страницы на двух языках из исходных файлов.', 'Без сборки правка на странице не появится.'],
+      model:  ['Sonnet 5.5, Opus 5.5 или Haiku 5.5 через собственный ключ Anthropic API или подписку Claude.', 'Подключается точечно.'],
+      github: ['Каждое «Сохранить» — коммит, отправленный сюда.', 'Чужие незаписанные правки в репозитории не задеваются.'],
+      live:   ['Сайт, который видят все.', 'В нём нет того, чего нет в истории.'],
+    },
+    steps: [
+      ['Указать', ['page', 'ext'], [['page', 'ext']],
+        'Кликаешь по элементу на странице и говоришь, что изменить.', 'Берутся разметка, путь на странице, снимок и куски текста.'],
+      ['Отправить', ['ext', 'bridge'], [['ext', 'bridge']],
+        'Расширение отправляет элемент и твои слова мосту на Маке.', 'Страница по https достучится до 127.0.0.1 только из расширения.'],
+      ['Найти', ['bridge', 'files'], [['bridge', 'files']],
+        'Мост ищет исходный файл по кускам текста.', 'У карточки название, описание и ссылка лежат в разных полях, целиком текст не совпал бы.'],
+      ['Спросить', ['bridge', 'model'], [['bridge', 'model']],
+        'Модель получает просьбу, исходный файл и правила сайта и возвращает правку.', ''],
+      ['Записать', ['bridge', 'files', 'build'], [['bridge', 'files'], ['files', 'build']],
+        'Мост записывает правку в исходный файл и запускает сборку.', 'Одна правка — один шаг; «↶» возвращает до 50.'],
+      ['Показать', ['build', 'page'], [['build', 'page']],
+        'Черновик перезагружается с правкой.', 'С Мака пока ничего не ушло.'],
+      ['Сохранить', ['bridge', 'github'], [['bridge', 'github']],
+        'Коммит файлов, которых коснулся редактор, и напечатанных страниц — и отправка на GitHub.', ''],
+      ['Выложить', ['github', 'live'], [['github', 'live']],
+        'Сначала сохранение, потом сайт уходит в мир.', 'Только по кнопке.'],
+    ],
+  },
+}[LANG];
+
+const WIRES = [['page','ext'],['ext','bridge'],['bridge','files'],['bridge','model'],['files','build'],
+               ['build','page'],['bridge','github'],['github','live']];
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const node = n => $(`.node[data-n="${n}"]`);
+
+$$('[data-t]').forEach(h => h.textContent = T[h.dataset.t]);
+$$('.node').forEach(b => {
+  const [name, sub] = T.nodes[b.dataset.n];
+  b.querySelector('b').textContent = name;
+  b.querySelector('span').textContent = sub;
+  b.onclick = () => showNode(b.dataset.n);
+});
+
+const steps = $('#steps');
+T.steps.forEach((s, i) => {
+  const b = document.createElement('button');
+  b.textContent = `${i + 1} ${s[0]}`;
+  b.onclick = () => go(i);
+  steps.appendChild(b);
+});
+const next = document.createElement('button');
+next.className = 'next';
+next.onclick = () => go(cur + 1 >= T.steps.length ? 0 : cur + 1);
+steps.appendChild(next);
+
+// провода — кривые от края к краю узлов; пересчитываются при смене размера
+function key(a, b) { return [a, b].sort().join('-'); }
+function draw() {
+  const box = $('#board').getBoundingClientRect(), svg = $('#wires');
+  svg.innerHTML = '';
+  for (const [a, b] of WIRES) {
+    const ra = node(a).getBoundingClientRect(), rb = node(b).getBoundingClientRect();
+    const ax = ra.left - box.left, ay = ra.top - box.top, bx = rb.left - box.left, by = rb.top - box.top;
+    let d;
+    if (Math.abs(ax - bx) < 4) {            // одна колонка: сверху вниз
+      const [t, u] = ay < by ? [ra, rb] : [rb, ra];
+      const x = t.left - box.left + t.width / 2;
+      d = `M${x} ${t.bottom - box.top} L${x} ${u.top - box.top}`;
+    } else {                                 // соседние колонки: от правого края к левому
+      const [l, r] = ax < bx ? [ra, rb] : [rb, ra];
+      const x1 = l.right - box.left, y1 = l.top - box.top + l.height / 2;
+      const x2 = r.left - box.left, y2 = r.top - box.top + r.height / 2;
+      const mx = (x1 + x2) / 2;
+      d = `M${x1} ${y1} C${mx} ${y1} ${mx} ${y2} ${x2} ${y2}`;
+    }
+    const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    p.setAttribute('d', d);
+    p.dataset.k = key(a, b);
+    svg.appendChild(p);
+  }
+  paint();
+}
+
+let cur = 0, lit = [], hot = [];
+function paint() {
+  $$('.node').forEach(b => {
+    b.classList.toggle('on', lit.includes(b.dataset.n));
+    b.classList.toggle('dim', lit.length > 0 && !lit.includes(b.dataset.n));
+  });
+  $$('#wires path').forEach(p => p.classList.toggle('on', hot.includes(p.dataset.k)));
+  $$('#steps button:not(.next)').forEach((b, i) => b.classList.toggle('on', i === cur));
+  next.textContent = cur === T.steps.length - 1 ? T.again : T.next;
+}
+function say(main, note) {
+  $('#say').innerHTML = '';
+  $('#say').append(main);
+  if (note) { const i = document.createElement('i'); i.textContent = note; $('#say').append(i); }
+}
+function go(i) {
+  cur = i;
+  const [, nodes, wires, main, note] = T.steps[i];
+  lit = nodes; hot = wires.map(([a, b]) => key(a, b));
+  say(main, note); paint();
+}
+function showNode(n) {
+  cur = -1; lit = [n];
+  hot = WIRES.filter(w => w.includes(n)).map(([a, b]) => key(a, b));
+  say(...T.about[n]); paint();
+}
+
+window.addEventListener('resize', draw);
+go(0); draw();
+</script>
+</body></html>
