@@ -237,6 +237,10 @@ footer.studio a:hover{color:var(--accent);border-color:var(--accent)}
   font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 .r .y{white-space:nowrap}
 .r .c{max-width:16em;text-align:right}
+/* телефон: строки полки «Материалы» (16.10) — название и строка на всю ширину, вид и дата под ними,
+   иначе четыре колонки сжимаются в столбики по слову */
+@media(max-width:640px){.rows .r{flex-wrap:wrap;gap:3px 12px}.rows .r .t,.rows .r .n{flex:1 1 100%}
+  .rows .r .c{text-align:left;max-width:none}}
 
 /* ── хронология внешности: кадры подняты из гита, порядок по времени ─ */
 .timeline{display:flex;gap:16px;overflow-x:auto;padding:0 0 1.2rem;margin:0 0 .4rem;
