@@ -87,30 +87,46 @@ h1{font-size:clamp(38px,6.4vw,72px);font-weight:800;letter-spacing:-.035em;line-
 .spec .r em{font-style:normal;font-weight:600}
 @media(max-width:640px){.spec .r{grid-template-columns:1fr;gap:2px}.spec .r i{text-align:left}}
 
-/* ── матрица подборки (16.10, слово автора: «всё это в формат таблицы — матрицу»; «нужно видеть хотя бы
-   миниатюры художников»). Строка — манера, клетки — художники. Миниатюра вписана целиком (contain), а не
-   обрезана: чужой рисунок не кадрируем. Щелчок по ней — увеличение тем же #lb, что у кадров. */
-.matrix{width:100%;border-collapse:collapse;table-layout:fixed;margin:1.4rem 0 0}
-.matrix th,.matrix td{vertical-align:top;text-align:left;border-top:2px solid var(--ink);padding:16px 14px 22px 0}
-.matrix th{width:17%;font-weight:400}
-.matrix th b{display:block;font:600 11.5px/1.35 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;
-  text-transform:uppercase;margin-bottom:8px}
-.matrix th span{display:block;color:var(--mute);font-size:13.5px;line-height:1.45}
-.matrix .ms{display:block;aspect-ratio:4/3;background:#EDE7DB;overflow:hidden}
-.matrix .ms img{display:block;width:100%;height:100%;object-fit:contain}
-.matrix .ms.none{display:flex;align-items:center;justify-content:center;padding:14px;color:var(--mute);
-  font-size:13px;line-height:1.4;text-align:center}
-.matrix .mwho{margin:10px 0 4px}
-.matrix .mwho b{display:block;font:600 13px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace}
-.matrix .mwho i{display:block;font-style:normal;color:var(--mute);font-size:12.5px;margin-top:2px}
-.matrix p{margin:0 0 6px;font-size:14.5px;line-height:1.45}
-.matrix td a{font-size:14px}
-.matrix small{display:block;color:var(--mute);font-size:12px;margin-top:4px}
+/* ── матрица подборки (16.10). Слова автора: «в формат таблицы — матрицу» → «ещё плотнее: картинка — это
+   ячейка таблицы, инфа по ховеру, изображения прям рядом». Столбец — манера, клетки вплотную (зазор 3px);
+   картинка заполняет квадрат (cover), целиком — по кнопке «Увеличить» в слое. Слой скрыт через visibility,
+   а не только прозрачность: невидимая ссылка не должна ловить первое касание на телефоне. */
+.mx{display:grid;grid-template-columns:repeat(var(--mx-cols),1fr);grid-template-rows:auto repeat(var(--mx-rows),auto);
+  grid-auto-flow:column;gap:3px;margin:1.6rem 0 0}
+.mh{position:relative;background:var(--ink);color:var(--paper);padding:9px 11px 8px;cursor:help;outline:none}
+.mh b{font:600 11px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase}
+.mh .mi{position:absolute;z-index:4;left:0;right:0;top:100%;background:var(--ink);color:var(--paper);
+  padding:2px 11px 11px;font-size:13px;line-height:1.45;visibility:hidden;opacity:0;transition:opacity .12s,visibility .12s}
+.mh:hover .mi,.mh:focus .mi{visibility:visible;opacity:1}
+.mc{position:relative;aspect-ratio:1;background:#EDE7DB;overflow:hidden;outline:none}
+.mc img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .25s}
+.mc:hover img,.mc:focus-within img{transform:scale(1.04)}
+.mc .mn{display:flex;flex-direction:column;justify-content:center;height:100%;box-sizing:border-box;padding:16px;
+  color:var(--mute);font-size:13px;line-height:1.4;text-align:center}
+.mc .mn b{color:var(--ink);font:600 13px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace;margin-bottom:6px}
+.mc .mi{position:absolute;inset:0;z-index:2;box-sizing:border-box;padding:10px 11px;overflow:auto;
+  background:rgba(20,17,14,.9);color:var(--paper);font-size:12.5px;line-height:1.36;
+  visibility:hidden;opacity:0;transition:opacity .15s,visibility .15s}
+.mc:hover .mi,.mc:focus-within .mi{visibility:visible;opacity:1}
+.mc .mi b{display:block;font:600 12.5px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace;padding-right:30px}
+.mc .mi i{display:block;font-style:normal;opacity:.7;font-size:11.5px;margin:1px 0 5px}
+.mc .mi p{margin:0 0 5px}
+.mc .mi a{color:var(--paper);text-decoration:underline;text-underline-offset:2px}
+.mc .mi a:hover{color:var(--accent)}
+.mc .mi small{display:block;opacity:.6;font-size:10.5px;line-height:1.3;margin-top:4px}
+.mc .mz{position:absolute;top:7px;right:7px;width:26px;height:26px;padding:0;background:none;border:1px solid var(--paper);
+  color:var(--paper);cursor:zoom-in;font:15px/1 -apple-system,BlinkMacSystemFont,sans-serif}
+.mc .mz:hover{border-color:var(--accent);color:var(--accent)}
 @media(max-width:760px){
-  .matrix,.matrix tbody,.matrix tr,.matrix th,.matrix td{display:block;width:auto}
-  .matrix th{padding:16px 0 6px}
-  .matrix td{border-top:1px solid var(--hair);padding:14px 0 18px}
-  .matrix .ms{max-width:420px}
+  /* телефон: наведения нет — манера заголовком на всю ширину с описанием, под ней три картинки в ряд;
+     касание открывает слой снизу экрана, а не в крошечном квадрате */
+  .mx{grid-template-columns:repeat(var(--mx-rows),1fr);grid-template-rows:none;grid-auto-flow:row}
+  .mh{grid-column:1/-1;margin-top:12px;cursor:default}
+  .mh b{display:block}
+  .mh .mi{position:static;display:block;visibility:visible;opacity:1;padding:5px 0 0;background:none;font-size:12.5px;color:#cfc7ba}
+  .mc .mn{padding:8px}
+  .mc .mn .mnt{display:none}
+  .mc .mi{position:fixed;inset:auto 10px 10px 10px;max-height:62vh;z-index:20;background:var(--ink);border:2px solid var(--paper)}
 }
 
 /* ── колофон: признание, набранное как правка корректора ───────────────
