@@ -379,6 +379,9 @@ footer a:hover{color:var(--accent);border-color:var(--accent)}
 .devlog p .en{display:inline-block;font:600 8.5px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
   letter-spacing:.08em;border:1px solid var(--mute);color:var(--mute);
   padding:2px 3px 1px;margin-left:7px;vertical-align:2px}
+/* у строки поста бывает ссылка на сам пост — как ссылки подвала, а не синяя браузерная */
+.devlog p a{color:var(--ink);text-decoration:none;border-bottom:2px solid var(--ink)}
+.devlog p a:hover{color:var(--accent);border-color:var(--accent)}
 /* картинка к записи: показывает за секунду то, на что уходит абзац */
 .devlog .pic{grid-column:3;margin:.9rem 0 .2rem;max-width:520px}
 .devlog .pic img{display:block;width:100%;border:2px solid var(--ink);box-shadow:5px 5px 0 var(--ink);cursor:zoom-in}

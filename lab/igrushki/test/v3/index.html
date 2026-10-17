@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>test v3</title>
+<style>
+html,body{margin:0;background:#1b1b1b;color:#ddd;font-family:monospace}
+#w{width:700px;height:500px;position:relative}
+canvas{display:block}
+</style><script data-goatcounter="https://panarini.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head><body>
+<div id="w"><canvas id="c" width="700" height="500"></canvas></div>
+<script>
+const cv = document.getElementById('c'), g = cv.getContext('2d');
+const P = { night: 45, lantern: 120, knock: 3, sack: 2, tell: 0.5 };
+const SPEED = 100, NH = 8;
+const CATS = ['sea', 'hearth', 'word'];
+const GLYPH = { sea: '~', hearth: '*', word: '#' };
+const MARK = { sea: 'salt stain', hearth: 'flour smudge', word: 'ink blot' };
+const PROP = {
+  sea: ['a net hung to dry', 'an oar painted blue'],
+  hearth: ['bread cooling on the sill', 'smoke from a warm chimney'],
+  word: ['ink bottles on the step', 'a lamp left on over a desk']
+};
+const VOICE = {
+  sea: '"Any word from the harbour?"',
+  hearth: '"Is it about supper? Someone promised."',
+  word: '"Has my reply come? The one on paper?"'
+};
+const REACT_OK = {
+  sea: 'stands at the water and smiles.',
+  hearth: 'hums and puts the kettle on.',
+  word: 'reads it twice, then aloud.'
+};
+const ENDING = {
+  sea: 'You are the tide\'s messenger. The harbour knows your step.',
+  hearth: 'You are the hearth-keeper. Kitchens leave a light for you.',
+  word: 'You are the town\'s quiet reader. Desks wait for your knock.',
+  mixed: 'You belong a little to everyone. No one can name you yet.',
+  none: 'No one knows your name yet. Tomorrow night, maybe.'
+};
+
+let houses, queue, sack, sel, me, keys, phase, t, msg, msgT, knockT, knocks, delivered;
+let dawnT, dawnList, ending, matched, mouse = { x: -1, y: -1 };
+
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function other(c) { const o = CATS.filter(x => x !== c); return o[Math.floor(Math.random() * o.length)]; }
+
+function reset() {
+  const two = CATS[Math.floor(Math.random() * 3)];
+  const pool = [];
+  CATS.forEach(c => { const n = c === two ? 2 : 3; for (let i = 0; i < n; i++) pool.push(c); });
+  shuffle(pool);
+  const xs = [100, 260, 440, 600];
+  houses = pool.map((c, i) => {
+    const cx = xs[i % 4], top = i < 4;
+    const props = shuffle([{ cat: c, old: false }, { cat: other(c), old: Math.random() < P.tell }]);
+    return { n: i + 1, cat: c, cx, y: top ? 78 : 362, dx: cx, dy: top ? 152 : 348, props, got: null, heard: false, shown: false, ok: false };
+  });
+  queue = shuffle(houses.map(h => {
+    const traces = shuffle([{ cat: h.cat, old: false }, { cat: other(h.cat), old: Math.random() < P.tell }]);
+    return { cat: h.cat, house: h.n, traces };
+  }));
+  sack = []; sel = 0; me = { x: 350, y: 215 }; keys = {};
+  phase = 'night'; t = P.night; msg = ''; msgT = 0; knockT = 0; knocks = 0; delivered = 0;
+  dawnT = 0; dawnList = []; ending = ''; matched = 0;
+  window.IGRUSHKA.poslednyaya = null;
+  say('Take letters from the post box in the middle.');
+}
+
+function say(s) { msg = s; msgT = 3; }
+function dist(ax, ay, bx, by) { return Math.hypot(ax - bx, ay - by); }
+function blocked(px, py) {
+  if (px < 14 || px > 686 || py < 72 || py > 430) return true;
+  return houses.some(h => px > h.cx - 53 && px < h.cx + 53 && py > h.y - 8 && py < h.y + 68);
+}
+function nearDoor() {
+  let best = null, bd = 28;
+  houses.forEach(h => { const d = dist(me.x, me.y, h.dx, h.dy); if (d < bd) { bd = d; best = h; } });
+  return best;
+}
+function nearHouse() {
+  let best = null, bd = P.lantern + 30;
+  houses.forEach(h => { const d = dist(me.x, me.y, h.cx, h.y + 30); if (d < bd) { bd = d; best = h; } });
+  return best;
+}
+
+function drop() {
+  if (phase !== 'night') return;
+  const h = nearDoor();
+  if (!h) { say('Stand on a doorstep (the small mark below a door) to drop a letter.'); return; }
+  if (!sack[sel]) { say('No letter chosen. Take some at the post box.'); return; }
+  if (h.got) { say('House ' + h.n + ' already has a letter.'); return; }
+  h.got = sack.splice(sel, 1)[0];
+  delivered++;
+  sel = 0;
+  say('Left a letter at house ' + h.n + '. Its window lights. You will learn at dawn.');
+}
+
+function slotRect(i) { const w = 110, gap = 10, x0 = 350 - (P.sack * (w + gap) - gap) / 2; return { x: x0 + i * (w + gap), y: 446, w, h: 48 }; }
+function slotAt(mx, my) {
+  for (let i = 0; i < P.sack; i++) { const r = slotRect(i); if (mx >= r.x && mx <= r.x + r.w && my >= r.y && my <= r.y + r.h) return i; }
+  return -1;
+}
+
+addEventListener('keydown', e => {
+  const k = e.key.toLowerCase();
+  if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' '].includes(k)) e.preventDefault();
+  keys[k] = true;
+  if (k === ' ') drop();
+  else if (k === 'r') reset();
+});
+addEventListener('keyup', e => { keys[e.key.toLowerCase()] = false; });
+cv.addEventListener('mousemove', e => {
+  const r = cv.getBoundingClientRect();
+  mouse.x = (e.clientX - r.left) * cv.width / r.width; mouse.y = (e.clientY - r.top) * cv.height / r.height;
+});
+cv.addEventListener('mouseleave', () => { mouse.x = -1; mouse.y = -1; });
+cv.addEventListener('click', e => {
+  const r = cv.getBoundingClientRect();
+  const x = (e.clientX - r.left) * cv.width / r.width, y = (e.clientY - r.top) * cv.height / r.height;
+  if (phase !== 'night') return;
+  const i = slotAt(x, y);
+  if (i >= 0 && sack[i]) { sel = i; say('Chosen. Walk to a doorstep and press Space.'); }
+});
+
+function finish() {
+  const c = { sea: 0, hearth: 0, word: 0 };
+  matched = 0;
+  houses.forEach(h => { if (h.got && h.got.cat === h.cat) { c[h.cat]++; matched++; h.ok = true; } });
+  const mx = Math.max(c.sea, c.hearth, c.word);
+  const tops = CATS.filter(k => c[k] === mx);
+  ending = matched === 0 ? 'none' : tops.length === 1 ? tops[0] : 'mixed';
+  window.IGRUSHKA.poslednyaya = {
+    ishod: ending, vremya: P.night, dostavleno: delivered, popalo: matched,
+    stuchal: knocks, ne_vzyato: queue.length, v_sumke: sack.length
+  };
+}
+
+let last = performance.now();
+function loop(now) {
+  const dt = Math.min(0.1, (now - last) / 1000); last = now;
+  if (msgT > 0) msgT -= dt;
+  if (phase === 'night') {
+    t -= dt;
+    let dx = 0, dy = 0;
+    if (keys['arrowleft'] || keys['a']) dx -= 1;
+    if (keys['arrowright'] || keys['d']) dx += 1;
+    if (keys['arrowup'] || keys['w']) dy -= 1;
+    if (keys['arrowdown'] || keys['s']) dy += 1;
+    const moving = dx || dy;
+    if (moving) {
+      const l = Math.hypot(dx, dy), nx = me.x + dx / l * SPEED * dt, ny = me.y + dy / l * SPEED * dt;
+      if (!blocked(nx, me.y)) me.x = nx;
+      if (!blocked(me.x, ny)) me.y = ny;
+    }
+    if (dist(me.x, me.y, 350, 250) < 30 && sack.length < P.sack && queue.length) {
+      while (sack.length < P.sack && queue.length) sack.push(queue.shift());
+      say('Took letters from the post box. Read their marks.');
+    }
+    const dh = nearDoor();
+    if (keys['e'] && dh && !moving && !dh.heard) {
+      knockT += dt;
+      if (knockT >= P.knock) {
+        dh.heard = true; knockT = 0; knocks++;
+        say('House ' + dh.n + ' murmurs: ' + VOICE[dh.cat]);
+      }
+    } else knockT = 0;
+    if (t <= 0) {
+      t = 0; phase = 'dawn'; dawnT = 0;
+      dawnList = houses.filter(h => h.got);
+      say('Dawn. The doors open.');
+    }
+  } else if (phase === 'dawn') {
+    dawnT += dt;
+    const n = Math.floor(dawnT / 1.0);
+    dawnList.forEach((h, i) => {
+      if (i < n && !h.shown) {
+        h.shown = true;
+        say('House ' + h.n + (okPre(h) ? ' ' + REACT_OK[h.cat] : ' frowns. Not for them. The letter stays on the step.'));
+      }
+    });
+    if (n >= dawnList.length + 2) { finish(); phase = 'end'; }
+  }
+  draw();
+  requestAnimationFrame(loop);
+}
+
+function lerpCol(a, b, k) { return a.map((v, i) => Math.round(v + (b[i] - v) * k)); }
+
+function draw() {
+  const k = phase === 'night' ? 1 - t / P.night : 1;
+  const sky = lerpCol([14, 16, 32], [70, 60, 70], k);
+  g.fillStyle = 'rgb(' + sky.join(',') + ')'; g.fillRect(0, 0, 700, 500);
+  g.font = '11px monospace'; g.fillStyle = '#ddd';
+  g.fillText('WASD: walk · click a letter to choose · Space: drop at a door · hold E: knock · R: restart', 12, 14);
+  g.fillText('Take letters at the post box. Each letter has two marks, one is false. Each house takes one letter.', 12, 28);
+  g.fillText('Delivered ' + delivered + '/' + NH + ' · Still at the post box ' + queue.length + ' · ' + (phase === 'night' ? 'Dawn in ' + Math.ceil(t) + 's' : 'Dawn'), 12, 42);
+  g.fillStyle = '#333'; g.fillRect(12, 48, 676, 5);
+  g.fillStyle = '#e8c27a'; g.fillRect(12, 48, 676 * k, 5);
+
+  houses.forEach(h => {
+    const seenNow = phase !== 'night' || dist(me.x, me.y, h.cx, h.y + 30) < P.lantern;
+    g.fillStyle = '#2b2b2b'; g.fillRect(h.cx - 45, h.y, 90, 60);
+    g.strokeStyle = '#555'; g.strokeRect(h.cx - 45, h.y, 90, 60);
+    g.fillStyle = '#777'; g.fillText(String(h.n), h.cx - 41, h.y + 12);
+    let wc = '#111';
+    if (h.got) wc = '#e8a23a';
+    if (phase !== 'night' && h.got && h.shown) wc = h.got.cat === h.cat ? '#fff0a0' : '#666';
+    g.fillStyle = wc; g.fillRect(h.cx - 8, h.y + 18, 16, 14);
+    if (seenNow && phase === 'night') {
+      g.font = '16px monospace'; g.fillStyle = '#ddd';
+      h.props.forEach((p, i) => g.fillText(GLYPH[p.cat], h.cx - 34 + i * 54, h.y + 30));
+      g.font = '11px monospace';
+      if (h.heard) { g.fillStyle = '#f5d76e'; g.fillText('heard: ' + GLYPH[h.cat], h.cx - 30, h.y + 54); }
+    }
+    g.fillStyle = '#6a6a6a'; g.fillRect(h.dx - 5, h.dy - 2, 10, 4);
+    if (phase !== 'night' && h.got && h.shown && h.got.cat !== h.cat) { g.fillStyle = '#aaa'; g.fillText('x', h.dx - 3, h.dy + (h.dy < 200 ? 12 : -6)); }
+  });
+
+  g.fillStyle = '#8a6a3a'; g.fillRect(335, 235, 30, 30);
+  g.fillStyle = '#222'; g.fillText('POST', 339, 254);
+
+  g.fillStyle = '#fff'; g.beginPath(); g.arc(me.x, me.y, 8, 0, 7); g.fill();
+  const dh = phase === 'night' ? nearDoor() : null;
+  if (dh && knockT > 0) { g.fillStyle = '#f5d76e'; g.fillRect(me.x - 12, me.y - 18, 24 * Math.min(1, knockT / P.knock), 4); }
+
+  if (phase === 'night') {
+    const gr = g.createRadialGradient(me.x, me.y, P.lantern * 0.55, me.x, me.y, P.lantern * 1.25);
+    gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, 'rgba(0,0,0,0.78)');
+    g.fillStyle = gr; g.fillRect(0, 56, 700, 380);
+    g.fillStyle = '#fff'; g.beginPath(); g.arc(me.x, me.y, 8, 0, 7); g.fill();
+  }
+
+  g.fillStyle = '#f5d76e';
+  if (phase === 'night') {
+    const nh = nearHouse();
+    if (msgT > 0) g.fillText(msg, 12, 438);
+    else if (nh) {
+      g.fillStyle = '#ccc';
+      g.fillText('House ' + nh.n + ': ' + nh.props.map(p => PROP[p.cat][nh.n % 2] + (p.old ? ' (old, dusty)' : '')).join(' · '), 12, 438);
+    }
+  } else if (msgT > 0) g.fillText(msg, 12, 438);
+
+  for (let i = 0; i < P.sack; i++) {
+    const r = slotRect(i), L = sack[i];
+    g.fillStyle = L ? '#3a3328' : '#1c1c1c'; g.fillRect(r.x, r.y, r.w, r.h);
+    g.strokeStyle = (L && i === sel && phase === 'night') ? '#f5d76e' : '#555'; g.lineWidth = (L && i === sel) ? 2 : 1;
+    g.strokeRect(r.x, r.y, r.w, r.h); g.lineWidth = 1;
+    if (L) {
+      g.fillStyle = '#ddd';
+      L.traces.forEach((tr, j) => g.fillText(GLYPH[tr.cat] + ' ' + MARK[tr.cat] + (tr.old ? ' (old)' : ''), r.x + 6, r.y + 18 + j * 16));
+    } else { g.fillStyle = '#555'; g.fillText('empty', r.x + 6, r.y + 28); }
+  }
+  const si = phase === 'night' ? slotAt(mouse.x, mouse.y) : -1;
+  cv.style.cursor = (si >= 0 && sack[si]) ? 'pointer' : 'default';
+
+  if (phase === 'end') {
+    g.fillStyle = 'rgba(0,0,0,.82)'; g.fillRect(100, 150, 500, 190);
+    g.fillStyle = '#fff'; g.font = '16px monospace';
+    g.fillText(ENDING[ending], 116, 190, 470);
+    g.font = '12px monospace'; g.fillStyle = '#ddd';
+    g.fillText('Right doorstep: ' + matched + ' of ' + delivered + ' delivered · Lit windows: ' + matched + '/' + NH, 116, 225);
+    g.fillText('Knocks: ' + knocks + ' · Letters left unfetched or in the sack: ' + (queue.length + sack.length), 116, 245);
+    g.fillText('Other nights end differently, depending on whose doors you reach.', 116, 280);
+    g.fillText('R to play again.', 116, 305);
+  }
+}
+
+// at dawn a delivered letter is judged: right house or not
+function okPre(h) { return h.got && h.got.cat === h.cat; }
+
+window.IGRUSHKA = {
+  ruchki: [
+    { id: 'night', nazv: 'night length, seconds', min: 20, max: 120, shag: 5, znach: P.night },
+    { id: 'lantern', nazv: 'lantern radius, px', min: 60, max: 220, shag: 10, znach: P.lantern },
+    { id: 'knock', nazv: 'knock time, seconds', min: 0.5, max: 6, shag: 0.5, znach: P.knock },
+    { id: 'sack', nazv: 'letters in the sack', min: 1, max: 4, shag: 1, znach: P.sack },
+    { id: 'tell', nazv: 'chance a false mark looks old', min: 0, max: 1, shag: 0.1, znach: P.tell }
+  ],
+  ustanovit(id, v) { P[id] = v; if (id === 'night' && phase === 'night') t = Math.min(t, v); },
+  sbros() { reset(); },
+  poslednyaya: null
+};
+reset();
+requestAnimationFrame(loop);
+</script>
+</body></html>
