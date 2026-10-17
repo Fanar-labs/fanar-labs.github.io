@@ -577,3 +577,9 @@ footer.afoot .aph a{border-bottom-width:1px}
 .cr .ct>i{display:block;font-style:normal;color:var(--mute);font-size:12.5px;margin-top:1px}
 .cr .cb,.cr .cf{color:var(--mute);font-size:13px}
 @media(max-width:760px){.cr{grid-template-columns:1fr;gap:2px}.cr .cb::before{content:"· "}}
+.czh{font:600 11.5px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;margin:2rem 0 .5rem}
+.wide .ex{max-width:46em}
+.wide .ex td,.wide .ex th{padding-right:10px}
+.wide .ex td:not(:first-child),.wide .ex th:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}
+.wide .ex th{text-transform:none}
+@media(max-width:760px){.wide .ex{font-size:12.5px}.wide .ex th{font-size:9.5px;letter-spacing:0}.wide .ex td,.wide .ex th{padding-right:3px}}
