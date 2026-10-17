@@ -417,3 +417,153 @@ footer.studio{margin-top:1.4rem;padding-top:1rem;border-top:2px solid var(--ink)
   font:600 13px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase;
   padding:14px 18px 13px;border:2px solid var(--ink);transition:transform .12s,box-shadow .12s}
 .cta a:hover{transform:translate(-3px,-3px);box-shadow:5px 5px 0 var(--accent);background:var(--accent);border-color:var(--accent)}
+
+/* ── атлас ИИ-игрушек (17.10). Слово автора: «сделай её красиво… раз атлас, то хочется сразу видеть».
+   Карта: столбцы — где мозг, строки — эпохи, в клетках фото вплотную (как матрица иллюстраторов), по четыре
+   в ряд, чтобы вся карта вставала в один экран ноутбука. Цвет фото — жива ли вещь: серое — замолчала,
+   уголёк — бросила компания и оживили люди, «?» — судьба неясна. Всё объясняет себя по наведению (закон автора:
+   экзотерический интерфейс): легенда, шапки столбцов, метки, сами фото — слоем поверх. Телефон: эпоха — строкой
+   во всю ширину, по два фото в ряд, касание открывает слой снизу экрана. */
+.wrap.page.wide{max-width:1180px}
+.al{display:flex;flex-wrap:wrap;gap:6px 20px;margin:0 0 12px;font:500 12px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace;
+  color:var(--mute)}
+.al span{display:inline-flex;align-items:center;gap:7px;cursor:help;outline:none}
+.al span b{color:var(--ink)}
+.al i{position:relative;width:14px;height:14px;flex:0 0 auto;border:1px solid var(--ink)}
+.al-live i{background:conic-gradient(#D93A00 0 25%,#E3B04B 0 50%,#3D8C7A 0 75%,#4A6CB3 0)}
+.al-silent i,.al-ember i{background:#A39C92}
+.al-ember i::after{content:"";position:absolute;left:3px;top:3px;width:6px;height:6px;border-radius:50%;background:var(--accent);
+  box-shadow:0 0 4px 1px rgba(217,58,0,.8)}
+.al-unknown i{background:var(--ink)}
+.al-unknown i::after{content:"?";position:absolute;inset:0;color:var(--paper);font:700 10px/13px ui-monospace,Menlo,monospace;
+  text-align:center}
+.am{display:grid;grid-template-columns:5.4em minmax(0,4fr) minmax(0,1fr) minmax(0,4fr);gap:10px 12px;align-items:start}
+.ae{font:600 11.5px/1.25 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;
+  padding-top:8px;border-top:2px solid var(--ink);align-self:stretch}
+.ae-0{border-top:0}
+.ah{position:relative;background:var(--ink);color:var(--paper);padding:9px 10px 8px;cursor:help;outline:none;
+  font:600 11px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;text-transform:uppercase}
+.ah .n{opacity:.55;margin-left:4px}
+.ah .mi{position:absolute;z-index:8;left:0;top:100%;width:max(100%,19em);box-sizing:border-box;background:var(--ink);
+  color:var(--paper);padding:3px 10px 11px;font:400 13px/1.45 -apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+  letter-spacing:0;text-transform:none;visibility:hidden;opacity:0;transition:opacity .12s,visibility .12s}
+.ah-cloud .mi{left:auto;right:0}
+.ah:hover .mi,.ah:focus .mi{visibility:visible;opacity:1}
+.ag{display:grid;grid-template-columns:repeat(var(--per),minmax(0,1fr));gap:3px;border-top:2px solid var(--ink);padding-top:3px;
+  align-self:stretch;min-height:48px}
+.ac{position:relative;aspect-ratio:1;background:#EDE7DB;outline:none}
+.ac:hover,.ac:focus-within{z-index:7}
+.ac img{display:block;width:100%;height:100%;object-fit:cover}
+.ac.s-silent img,.ac.s-ember img{filter:grayscale(1) contrast(.9) brightness(1.05)}
+.ac.s-unknown img{filter:grayscale(.6)}
+.ac .mn{display:flex;align-items:center;justify-content:center;height:100%;padding:8px;box-sizing:border-box;text-align:center;
+  font:600 12px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace}
+.ac .an{position:absolute;left:0;bottom:0;max-width:100%;box-sizing:border-box;background:var(--paper);color:var(--ink);
+  font:600 10.5px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;padding:3px 5px 2px;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.ab{position:absolute;top:6px;left:6px;z-index:1;cursor:help}
+.ab-ember{width:10px;height:10px;border-radius:50%;background:var(--accent);
+  box-shadow:0 0 0 2px var(--paper),0 0 10px 3px rgba(217,58,0,.7)}
+.ab-unknown{width:18px;height:18px;background:var(--ink);color:var(--paper);font:700 12px/18px ui-monospace,Menlo,monospace;
+  text-align:center}
+.ac .ai{position:absolute;top:0;left:0;z-index:5;width:max(100%,17.5em);min-height:100%;box-sizing:border-box;padding:10px 11px;
+  background:rgba(20,17,14,.95);color:var(--paper);font-size:12.5px;line-height:1.38;visibility:hidden;opacity:0;
+  transition:opacity .15s,visibility .15s}
+.ag-cloud .ac:nth-child(4n+3) .ai,.ag-cloud .ac:nth-child(4n) .ai{left:auto;right:0}
+.ac:hover .ai,.ac:focus-within .ai{visibility:visible;opacity:1}
+.ac .ai b{display:block;font:600 13px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace;padding-right:32px}
+.ac .ai i{display:block;font-style:normal;opacity:.7;font-size:11.5px;margin:2px 0 7px}
+.ac .ai p{margin:0 0 6px}
+.ac .ai em{font-style:normal;opacity:.6}
+.ac .ai small{display:block;opacity:.6;font-size:10.5px;line-height:1.3;margin-top:7px}
+.ac .ai a{color:var(--paper);text-decoration:underline;text-underline-offset:2px}
+.ac .ai a:hover{color:var(--accent)}
+.ac .ai .mz{position:absolute;top:7px;right:7px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--paper);text-decoration:none;font:15px/1 -apple-system,BlinkMacSystemFont,sans-serif}
+.ac .ai .mz:hover{border-color:var(--accent);color:var(--accent)}
+.q{font-style:normal;font-size:.82em;color:var(--accent);cursor:help;margin-left:2px}
+.ac .ai .q,.fr .mi .q{color:#F08A5D}
+/* выводы: число и строка; на чём стоит число — слоем по наведению */
+.af{border-top:2px solid var(--ink);max-width:62em}
+.fr{position:relative;display:grid;grid-template-columns:6.4em 1fr;gap:16px;align-items:baseline;padding:13px 0 14px;
+  border-bottom:1px solid var(--hair);cursor:help;outline:none}
+.fr>b{font-size:28px;font-weight:800;letter-spacing:-.03em;line-height:1;white-space:nowrap;justify-self:start;
+  border-bottom:2px dotted var(--mute);padding-bottom:3px}
+.fr>span{font-size:17px;line-height:1.4}
+.fr .mi{position:absolute;z-index:6;left:0;right:0;top:100%;background:var(--ink);color:var(--paper);padding:10px 12px 12px;
+  font-size:13.5px;line-height:1.45;visibility:hidden;opacity:0;transition:opacity .12s,visibility .12s}
+.fr:hover .mi,.fr:focus .mi{visibility:visible;opacity:1}
+.fr:hover>b,.fr:focus>b{color:var(--accent);border-color:var(--accent)}
+/* корни — полоса из шести */
+.ar{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
+.rr{border-top:2px solid var(--ink);padding-top:9px;font-size:14px;line-height:1.45}
+.rr a{color:var(--ink);text-decoration:none}
+.rr a b{font:600 13px/1.25 ui-monospace,SFMono-Regular,Menlo,monospace}
+.rr a:hover{color:var(--accent)}
+.rr i{display:block;font-style:normal;color:var(--mute);font-size:12.5px;margin:4px 0 7px}
+.rr p{margin:0}
+/* карточки: свёрнуты, раскрываются по щелчку и по адресу #t-<вещь> (⤢ на карте) */
+.tcs{border-top:2px solid var(--ink);max-width:62em}
+.tc{border-bottom:1px solid var(--hair);scroll-margin-top:56px}
+.tc summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px;padding:8px 0}
+.tc summary::-webkit-details-marker{display:none}
+.tc summary::after{content:"+";flex:0 0 1em;text-align:center;font:400 22px/1 -apple-system,BlinkMacSystemFont,sans-serif}
+.tc[open] summary::after{content:"−"}
+.at{flex:0 0 46px;width:46px;height:46px;background:#EDE7DB;overflow:hidden}
+.at img{display:block;width:100%;height:100%;object-fit:cover}
+.at.s-silent img,.at.s-ember img{filter:grayscale(1)}
+.at.s-unknown img{filter:grayscale(.6)}
+.tn{flex:1;min-width:0}
+.tn b{display:block;font-size:16.5px;letter-spacing:-.01em}
+.tn i{display:block;font-style:normal;color:var(--mute);font-size:13.5px;line-height:1.35}
+.tc summary:hover .tn b,.tc[open] .tn b{color:var(--accent)}
+.ts{font:600 10.5px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;text-transform:uppercase;
+  padding:5px 7px 4px;border:1.5px solid var(--ink);white-space:nowrap}
+.ts-silent{color:var(--mute);border-color:var(--mute)}
+.ts-ember{color:var(--accent);border-color:var(--accent)}
+.ts-unknown{background:var(--ink);color:var(--paper)}
+.tc dl{display:grid;grid-template-columns:10.5em 1fr;gap:9px 18px;margin:6px 0 12px;padding-left:60px;font-size:15px;line-height:1.5}
+.tc dt{font:600 11px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--mute);padding-top:2px}
+.tc dd{margin:0}
+.tc dt:last-of-type{color:var(--accent)}
+.tc .src{padding-left:60px;font-size:13px;line-height:1.5;color:var(--mute);margin:0 0 18px}
+.tc .src em{font-style:normal;font-weight:600;color:var(--ink)}
+.tc .src a{color:var(--mute);text-decoration:underline;text-underline-offset:2px}
+.tc .src a:hover{color:var(--accent)}
+footer.afoot{max-width:62em}
+footer.afoot ul{margin:.3rem 0 1.1rem;padding-left:1.2em}
+footer.afoot li{margin:0 0 .25rem}
+footer.afoot .aph{columns:2;column-gap:32px;font-size:13px;line-height:1.45;padding-left:1.7em;margin:.4rem 0 0}
+footer.afoot .aph li{break-inside:avoid}
+footer.afoot .aph a{border-bottom-width:1px}
+@media(max-width:1000px){.ar{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){
+  .am{grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,2fr);gap:6px 8px}
+  .ae{grid-column:1/-1;margin-top:8px;padding-top:6px}
+  .ae-0{display:none}
+  .ah{padding:7px 4px 6px 5px;font-size:8.5px;letter-spacing:0;overflow-wrap:anywhere}
+  .ah .n{display:block;margin:2px 0 0}
+  .ag{border-top:0;padding-top:0;min-height:0}
+  .ag-in,.ag-cloud{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ac .an{display:none}
+  .ab{top:4px;left:4px}
+  .ab-ember{width:7px;height:7px}
+  .ab-unknown{width:14px;height:14px;font-size:10px;line-height:14px}
+  .am .ah .mi,.am .ag .ac .ai{position:fixed;inset:auto 10px 10px 10px;width:auto;min-height:0;max-height:62vh;overflow:auto;
+    z-index:20;background:var(--ink);border:2px solid var(--paper);padding:12px 13px;font-size:14px}
+  .fr{grid-template-columns:1fr;gap:6px}
+  .fr .mi{position:static;display:none;margin-top:4px}
+  .fr:focus .mi{display:block}
+  .tc dl{grid-template-columns:1fr;gap:1px;padding-left:0}
+  .tc dd{margin-bottom:9px}
+  .tc .src{padding-left:0}
+  footer.afoot .aph{columns:1}
+}
+@media(max-width:560px){.ar{grid-template-columns:1fr 1fr}.ts{font-size:9.5px;padding:4px 5px 3px}}
+/* сенсорный экран: после касания «наведение» залипает на клетке, и слой закрыл бы раскрытую карточку —
+   там слой держится только фокусом (касание открывает, касание мимо или ⤢ закрывает) */
+@media(hover:none){
+  .ac:hover .ai{visibility:hidden;opacity:0}
+  .ac:focus-within .ai{visibility:visible;opacity:1}
+}

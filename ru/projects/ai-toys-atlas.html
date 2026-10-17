@@ -1,0 +1,687 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Атлас ИИ-игрушек — Fanarlabs</title>
+<meta name="description" content="26 ИИ-игрушек и роботов-компаньонов, от Pet Rock (1975) до xiaozhi-esp32 (2024): где у них мозг, чем они кажутся живыми, что с ними стало.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Атлас ИИ-игрушек — Fanarlabs">
+<meta property="og:description" content="26 ИИ-игрушек и роботов-компаньонов, от Pet Rock (1975) до xiaozhi-esp32 (2024): где у них мозг, чем они кажутся живыми, что с ними стало.">
+<meta property="og:image" content="https://fanarlabs.com/projects/img/covers/ai-toys-atlas.svg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/assets/hub.css">
+<script data-goatcounter="https://panarini.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head><body>
+<!-- СОБРАНО gen_pages.py из content/ai-toys-atlas.txt — правьте источник, не эту страницу. -->
+<nav class="topbar">
+  <a class="me" href="/">Fanarlabs</a>
+  <span class="links">
+    <a href="mailto:hello@fanarlabs.com" aria-label="Email">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 3h13a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5Z" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M1.6 4.1 8 8.9l6.4-4.8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+    </a>
+    <a href="https://github.com/PanarinI" aria-label="GitHub">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+    </a>
+    <a href="https://bsky.app/profile/igorpanarin.bsky.social" aria-label="Bluesky">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 7.1C7.1 5.4 4.7 2.2 2.7 1.4 1.5.9.5 1.4.5 2.9c0 1.4.8 4.7 1.3 5.5.9 1.4 2.4 1.3 3.9 1.1-1.5.2-2.8.8-1.1 2.6.4.4 1 1 1.5 1.5.8.8 1.5.9 1.9.9s1.1-.1 1.9-.9c.5-.5 1.1-1.1 1.5-1.5 1.7-1.8.4-2.4-1.1-2.6 1.5.2 3 .3 3.9-1.1.5-.8 1.3-4.1 1.3-5.5 0-1.5-1-2-2.2-1.5-2 .8-4.4 4-5.3 5.7Z"/></svg>
+    </a>
+    <a href="https://t.me/bot_and_kot" aria-label="Telegram channel, in Russian">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M15.2 2.2 1.1 7.6c-.7.3-.7.9 0 1.1l3.5 1.1L13 4.4c.4-.2.8-.1.5.2l-6.8 6.2-.3 3.6c.4 0 .6-.2.8-.4l1.7-1.7 3.6 2.6c.7.4 1.1.2 1.3-.6l2.3-10.9c.2-.9-.3-1.3-.9-1.2Z"/></svg><span class="ru">RU</span>
+    </a>
+    <a class="lang" href="/projects/ai-toys-atlas.html" hreflang="en">Eng</a>
+  </span>
+</nav>
+<div class="wrap page wide">
+
+<a class="back" href="../#materials">← Материалы</a>
+
+<div class="head"><h1>Атлас ИИ-игрушек</h1><span class="stage">атлас</span></div>
+
+<p class="lede">26 известных ИИ-игрушек и роботов-компаньонов, разобранных на пять слоёв: тело, мозг, отношения, иллюзия жизни, судьба.
+      Я собрал их, чтобы сделать свою — простую игрушку с маленькой нейросетью прямо на чипе.</p>
+<div class="al"><span class="al-live" tabindex="0" title="Продаётся или работает."><i></i>цвет — жива <b>18</b></span><span class="al-silent" tabindex="0" title="Выключены серверы, снята с продажи или запрещена."><i></i>серая — замолчала <b>4</b></span><span class="al-ember" tabindex="0" title="Компания бросила; владельцы и бывшие инженеры вернули её своими серверами."><i></i>уголёк — оживили люди <b>3</b></span><span class="al-unknown" tabindex="0" title="Источники расходятся в том, что стало после банкротства создателя."><i></i>? — судьба неясна <b>1</b></span></div>
+<div class="am">
+  <div class="ae ae-0"></div>
+  <div class="ah ah-in" tabindex="0"><b>Мозг внутри</b> <span class="n">13</span><span class="mi">Работает на самом устройстве, без сети. Сюда же отнесены Pet Rock и Teddy Ruxpin — у них логики нет вовсе.</span></div>
+  <div class="ah ah-mid" tabindex="0"><b>Посередине</b> <span class="n">2</span><span class="mi">Toniebox берёт записи из облака и играет без сети. Где считает Loona, источники не говорят.</span></div>
+  <div class="ah ah-cloud" tabindex="0"><b>В облаке</b> <span class="n">11</span><span class="mi">Главное считают серверы компании. Выключат их — игрушка теряет голос или перестаёт работать.</span></div>
+  <div class="ae">до 2000</div>
+  <div class="ag ag-in" style="--per:4">
+    <div class="ac s-live" tabindex="0"><img src="../../projects/img/atlas/pet-rock.jpg" alt="Оранжевая коробка Pet Rock с дырочками для воздуха и надписью «one genuine pedigreed Pet Rock»" loading="lazy"><span class="an">Pet Rock</span>
+     <div class="ai">
+      <a class="mz" href="#t-pet-rock" title="Полная карточка" aria-label="Полная карточка">⤢</a>
+      <b>Pet Rock</b><i>1975 · $3,95</i>
+      <p><em>Кажется живой:</em> Коробка с дырочками и инструкция по уходу</p>
+      <p><em>Судьба:</em> Около 1,5 млн за полгода, потом мода ушла; с 2023 переиздаётся</p>
+      <small>Фото: <a href="https://commons.wikimedia.org/wiki/File:PetRock_Box.jpg">Hempdiddy · общественное достояние</a></small>
+     </div>
+    </div>
+    <div class="ac s-live" tabindex="0"><img src="../../projects/img/atlas/teddy-ruxpin.jpg" alt="Потёртый медведь Teddy Ruxpin крупным планом, в белой рубашке со значком" loading="lazy"><span class="an">Teddy Ruxpin</span>
+     <div class="ai">
+      <a class="mz" href="#t-teddy-ruxpin" title="Полная карточка" aria-label="Полная карточка">⤢</a>
+      <b>Teddy Ruxpin</b><i>1985 · $59–79</i>
+      <p><em>Кажется живой:</em> Рот и глаза в такт голосу</p>
+      <p><em>Судьба:</em> Больше 8 млн произведено; создатель обанкротился, бренд жив</p>
+      <small>Фото: <a href="https://www.flickr.com/photos/39160147@N03/7755204466">JeepersMedia (Mike Mozart), Flickr · CC BY 2.0, обрезано</a></small>
+     </div>
+    </div>
+    <div class="ac s-live" tabindex="0"><img src="../../projects/img/atlas/tamagotchi.jpg" alt="Полупрозрачное жёлтое яйцо Tamagotchi на цепочке" loading="lazy"><span class="an">Tamagotchi</span>
+     <div class="ai">
+      <a class="mz" href="#t-tamagotchi" title="Полная карточка" aria-label="Полная карточка">⤢</a>
+      <b>Tamagotchi</b><i>1996 · ¥1 980</i>
+      <p><em>Кажется живой:</em> Зовёт писком, смерть необратима</p>
+      <p><em>Судьба:</em> 98,1 млн к 2025, продаётся</p>
+      <small>Фото: <a href="https://commons.wikimedia.org/wiki/File:Gele_tamagotchi,_objectnr_78041.JPG">Museum Rotterdam · CC BY-SA 3.0, обрезано</a></small>
+     </div>
+    </div>
+    <div class="ac s-live" tabindex="0"><img src="../../projects/img/atlas/furby.jpg" alt="Пять первых Furby разного окраса на белом фоне" loading="lazy"><span class="an">Furby</span>
+     <div class="ai">
+      <a class="mz" href="#t-furby" title="Полная карточка" aria-label="Полная карточка">⤢</a>
+      <b>Furby</b><i>1998 · около $35</i>
+      <p><em>Кажется живой:</em> Свой язык, «учит» английский по таймеру</p>
+      <p><em>Судьба:</em> Больше 58 млн, продаётся</p>
+      <small>Фото: <a href="http://katalog.landesmuseum.de/object/BDD30E4197CF44C4890F612E6586B23E">Landesmuseum Württemberg · CC0</a></small>
+     </div>
+    </div>
+    <div class="ac s-live" tabindex="0"><img src="../../projects/img/atlas/aibo.jpg" alt="Серебристо-белый робот-пёс AIBO стоит в траве" loading="lazy"><span class="an">AIBO</span>
+     <div class="ai">
+      <a class="mz" href="#t-aibo" title="Полная карточка" aria-label="Полная карточка">⤢</a>
+      <b>AIBO</b><i>1999 / 2018 · ¥250 000 / ¥198 000 + подписка</i>
+      <p><em>Кажется живой:</em> Неожиданное поведение, узнаёт хозяина</p>
+      <p><em>Судьба:</em> Около 150 тыс., закрыт в 2006; новый продаётся</p>
+      <small>Фото: <a href="https://commons.wikimedia.org/wiki/File:AIBO_ERS-111_-_July_2010.jpg">Morgan из Монреаля, Flickr · CC BY 2.0, обрезано</a></small>
+     </div>
+    </div>
+  </div>
+  <div class="ag ag-mid" style="--per:1"></div>
+  <div class="ag ag-cloud" style="--per:4"></div>
+  <div class="ae">2000-е</div>
+  <div class="ag ag-in" style="--per:4">
+    <div class="ac s-live" tabindex="0"><img src="../../projects/img/atlas/roomba.jpg" alt="Серый Roomba первого поколения, вид сверху под углом" loading="lazy"><span class="an">Roomba</span>
+     <div class="ai">
+      <a class="mz" href="#t-roomba" title="Полная карточка" aria-label="Полная карточка">⤢</a>
+      <b>Roomba</b><i>2002 · $199</i>
+      <p><em>Кажется живой:</em> Застревает, а характер дорисовывают владельцы</p>
+      <p><em>Судьба:</em> Больше 2 млн к 2007; iRobot банкрот в 12.2025, продаётся</p>
+      <small>Фото: <a href="https://commons.wikimedia.org/wiki/File:Roomba_original.jpg">Larry D. Moore · CC BY 4.0, обрезано</a></small>
+     </div>
+    </div>
+    <div class="ac s-silent" tabindex="0"><img src="../../projects/img/atlas/keepon.jpg" alt="Жёлтый Keepon — мягкий робот в форме снеговика — в чёрном цилиндре" loading="lazy"><span class="an">Keepon</span>
+     <div class="ai">
+      <a class="mz" href="#t-keepon" title="Полная карточка" aria-label="Полная карточка">⤢</a>
+      <b>Keepon</b><i>2003 / 2011 · около $40</i>
+      <p><em>Кажется живой:</em> Танцует в ритм</p>
+      <p><em>Судьба:</em> Снят с продажи</p>
+      <small>Фото: <a href="https://commons.wikimedia.org/wiki/File:KeeponTophatNextfest2007.jpg">Ilikedudes, Википедия · CC BY 3.0, обрезано</a></small>
+     </div>
+    </div>
+    <div class="ac s-live" tabindex="0"><img src="../../projects/img/atlas/paro.jpg" alt="Paro — белый робот-тюленёнок с мягким мехом лежит на животе" loading="lazy"><span class="an">Paro</span>
+     <div class="ai">
+      <a class="mz" href="#t-paro" title="Полная карточка" aria-label="Полная карточка">⤢</a>
+      <b>Paro</b><i>2004 · $6 000 в США</i>
+      <p><em>Кажется живой:</em> Отвечает на ласку</p>
+      <p><em>Судьба:</em> Больше 7 000 выпущено, продаётся</p>
+      <small>Фото: <a href="https://commons.wikimedia.org/wiki/File:Robots%C3%A4len_Paro_TEKS0057912.jpg">Tekniska museet / Peter Häll · CC BY-SA 4.0, обрезано</a></small>
+     </div>
+    </div>
+    <div class="ac s-unknown" tabindex="0"><img src="../../projects/img/atlas/pleo.jpg" alt="Pleo — зелёный робот-динозаврик — держит во рту листик" loading="lazy"><span class="ab ab-unknown" title="Источники расходятся в том, что стало после банкротства создателя.">?</span><span class="an">Pleo</span>
+     <div class="ai">
+      <a class="mz" href="#t-pleo" title="Полная карточка" aria-label="Полная карточка">⤢</a>
+      <b>Pleo</b><i>2007 · $349</i>
+      <p><em>Кажется живой:</em> 14 моторов, кожа с датчиками</p>
+      <p><em>Судьба:</em> 100 тыс. в 2008, Ugobe банкрот в 2009; что дальше — неясно</p>
+      <small>Фото: <a href="https://commons.wikimedia.org/wiki/File:Pleo_robot.jpg">Jiuguang Wang · CC BY-SA 3.0, обрезано</a></small>
+     </div>
+    </div>
+  </div>
+  <div class="ag ag-mid" style="--per:1"></div>
+  <div class="ag ag-cloud" style="--per:4">
+    <div class="ac s-ember" tabindex="0"><img src="../../projects/img/atlas/nabaztag.jpg" alt="Nabaztag — белый пластиковый кролик, одно ухо поднято, другое в сторону" loading="lazy"><span class="ab ab-ember" title="Компания бросила; владельцы и бывшие инженеры вернули её своими серверами."></span><span class="an">Nabaztag</span>
+     <div class="ai">
+      <a class="mz" href="#t-nabaztag" title="Полная карточка" aria-label="Полная карточка">⤢</a>
+      <b>Nabaztag</b><i>2005 · около $120–150</i>
+      <p><em>Кажется живой:</em> Уши и свет вместо экрана</p>
+      <p><em>Судьба:</em> Серверы выключены в 2011; оживлён владельцами</p>
+      <small>Фото: <a href="https://commons.wikimedia.org/wiki/File:Nabaztag-IMG_7036.jpg">Rama, Musée Bolo · CC BY-SA 2.0 FR, обрезано</a></small>
+     </div>
+    </div>
+  </div>
+  <div class="ae">2010-е</div>
+  <div class="ag ag-in" style="--per:4">
+    <div class="ac s-live" tabindex="0"><img src="../../projects/img/atlas/lovot.jpg" alt="LOVOT в сером тканевом костюме, с большими тёмными глазами и рожком-датчиком на голове, рядом зарядное «гнездо»; музейная выставка" loading="lazy"><span class="an">LOVOT</span>
+     <div class="ai">
+      <a class="mz" href="#t-lovot" title="Полная карточка" aria-label="Полная карточка">⤢</a>
+      <b>LOVOT</b><i>2019 · ¥598 000 за пару + подписка</i>
+      <p><em>Кажется живой:</em> Тёплый, просится на руки</p>
+      <p><em>Судьба:</em> Больше 18 000 в работе (2026), продаётся</p>
+      <small>Фото: <a href="https://commons.wikimedia.org/wiki/File:223_MNACTEC,_exposici%C3%B3_Robots,_rob%C3%B2tica_per_a_la_llar,_LOVOT,_Buddy,_Moxie_i_Aibo.jpg">Enric, выставка MNACTEC · CC BY-SA 4.0, обрезано</a></small>
+     </div>
+    </div>
+  </div>
+  <div class="ag ag-mid" style="--per:1">
+    <div class="ac s-live" tabindex="0"><img src="../../projects/img/atlas/toniebox.jpg" alt="Красный тканевый куб Toniebox с «ушами»-регуляторами и красной фигуркой на крышке" loading="lazy"><span class="an">Toniebox</span>
+     <div class="ai">
+      <a class="mz" href="#t-toniebox" title="Полная карточка" aria-label="Полная карточка">⤢</a>
+      <b>Toniebox</b><i>2016 · около €80 <i class="q" title="Вывод или слабый источник">◆</i></i>
+      <p><em>Кажется живой:</em> Фигурка-герой на крышке</p>
+      <p><em>Судьба:</em> 10 млн коробок к 09.2025, продаётся</p>
+      <small>Фото: <a href="https://commons.wikimedia.org/wiki/File:Toniebox.jpg">Johann56 · CC BY-SA 4.0, обрезано</a></small>
+     </div>
+    </div>
+  </div>
+  <div class="ag ag-cloud" style="--per:4">
+    <div class="ac s-silent" tabindex="0"><img src="../../projects/img/atlas/cayla.jpg" alt="Кукла My Friend Cayla со светлыми волосами, в джинсовой куртке, сидит на столе" loading="lazy"><span class="an">My Friend Cayla</span>
+     <div class="ai">
+      <a class="mz" href="#t-cayla" title="Полная карточка" aria-label="Полная карточка">⤢</a>
+      <b>My Friend Cayla</b><i>2014 · около $40</i>
+      <p><em>Кажется живой:</em> Обещает хранить секрет</p>
+      <p><em>Судьба:</em> Запрещена в Германии в 2017</p>
+      <small>Фото: <a href="https://www.kpbs.org/news/2017/02/17/banned-in-germany-kids-doll-is-labeled-an">NPR / KPBS, 2017 · цитата для обзора</a></small>
+     </div>
+    </div>
+    <div class="ac s-silent" tabindex="0"><img src="../../projects/img/atlas/hello-barbie.jpg" alt="Hello Barbie со светлыми волосами, в серебристой куртке и футболке с надписью HELLO HELLO HELLO" loading="lazy"><span class="an">Hello Barbie</span>
+     <div class="ai">
+      <a class="mz" href="#t-hello-barbie" title="Полная карточка" aria-label="Полная карточка">⤢</a>
+      <b>Hello Barbie</b><i>2015 · около $75</i>
+      <p><em>Кажется живой:</em> Помнит, что рассказали родители</p>
+      <p><em>Судьба:</em> Взломы 2015–16; сервис остановлен в 2019 <i class="q" title="Вывод или слабый источник">◆</i></p>
+      <small>Фото: <a href="https://www.theregister.com/2015/02/19/hello_barbie/">© Mattel, из The Register · цитата для обзора</a></small>
+     </div>
+    </div>
+    <div class="ac s-ember" tabindex="0"><img src="../../projects/img/atlas/cozmo.jpg" alt="Cozmo — маленький бело-красный робот на гусеницах, с экраном-лицом и подъёмной рукой, на чёрном фоне" loading="lazy"><span class="ab ab-ember" title="Компания бросила; владельцы и бывшие инженеры вернули её своими серверами."></span><span class="an">Cozmo / Vector</span>
+     <div class="ai">
+      <a class="mz" href="#t-cozmo-vector" title="Полная карточка" aria-label="Полная карточка">⤢</a>
+      <b>Cozmo / Vector</b><i>2016 / 2018 · $180 / $249</i>
+      <p><em>Кажется живой:</em> Глаза, анимированные аниматорами</p>
+      <p><em>Судьба:</em> Больше 1,5 млн роботов; Anki закрылась в 2019, спасли покупатель и сообщество</p>
+      <small>Фото: <a href="https://commons.wikimedia.org/wiki/File:Anki_Cozmo.png">DecafPotato · CC BY-SA 4.0, обрезано</a></small>
+     </div>
+    </div>
+    <div class="ac s-silent" tabindex="0"><img src="../../projects/img/atlas/jibo.jpg" alt="Jibo — белый робот с круглым чёрным экраном-лицом — на столе в гостиной" loading="lazy"><span class="an">Jibo</span>
+     <div class="ai">
+      <a class="mz" href="#t-jibo" title="Полная карточка" aria-label="Полная карточка">⤢</a>
+      <b>Jibo</b><i>2017 · $899</i>
+      <p><em>Кажется живой:</em> Поворачивается к говорящему</p>
+      <p><em>Судьба:</em> Серверы выключены в 2019</p>
+      <small>Фото: <a href="https://www.engadget.com/2019-03-04-social-robot-jibo-shutting-down-message.html">© Jibo, Inc., из Engadget · цитата для обзора</a></small>
+     </div>
+    </div>
+  </div>
+  <div class="ae">2020-е</div>
+  <div class="ag ag-in" style="--per:4">
+    <div class="ac s-live" tabindex="0"><img src="../../projects/img/atlas/bittle.jpg" alt="Petoi Bittle — маленький чёрно-жёлтый робот-пёс на четырёх ногах — стоит на зелёном коврике перед ноутбуком" loading="lazy"><span class="an">Petoi Bittle</span>
+     <div class="ai">
+      <a class="mz" href="#t-bittle" title="Полная карточка" aria-label="Полная карточка">⤢</a>
+      <b>Petoi Bittle</b><i>2020 · $225 (набор на Kickstarter)</i>
+      <p><em>Кажется живой:</em> Четыре ноги, трюки</p>
+      <p><em>Судьба:</em> $567 тыс. на Kickstarter, продаётся</p>
+      <small>Фото: <a href="https://www.flickr.com/photos/53726379@N00/52104868821">epredator, Flickr · CC BY 2.0, обрезано</a></small>
+     </div>
+    </div>
+    <div class="ac s-live" tabindex="0"><img src="../../projects/img/atlas/eilik.jpg" alt="Eilik — маленький белый настольный робот с экраном-лицом и двумя голубыми глазами, на голубом фоне" loading="lazy"><span class="an">Eilik</span>
+     <div class="ai">
+      <a class="mz" href="#t-eilik" title="Полная карточка" aria-label="Полная карточка">⤢</a>
+      <b>Eilik</b><i>2022 · $149,99</i>
+      <p><em>Кажется живой:</em> Сердится, если не замечают</p>
+      <p><em>Судьба:</em> 4 738 вкладчиков, продаётся</p>
+      <small>Фото: <a href="https://store.energizelab.com/products/eilik">© Energize Lab · цитата для обзора</a></small>
+     </div>
+    </div>
+    <div class="ac s-live" tabindex="0"><img src="../../projects/img/atlas/moflin.jpg" alt="Рука держит Moflin — маленький пушистый бежевый комок без лица — на витрине магазина" loading="lazy"><span class="an">Moflin</span>
+     <div class="ai">
+      <a class="mz" href="#t-moflin" title="Полная карточка" aria-label="Полная карточка">⤢</a>
+      <b>Moflin</b><i>2024 · ¥59 400</i>
+      <p><em>Кажется живой:</em> Мех, медленный характер, узнаёт голос</p>
+      <p><em>Судьба:</em> Больше 7 000 к 03.2025 <i class="q" title="Вывод или слабый источник">◆</i>, продаётся</p>
+      <small>Фото: <a href="https://commons.wikimedia.org/wiki/File:Casio%E3%81%AEAI%E3%83%9A%E3%83%83%E3%83%88%E3%83%AD%E3%83%9C%E3%80%8CMoflin%E3%80%8D.jpg">Kyu3a · CC BY-SA 4.0, обрезано</a></small>
+     </div>
+    </div>
+  </div>
+  <div class="ag ag-mid" style="--per:1">
+    <div class="ac s-live" tabindex="0"><img src="../../projects/img/atlas/loona.jpg" alt="Loona — белый робот на колёсах с чёрным экраном-лицом и оранжевыми глазами, на чёрном фоне" loading="lazy"><span class="an">Loona</span>
+     <div class="ai">
+      <a class="mz" href="#t-loona" title="Полная карточка" aria-label="Полная карточка">⤢</a>
+      <b>Loona</b><i>2023 · $449</i>
+      <p><em>Кажется живой:</em> Плавное движение, ловит мяч</p>
+      <p><em>Судьба:</em> Около $4 млн краудфандинга, продаётся</p>
+      <small>Фото: <a href="https://keyirobot.com/products/loona">© KEYi Tech · цитата для обзора</a></small>
+     </div>
+    </div>
+  </div>
+  <div class="ag ag-cloud" style="--per:4">
+    <div class="ac s-ember" tabindex="0"><img src="../../projects/img/atlas/moxie.jpg" alt="Moxie — бирюзовый робот с круглым экраном-лицом — стоит на маленьком белом столике; музейная выставка" loading="lazy"><span class="ab ab-ember" title="Компания бросила; владельцы и бывшие инженеры вернули её своими серверами."></span><span class="an">Moxie</span>
+     <div class="ai">
+      <a class="mz" href="#t-moxie" title="Полная карточка" aria-label="Полная карточка">⤢</a>
+      <b>Moxie</b><i>2020 · $1 500, позже $799</i>
+      <p><em>Кажется живой:</em> Лицо-экран, ежедневные задания</p>
+      <p><em>Судьба:</em> Серверы выключены 30.01.2025; бывшие инженеры выпустили локальный сервер</p>
+      <small>Фото: <a href="https://commons.wikimedia.org/wiki/File:223_MNACTEC,_exposici%C3%B3_Robots,_rob%C3%B2tica_per_a_la_llar,_LOVOT,_Buddy,_Moxie_i_Aibo.jpg">Enric, выставка MNACTEC · CC BY-SA 4.0, обрезано</a></small>
+     </div>
+    </div>
+    <div class="ac s-live" tabindex="0"><img src="../../projects/img/atlas/emo.jpg" alt="EMO — маленький чёрный робот с экраном-лицом, двумя квадратными голубыми глазами и в наушниках — стоит на зарядном скейте" loading="lazy"><span class="an">EMO</span>
+     <div class="ai">
+      <a class="mz" href="#t-emo" title="Полная карточка" aria-label="Полная карточка">⤢</a>
+      <b>EMO</b><i>2021 · $279</i>
+      <p><em>Кажется живой:</em> Бродит по столу и не падает</p>
+      <p><em>Судьба:</em> $348 тыс. на Kickstarter, продаётся</p>
+      <small>Фото: <a href="https://living.ai/emo/">© Living AI · цитата для обзора</a></small>
+     </div>
+    </div>
+    <div class="ac s-live" tabindex="0"><img src="../../projects/img/atlas/bubblepal.jpg" alt="Красный плюшевый динозавр с прицепленным светящимся шариком BubblePal в руках ребёнка" loading="lazy"><span class="an">BubblePal</span>
+     <div class="ai">
+      <a class="mz" href="#t-bubblepal" title="Полная карточка" aria-label="Полная карточка">⤢</a>
+      <b>BubblePal</b><i>2024 · ¥399 (около $149 в США)</i>
+      <p><em>Кажется живой:</em> Голос у уже любимой игрушки</p>
+      <p><em>Судьба:</em> Больше 200 тыс. <i class="q" title="Вывод или слабый источник">◆</i>, продаётся</p>
+      <small>Фото: <a href="https://www.technologyreview.com/2025/10/07/1125191/ai-toys-in-china/">© Haivivi, из MIT Technology Review · цитата для обзора</a></small>
+     </div>
+    </div>
+    <div class="ac s-live" tabindex="0"><img src="../../projects/img/atlas/kumma.jpg" alt="Kumma — бежевый плюшевый медведь в зелёном вязаном шарфе" loading="lazy"><span class="an">FoloToy Kumma</span>
+     <div class="ai">
+      <a class="mz" href="#t-kumma" title="Полная карточка" aria-label="Полная карточка">⤢</a>
+      <b>FoloToy Kumma</b><i>2024 · $99</i>
+      <p><em>Кажется живой:</em> Голос родителя</p>
+      <p><em>Судьба:</em> Отчёт PIRG в 11.2025, снова в продаже</p>
+      <small>Фото: <a href="https://folotoy.com/products/teddy">© FoloToy · цитата для обзора</a></small>
+     </div>
+    </div>
+    <div class="ac s-live" tabindex="0"><img src="../../projects/img/atlas/grem.jpg" alt="Grem — голубое плюшевое существо с большими глазами и розовыми пятнами на щеках и ушах" loading="lazy"><span class="an">Grem</span>
+     <div class="ai">
+      <a class="mz" href="#t-grem" title="Полная карточка" aria-label="Полная карточка">⤢</a>
+      <b>Grem</b><i>2024 · $99</i>
+      <p><em>Кажется живой:</em> Мягкое тело, мозг в кармане на спине</p>
+      <p><em>Судьба:</em> Продаётся</p>
+      <small>Фото: <a href="https://www.heycurio.com/product/grem">© Curio Interactive · цитата для обзора</a></small>
+     </div>
+    </div>
+    <div class="ac s-live" tabindex="0"><img src="../../projects/img/atlas/xiaozhi.jpg" alt="Коробочка на ESP32 с маленьким экраном: лицо-эмодзи и китайский текст разговора" loading="lazy"><span class="an">xiaozhi-esp32</span>
+     <div class="ai">
+      <a class="mz" href="#t-xiaozhi" title="Полная карточка" aria-label="Полная карточка">⤢</a>
+      <b>xiaozhi-esp32</b><i>около 2024 · прошивка бесплатна (MIT)</i>
+      <p><em>Кажется живой:</em> Лицо-эмодзи, своё имя</p>
+      <p><em>Судьба:</em> 31 тыс. звёзд на GitHub, обновляется</p>
+      <small>Фото: <a href="https://github.com/78/xiaozhi-esp32">78/xiaozhi-esp32 на GitHub · лицензия MIT</a></small>
+     </div>
+    </div>
+  </div>
+</div>
+
+<h2>Что видно, если положить всё рядом</h2>
+<div class="af">
+  <div class="fr" tabindex="0"><b>6 из 6</b><span>облачных игрушек до 2021 года потеряли создателя: он закрылся или ушёл с рынка. Четыре замолчали, когда выключили серверы.</span><span class="mi">Замолчали: Nabaztag (2011), Hello Barbie (2019 <i class="q" title="Вывод или слабый источник">◆</i>), Jibo (2019), Moxie (2025). Vector спас покупатель активов Anki, Cayla запретили раньше. Создатели игрушек с мозгом внутри тоже закрывались (Worlds of Wonder, Ugobe, iRobot), но купленные игрушки продолжали работать <i class="q" title="Посчитано нами по карточкам">Σ</i>.</span></div>
+  <div class="fr" tabindex="0"><b>7</b><span>игрушек проданы тиражом больше миллиона. Ни одна не стоила на старте дороже $249.</span><span class="mi">Tamagotchi 98,1 млн, Furby больше 58 млн, Toniebox 10 млн, Teddy Ruxpin больше 8 млн произведено, Roomba больше 2 млн к 2007, Cozmo/Vector больше 1,5 млн, Pet Rock около 1,5 млн. Дорогие остались в тысячах: AIBO около 150 тыс., Pleo 100 тыс., LOVOT больше 18 тыс., Moflin больше 7 тыс. <i class="q" title="Вывод или слабый источник">◆</i>, Paro больше 7 тыс. Это связь, причина не доказана: массовые игрушки к тому же старше и проще <i class="q" title="Посчитано нами по карточкам">Σ</i>.</span></div>
+  <div class="fr" tabindex="0"><b>9</b><span>игрушек отвечают на касание. Столько же показывают глаза на экране.</span><span class="mi">Касание: Paro, Moflin, LOVOT, Pleo, Eilik, Keepon, Jibo, EMO, aibo 2018. Глаза на экране: Cozmo/Vector, EMO, Loona, Eilik, LOVOT, Jibo, Moxie, aibo 2018, xiaozhi. Другие повторяющиеся приёмы: узнаёт своего (7), живёт по своему распорядку и просит внимания (5), характер растёт днями (5), свой язык вместо речи (4), беспомощность, которая вызывает заботу (Roomba, Cozmo).</span></div>
+  <div class="fr" tabindex="0"><b>4</b><span>скандала с детскими игрушками, и все четыре — про микрофон.</span><span class="mi">Furby запретили на территории АНБ (1999), хотя производитель отрицал запись. Hello Barbie взламывали (2015–16). Cayla запретили в Германии как скрытое шпионское устройство (2017). Медведь Kumma на GPT-4o обсуждал секс и подсказывал, где лежат ножи и спички (PIRG, 13.11.2025). Если речь распознаётся на чипе, а игрушка выбирает из закрытого набора реакций, голос никуда не уходит и сказать запретное нечем <i class="q" title="Вывод или слабый источник">◆</i>.</span></div>
+  <div class="fr" tabindex="0"><b>3 из 5</b><span>ближайших родственников игрушки на чипе обходятся вовсе без нейросети.</span><span class="mi">Пятеро: Moflin, Keepon, Eilik, Tamagotchi, Furby — мозг внутри, мало датчиков, медленное время. Без нейросети: Eilik, Tamagotchi, Furby; про Moflin и Keepon источники не говорят. Значит, нейросеть на чипе — добавка к каркасу, как узнавание голоса хозяина у Moflin <i class="q" title="Вывод или слабый источник">◆</i>.</span></div>
+</div>
+
+<h2>Корни</h2>
+<p class="rule">Мысли и опыты, которые так или иначе повторяют все эти игрушки.</p>
+<div class="ar">
+  <div class="rr"><a href="https://en.wikipedia.org/wiki/Braitenberg_vehicle"><b>Braitenberg vehicles</b></a><i>1984 · Валентино Брайтенберг, книга Vehicles</i><p>Тележка, два датчика света, два мотора. Провода накрест — несётся на свет, прямо — отворачивает. Внутри нет мысли, а наблюдатель видит характер.</p></div>
+  <div class="rr"><a href="https://en.wikipedia.org/wiki/BEAM_robotics"><b>BEAM robotics</b></a><i>начало 1990-х · Марк Тилден</i><p>Роботы без процессора: несколько транзисторов вместо нервов, часто солнечная батарея. Ползут к свету и «ищут». Тилден потом придумал Robosapien (2004).</p></div>
+  <div class="rr"><a href="https://en.wikipedia.org/wiki/Subsumption_architecture"><b>Subsumption architecture</b></a><i>1986 · Родни Брукс, MIT</i><p>Без модели мира: слои простых поведений — «не врезаться», «бродить», «идти к цели». Верхний слой подавляет нижний. Брукс — сооснователь iRobot, создателя Roomba.</p></div>
+  <div class="rr"><a href="https://en.wikipedia.org/wiki/Kismet_(robot)"><b>Kismet</b></a><i>конец 1990-х · Синтия Бризил, MIT</i><p>Голова-робот с лицом и лепетом — звуками, похожими на речь, без слов. С ним говорили, как с младенцем. Бризил потом основала Jibo.</p></div>
+  <div class="rr"><a href="https://en.wikipedia.org/wiki/The_Media_Equation"><b>The Media Equation</b></a><i>1996 · Байрон Ривз и Клиффорд Насс</i><p>Опыты в Стэнфорде: люди вежливы с компьютером, обижаются на него и льстят ему, даже зная, что это машина.</p></div>
+  <div class="rr"><a href="https://en.wikipedia.org/wiki/Uncanny_valley"><b>Uncanny valley</b></a><i>1970 · Масахиро Мори</i><p>Чем больше робот похож на человека, тем он симпатичнее — до порога. Почти-человек вызывает жуть.</p></div>
+</div>
+
+<h2>26 карточек</h2>
+<p class="rule">В каждой карточке: тело, мозг, отношения, иллюзия жизни, судьба и что из этого взять для простой игрушки с маленькой нейросетью на чипе. Факты без пометки взяты из открытых источников под карточкой и независимо не проверялись. <i class="q" title="Вывод или слабый источник">◆</i> вывод или слабый источник · <i class="q" title="Посчитано нами по карточкам">Σ</i> посчитано нами · <i class="q" title="Не нашли">□</i> не нашли.</p>
+<div class="tcs">
+<details class="tc" id="t-pet-rock">
+  <summary><span class="at s-live"><img src="../../projects/img/atlas/pet-rock.jpg" alt="" loading="lazy"></span><span class="tn"><b>Pet Rock</b><i>1975 · Гэри Дал, рекламщик (США) · $3,95</i></span><span class="ts ts-live">жива</span></summary>
+  <dl>
+    <dt>Тело</dt><dd>Ничего не чувствует и ничем не отвечает. Камень в картонной коробке-переноске с дырочками и древесной стружкой.</dd>
+    <dt>Мозг</dt><dd>Электроники нет. «Интеллект» — руководство по уходу и дрессировке; самый популярный трюк — «притвориться мёртвым».</dd>
+    <dt>Отношения</dt><dd>Присутствие и шутка; подарок взрослым <i class="q" title="Вывод или слабый источник">◆</i>.</dd>
+    <dt>Иллюзия жизни</dt><dd>Упаковка как из зоомагазина. Руководство написано всерьёз. Трюки, где бездействие засчитано как успех. Имя и уход достраивает владелец <i class="q" title="Вывод или слабый источник">◆</i>.</dd>
+    <dt>Судьба</dt><dd>Показан в августе 1975. Продано 1,3–1,5 млн за несколько месяцев; себестоимость меньше цента, прибыль 95 центов с камня. Мода ушла после Рождества 1975. В 2022 права купила Super Impulse, в 2023 вышла лицензионная версия с A24.</dd>
+    <dt>Для игрушки на чипе</dt><dd>Идею питомца проверили на людях без единой микросхемы — упаковкой и текстом. Шутка прожила месяцы; чип должен дать то, чего нет у камня, — ответ на действия ребёнка.</dd>
+  </dl>
+  <p class="src"><em>Источники:</em> <a href="https://en.wikipedia.org/wiki/Pet_Rock">Pet Rock — Wikipedia</a> · <a href="https://www.mentalfloss.com/fun/toys/pet-rock-history">Hard Sell: A History of the Pet Rock — Mental Floss</a> · <a href="https://www.museumofplay.org/?p=7865">Pet Rock — The Strong National Museum of Play</a></p>
+</details>
+<details class="tc" id="t-teddy-ruxpin">
+  <summary><span class="at s-live"><img src="../../projects/img/atlas/teddy-ruxpin.jpg" alt="" loading="lazy"></span><span class="tn"><b>Teddy Ruxpin</b><i>1985 · Worlds of Wonder (США) · $59–79</i></span><span class="ts ts-live">жива</span></summary>
+  <dl>
+    <dt>Тело</dt><dd>Датчики в источниках не названы <i class="q" title="Не нашли">□</i>. Отвечает речью из динамика, глазами и ртом: в ранних моделях три сервомотора, потом два, потом один. В комплекте книжки.</dd>
+    <dt>Мозг</dt><dd>Ума нет. Стереокассета: на одной дорожке звук, на другой — сигналы, которые двигают лицо. Всё записано заранее, медведь ничего не слышит.</dd>
+    <dt>Отношения</dt><dd>Сказка: медведь «читает» вслух <i class="q" title="Вывод или слабый источник">◆</i>. Около 60 книжек с кассетами по $12,95; мультсериал 1987 года на 65 серий.</dd>
+    <dt>Иллюзия жизни</dt><dd>Рот и глаза движутся в такт речи. Во время чтения зевает и хихикает. Создатель, Кен Форсс, раньше делал аниматронику для Disney.</dd>
+    <dt>Судьба</dt><dd>41 000 штук за первые 30 дней, $93 млн продаж за первый год, больше 8 млн за все годы. Worlds of Wonder обанкротилась в 1987–1988. Потом лицензии: Hasbro, Yes! Entertainment, BackPack Toys, Wicked Cool Toys (2017, истории в приложении). В 2025 готовили фильм с Amazon MGM.</dd>
+    <dt>Для игрушки на чипе</dt><dd>Живым его сделали синхронность голоса и мимики и хорошая озвучка. Носитель историй сменился четыре раза за 30 лет: кассета, картриджи, цифровые картриджи, приложение. Истории, записанные в чип, переживают носитель.</dd>
+  </dl>
+  <p class="src"><em>Источники:</em> <a href="https://en.wikipedia.org/wiki/Teddy_Ruxpin">Teddy Ruxpin — Wikipedia</a> · <a href="https://mentalfloss.com/article/81691/bear-necessity-story-teddy-ruxpin">A Bear Necessity — Mental Floss</a></p>
+</details>
+<details class="tc" id="t-tamagotchi">
+  <summary><span class="at s-live"><img src="../../projects/img/atlas/tamagotchi.jpg" alt="" loading="lazy"></span><span class="tn"><b>Tamagotchi</b><i>1996 · Bandai · ¥1 980</i></span><span class="ts ts-live">жива</span></summary>
+  <dl>
+    <dt>Тело</dt><dd>Три кнопки, датчиков нет. Чёрно-белый экран 32×16 точек и писк. Яйцо высотой 53 мм на двух батарейках LR44.</dd>
+    <dt>Мозг</dt><dd>Целиком внутри, без сети: микроконтроллер Epson E0C6S46. Таблица правил и таймеров: шкалы голода, счастья и дрессировки, болезнь, смерть от плохого ухода или старости. Нейросети нет.</dd>
+    <dt>Отношения</dt><dd>Забота. Дети и подростки 1990-х; по словам компании (2020), около 40% покупателей — взрослые.</dd>
+    <dt>Иллюзия жизни</dt><dd>Писком зовёт, когда что-то нужно. Паузы нет: от яйца до взрослого около 12 дней. Смерть необратима; дети устраивали похороны.</dd>
+    <dt>Судьба</dt><dd>400 000 в 1996, 10 млн к июлю 1997, около 40 млн к весне 1998. В 1999 Bandai списал 2,5 млн нераспроданных. Возвращался в 2004, 2017 и 2023 (с Wi-Fi). 98,1 млн к 2025 году; бренд жив.</dd>
+    <dt>Для игрушки на чипе</dt><dd>Привязанность дали расписание, необратимость и просьба о внимании. Маленькой нейросети сначала нужен такой же простой каркас потребностей, потом — улучшение реакций.</dd>
+  </dl>
+  <p class="src"><em>Источники:</em> <a href="https://en.wikipedia.org/wiki/Tamagotchi">Tamagotchi — Wikipedia</a> · <a href="https://www.japantoplay.com/tamagotchi-guide">Tamagotchi guide — JapanToPlay</a> · <a href="https://www.museumofplay.org/games/tamagotchi/">Tamagotchi — The Strong National Museum of Play</a> · <a href="https://ja.wikipedia.org/wiki/たまごっち">たまごっち — Wikipedia (ja)</a> · <a href="https://github.com/jcrona/tamalib">TamaLIB — GitHub</a></p>
+</details>
+<details class="tc" id="t-furby">
+  <summary><span class="at s-live"><img src="../../projects/img/atlas/furby.jpg" alt="" loading="lazy"></span><span class="tn"><b>Furby</b><i>1998 · Tiger Electronics (с 2005 — Hasbro) · около $35</i></span><span class="ts ts-live">жива</span></summary>
+  <dl>
+    <dt>Тело</dt><dd>ИК-порт между глаз для связи с другими Furby; датчики касания, наклона и света в ранних моделях (у модели 1998 года список не уточнён <i class="q" title="Вывод или слабый источник">◆</i>). Отвечает динамиком и одним мотором, который двигает глаза, рот и уши.</dd>
+    <dt>Мозг</dt><dd>Внутри: микроконтроллер Sunplus SPC81A, 128 байт оперативной памяти. Сценарий: сначала говорит на выдуманном «furbish», со временем английских слов всё больше. «Обучение» заложено в программу заранее.</dd>
+    <dt>Отношения</dt><dd>Игра и присутствие: говорит, поёт, «растёт». Дети.</dd>
+    <dt>Иллюзия жизни</dt><dd>Свой язык. «Взросление» по таймеру. Выключателя нет: молчит, только если вынуть батарейки. Furby переговариваются друг с другом по ИК.</dd>
+    <dt>Судьба</dt><dd>1,8 млн в 1998, 14 млн в 1999; больше 58 млн по данным Hasbro. В 1999 АНБ запретило Furby на своей территории из страха записи секретов; производитель отрицал, что игрушка что-либо записывает. Новые версии в 2005, 2012, 2013, 2016 и 2023. Бренд жив.</dd>
+    <dt>Для игрушки на чипе</dt><dd>Культовая игрушка жила на 128 байтах, а «обучение» было таймером. Для чипа главное — рассчитать, как характер меняется во времени; распознавание можно держать простым.</dd>
+  </dl>
+  <p class="src"><em>Источники:</em> <a href="https://en.wikipedia.org/wiki/Furby">Furby — Wikipedia</a> · <a href="https://robotsguide.com/robots/furby">Furby — Robots Guide</a> · <a href="https://www.fox6now.com/news/furby-history-iconic-toy">A brief history of Furby — FOX 6</a> · <a href="https://www.computerhistory.org/revolution/artificial-intelligence-robotics/13/294/1306">Furby — Computer History Museum</a></p>
+</details>
+<details class="tc" id="t-aibo">
+  <summary><span class="at s-live"><img src="../../projects/img/atlas/aibo.jpg" alt="" loading="lazy"></span><span class="tn"><b>AIBO</b><i>1999 / 2018 · Sony · ¥250 000 / ¥198 000 + подписка</i></span><span class="ts ts-live">жива</span></summary>
+  <dl>
+    <dt>Тело</dt><dd>1999: касание, камера, дальномер, микрофон, акселерометр. aibo 2018: две камеры, четыре микрофона, датчики касания на голове, подбородке и спине, 22 оси движения, два OLED-экрана вместо глаз.</dd>
+    <dt>Мозг</dt><dd>1999: внутри — 64-битный процессор 50 МГц, программы на Memory Stick, больше 100 голосовых команд. 2018: Snapdragon 820 внутри плюс облако; нужны подписка и постоянная связь.</dd>
+    <dt>Отношения</dt><dd>Присутствие и игра, потом забота: домашняя собака. Взрослые и семьи с высоким доходом <i class="q" title="Вывод или слабый источник">◆</i>.</dd>
+    <dt>Иллюзия жизни</dt><dd>Поведение «достаточно сложное и неожиданное, чтобы человек не терял интерес» — цель разработчика Масахиро Фудзиты. Подстраивается под хозяина и учит трюки. С 2018 узнаёт до 100 лиц.</dd>
+    <dt>Судьба</dt><dd>Первая партия — 5 000; японские 3 000 раскуплены за 20 минут. Около 150 000 до закрытия линейки в 2006. В 2014 Sony прекратила ремонт; владельцы в Японии устраивали собакам похороны. Новый aibo с 2018 продаётся в Японии: 11 111 штук за первый квартал.</dd>
+    <dt>Для игрушки на чипе</dt><dd>Живость держалась на десятках осей и датчиков за цену подержанной машины, а облако обернулось подпиской и зависимостью от производителя. Простой игрушке нужен автономный чип без подписки.</dd>
+  </dl>
+  <p class="src"><em>Источники:</em> <a href="https://en.wikipedia.org/wiki/AIBO">AIBO — Wikipedia</a> · <a href="https://robotsguide.com/robots/aibo">Aibo (1999) — Robots Guide</a> · <a href="https://www.foxnews.com/tech/sony-sells-thousands-of-aibo-robot-dogs-as-it-considers-us-launch">Sony sells thousands of Aibo robot dogs — Fox News</a> · <a href="https://www.androidpolice.com/2017/11/01/12-year-hiatus-sony-announces-return-aibo-robot-pet/">Sony announces return of Aibo — Android Police</a></p>
+</details>
+<details class="tc" id="t-roomba">
+  <summary><span class="at s-live"><img src="../../projects/img/atlas/roomba.jpg" alt="" loading="lazy"></span><span class="tn"><b>Roomba</b><i>2002 · iRobot (США) · $199</i></span><span class="ts ts-live">жива</span></summary>
+  <dl>
+    <dt>Тело</dt><dd>Бампер, ИК-датчики обрыва снизу, датчик грязи; у поздних поколений камера. Отвечает колёсами, щётками и пылесосом.</dd>
+    <dt>Мозг</dt><dd>Внутри: простые поведения — спираль, езда вдоль стены, случайный поворот после удара. Случайная навигация обходилась дешевле, поэтому и цена была ниже, чем у конкурентов. Нейросети нет; поздние модели строят карту по камере.</dd>
+    <dt>Отношения</dt><dd>Помощь по дому. Исследование Georgia Tech (2007): из 30 опрошенных владельцев 21 дал роботу имя, 16 говорили о нём «он».</dd>
+    <dt>Иллюзия жизни</dt><dd>Личность ему не проектировали. Он ездит сам; застревает, и это читается как характер; хозяева помогают, прощают и наряжают его, как питомца. Рабочее имя изделия — DustPuppy.</dd>
+    <dt>Судьба</dt><dd>Больше 2 млн к 2007 году. Сделка с Amazon на $1,7 млрд сорвалась в 2024. 14 декабря 2025 iRobot подала на банкротство и переходит к своему производителю, Picea. Пылесосы продаются.</dd>
+    <dt>Для игрушки на чипе</dt><dd>Привязанность выросла из простого самостоятельного движения, видимой беспомощности и места для украшений. Характер можно не рисовать — его дорисует владелец.</dd>
+  </dl>
+  <p class="src"><em>Источники:</em> <a href="https://en.wikipedia.org/wiki/Roomba">Roomba — Wikipedia</a> · <a href="https://www.technologyreview.com/2006/03/09/229488/will-home-robots-ever-clean-up/amp/">Will home robots ever clean up? — MIT Technology Review, 2006</a> · <a href="https://www.nbcnews.com/id/wbna21102202">Roombas fill an emotional vacuum — NBC News</a> · <a href="https://faculty.cc.gatech.edu/~beki/c35.pdf">Sung et al., My Roomba Is Rambo (PDF)</a> · <a href="https://spectrum.ieee.org/automaton/robotics/artificial-intelligence/how-to-give-robot-vacuums-a-personality">How to give robot vacuums a personality — IEEE Spectrum</a> · <a href="https://www.theregister.com/2025/12/15/irobot_chapter_11/">iRobot files for Chapter 11 — The Register, 2025</a></p>
+</details>
+<details class="tc" id="t-keepon">
+  <summary><span class="at s-silent"><img src="../../projects/img/atlas/keepon.jpg" alt="" loading="lazy"></span><span class="tn"><b>Keepon</b><i>2003 / 2011 · Хидэки Кодзима (NICT) и Марек Михаловски (BeatBots); игрушка — Wow! Stuff · около $40</i></span><span class="ts ts-silent">замолчала</span></summary>
+  <dl>
+    <dt>Тело</dt><dd>My Keepon: датчики касания под резиновой кожей, микрофон в носу (ритм и направление звука), три мотора, восемь батареек AA. Отвечает только движением и звуками; лицо без мимики.</dd>
+    <dt>Мозг</dt><dd>Внутри. Два режима: танец под музыку и хлопки и ответ на касание. Настроение переключается между любопытным, возбуждённым и сонным. Исследовательским Keepon для детей с аутизмом управлял терапевт удалённо.</dd>
+    <dt>Отношения</dt><dd>Присутствие и игра; в исследованиях — инструмент наблюдения за детьми с аутизмом.</dd>
+    <dt>Иллюзия жизни</dt><dd>Подпрыгивает в такт любому ритму, каждый раз по-новому. Чихает, если почесать нос. Если его не замечать, подаёт голос.</dd>
+    <dt>Судьба</dt><dd>Видео, где он танцует под песню группы Spoon, разошлось в 2007. My Keepon вышел в октябре 2011. Сейчас снят с продажи; причину не нашли <i class="q" title="Не нашли">□</i>.</dd>
+    <dt>Для игрушки на чипе</dt><dd>Микрофон на ритм, касание, три мотора и два-три настроения дают живость дёшево. Это почти готовая схема для игрушки на чипе, если не делать её зависимой от оператора.</dd>
+  </dl>
+  <p class="src"><em>Источники:</em> <a href="https://robotsguide.com/robots/keepon">Keepon — Robots Guide</a> · <a href="https://spectrum.ieee.org/this-could-be-your-very-own-keepon">Your very own Keepon — IEEE Spectrum</a> · <a href="https://fr.wikipedia.org/wiki/Keepon">Keepon — Wikipedia (fr)</a> · <a href="https://beatbots.net/my-keepon">My Keepon — BeatBots</a></p>
+</details>
+<details class="tc" id="t-paro">
+  <summary><span class="at s-live"><img src="../../projects/img/atlas/paro.jpg" alt="" loading="lazy"></span><span class="tn"><b>Paro</b><i>2004 · AIST (Таканори Сибата); производитель Intelligent System Co. · $6 000 в США</i></span><span class="ts ts-live">жива</span></summary>
+  <dl>
+    <dt>Тело</dt><dd>Датчики касания по всему меху, датчики усов, света, звука, температуры и положения. Моторы двигают веки, голову и ласты; звуки детёныша тюленя.</dd>
+    <dt>Мозг</dt><dd>Внутри; сеть в описаниях не упомянута <i class="q" title="Вывод или слабый источник">◆</i>. Три внутренних «настроения» и суточный ритм. Учит своё имя, повторяет то, за что гладят, избегает того, за что бьют.</dd>
+    <dt>Отношения</dt><dd>Присутствие и забота. Пожилые люди, в том числе с деменцией, в домах престарелых и клиниках.</dd>
+    <dt>Иллюзия жизни</dt><dd>В ответ на ласку закрывает глаза и пищит. Поворачивается к тому, кто подошёл. Детёныша тюленя мало кто держал в руках, поэтому сравнивать не с чем <i class="q" title="Вывод или слабый источник">◆</i>.</dd>
+    <dt>Судьба</dt><dd>Аренда в учреждения с 2004 года. Выпущено больше 7 000. В США с 2009 — медицинское изделие класса 2. Каждый Paro собирают вручную. Продаётся.</dd>
+    <dt>Для игрушки на чипе</dt><dd>Для уязвимых людей хватило ответа на ласку и одного образа, без речи. Медицинская цена и ручная сборка ограничили охват.</dd>
+  </dl>
+  <p class="src"><em>Источники:</em> <a href="https://en.wikipedia.org/wiki/Paro_(robot)">Paro (robot) — Wikipedia</a> · <a href="https://www.aist.go.jp/aist_e/list/latest_research/2004/20041208_2/20041208_2.html">PARO — AIST release, 2004</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6685125/">PMC6685125 — PubMed Central</a> · <a href="https://www.computerworld.com/?p=1489717">Computerworld</a> · <a href="https://telecareaware.com/paro-the-seal-that-benefits-so-few/">PARO, the seal that benefits so few — Telecare Aware</a> · <a href="https://en.nagoya-u.ac.jp/news/articles/voice_034/">Voice 034 — Nagoya University</a></p>
+</details>
+<details class="tc" id="t-pleo">
+  <summary><span class="at s-unknown"><img src="../../projects/img/atlas/pleo.jpg" alt="" loading="lazy"></span><span class="tn"><b>Pleo</b><i>2007 · Ugobe (позже Innvo Labs) · $349</i></span><span class="ts ts-unknown">неясно</span></summary>
+  <dl>
+    <dt>Тело</dt><dd>Камера, два микрофона, датчики под «кожей», в пасти и в лапах; 14 моторов с обратной связью по усилию.</dd>
+    <dt>Мозг</dt><dd>Внутри <i class="q" title="Вывод или слабый источник">◆</i>: на запуске шесть процессоров и программная платформа Life OS. Заявлено, что поведение меняется со временем; как это устроено, источники не описывают <i class="q" title="Не нашли">□</i>.</dd>
+    <dt>Отношения</dt><dd>Забота: динозаврик-питомец для семей и взрослых коллекционеров <i class="q" title="Вывод или слабый источник">◆</i>.</dd>
+    <dt>Иллюзия жизни</dt><dd>Детёныш выбран, чтобы спрятать датчики и моторы. Отвечает на поглаживание и удар. Плавно движется за счёт 14 моторов.</dd>
+    <dt>Судьба</dt><dd>По словам компании, 100 000 штук в 2008. В апреле 2009 Ugobe обанкротилась. Бренд перешёл к Innvo Labs, второе поколение вышло в 2011. Что с ним дальше, источники говорят по-разному <i class="q" title="Не нашли">□</i>.</dd>
+    <dt>Для игрушки на чипе</dt><dd>14 моторов и десятки датчиков нашли 100 000 покупателей и всё равно разорили компанию. Простой игрушке — минимум приводов и низкая цена.</dd>
+  </dl>
+  <p class="src"><em>Источники:</em> <a href="https://en.wikipedia.org/wiki/Pleo">Pleo — Wikipedia</a> · <a href="https://robotsguide.com/robots/pleo">Pleo — Robots Guide</a> · <a href="https://www.slashgear.com/ugobe-files-for-bankruptcy-no-more-pleo-2141364">Ugobe files for bankruptcy — SlashGear</a></p>
+</details>
+<details class="tc" id="t-nabaztag">
+  <summary><span class="at s-ember"><img src="../../projects/img/atlas/nabaztag.jpg" alt="" loading="lazy"></span><span class="tn"><b>Nabaztag</b><i>2005 · Violet (Франция) · около $120–150</i></span><span class="ts ts-ember">оживили</span></summary>
+  <dl>
+    <dt>Тело</dt><dd>Два мотора двигают уши; цветные светодиоды; динамик. Модель 2006 года добавила микрофон и считыватель RFID-меток.</dd>
+    <dt>Мозг</dt><dd>Почти всё на серверах Violet; внутри микроконтроллер PIC и Wi-Fi. Серверы присылают погоду, почту, новости, MP3; какой цвет что значит, владелец задаёт на сайте. Нейросети нет.</dd>
+    <dt>Отношения</dt><dd>Присутствие и помощь: новости цветом и ушами вместо экрана. Два кролика через интернет повторяют движения ушей друг друга.</dd>
+    <dt>Иллюзия жизни</dt><dd>Уши как язык тела. Заговаривает сам: объявляет время, читает письма вслух. Свет в животе вместо цифр.</dd>
+    <dt>Судьба</dt><dd>65 000 к ноябрю 2006. Violet обанкротилась, в 2009 её купила Mindscape; в июле 2011 поддержку прекратили и открыли исходный код. Владельцы подняли свои серверы: OpenJabNab, NabaztagLives, Pynab на Raspberry Pi.</dd>
+    <dt>Для игрушки на чипе</dt><dd>Если всё считает сервер компании, игрушка перестаёт работать вместе с компанией. Кроликов вернули, потому что открыли код и протокол. Значит, главное — на чипе, облако — по желанию.</dd>
+  </dl>
+  <p class="src"><em>Источники:</em> <a href="https://en.wikipedia.org/wiki/Nabaztag">Nabaztag — Wikipedia</a> · <a href="https://fr.wikipedia.org/wiki/Nabaztag">Nabaztag — Wikipedia (fr)</a> · <a href="https://www.clubic.com/actualite-52064-.html">4,000 units — Clubic</a> · <a href="https://www.webmanagercenter.com/2006/11/11/22096/le-lapin-nabaztag-une-reussite-francaise-qui-attend-une-nouvelle-version/">Le lapin Nabaztag — Webmanagercenter, 2006</a> · <a href="https://github.com/nabaztag2018/pynab">Pynab — GitHub</a></p>
+</details>
+<details class="tc" id="t-lovot">
+  <summary><span class="at s-live"><img src="../../projects/img/atlas/lovot.jpg" alt="" loading="lazy"></span><span class="tn"><b>LOVOT</b><i>2019 · Groove X · ¥598 000 за пару + подписка</i></span><span class="ts ts-live">жива</span></summary>
+  <dl>
+    <dt>Тело</dt><dd>В «роге» на голове — камера 360°, микрофон и тепловизор; датчики касания по всему телу. Колёса прячутся, когда его берут на руки; глаза — экраны; корпус тёплый, около 30 °C.</dd>
+    <dt>Мозг</dt><dd>В основном внутри: процессор класса ноутбука и ускоритель нейросетей; в зарядке-«гнезде» стоит ещё один компьютер. Строит карту комнаты, узнаёт лица; данные хранятся на устройстве.</dd>
+    <dt>Отношения</dt><dd>Забота: его держат на руках, он просит внимания. Семьи, одинокие взрослые, дома ухода. 52% владельцев раньше держали животных (данные компании).</dd>
+    <dt>Иллюзия жизни</dt><dd>Тёплое мягкое тело с весом. Засыпает на руках; привыкает в три стадии: настороженность, сближение, привязанность. У каждого свой рисунок глаз.</dd>
+    <dt>Судьба</dt><dd>Больше 18 000 в работе, и 90% владельцев остаются с ним через три года (январь 2026, данные компании). Продаётся.</dd>
+    <dt>Для игрушки на чипе</dt><dd>Покупают тело, которое греют и обнимают, и привычку за ним ухаживать. Для чипа: таймер «скучает → просит», касание и простая память «кого знаю»; без дорогой камеры и карты комнаты.</dd>
+  </dl>
+  <p class="src"><em>Источники:</em> <a href="https://news.mynavi.jp/techplus/article/20181219-743215/">LOVOT announcement — Mynavi, 2018</a> · <a href="https://pc.watch.impress.co.jp/docs/news/1596287.html">LOVOT 3.0 — Impress Watch, 2024</a> · <a href="https://www.watch.impress.co.jp/docs/news/1454642.html">Isetan pop-up — Impress Watch, 2022</a> · <a href="https://www.watch.impress.co.jp/docs/news/2078933.html">Ten years of Groove X — Impress Watch, 2026</a> · <a href="https://es.wikipedia.org/wiki/LOVOT">LOVOT — Wikipedia (es)</a> · <a href="https://en.wikipedia.org/wiki/Companion_robot">Companion robot — Wikipedia</a> · <a href="https://monoist.itmedia.co.jp/mn/spv/2203/15/news110.html">Maezawa Fund — MONOist, 2022</a> · <a href="https://blog.ssu.co.jp/en/pr/strategy/36795/">14,000 units — SSU blog, 2024</a></p>
+</details>
+<details class="tc" id="t-toniebox">
+  <summary><span class="at s-live"><img src="../../projects/img/atlas/toniebox.jpg" alt="" loading="lazy"></span><span class="tn"><b>Toniebox</b><i>2016 · Boxine (Германия; с 2021 — Tonies SE) · около €80 <i class="q" title="Вывод или слабый источник">◆</i></i></span><span class="ts ts-live">жива</span></summary>
+  <dl>
+    <dt>Тело</dt><dd>Фигурка с NFC-чипом на крышке говорит коробке, что играть; кнопок нет, громкость — «ушами». Динамик, светодиод, мягкий куб 12 см.</dd>
+    <dt>Мозг</dt><dd>Не думает. Фигурка → файл из облака → воспроизведение. Записи скачиваются по Wi-Fi и хранятся в коробке, играет без сети. Нужен облачный аккаунт.</dd>
+    <dt>Отношения</dt><dd>Сказки и музыка. Слушает ребёнок 3–7 лет, покупает и загружает родитель. Поставил фигурку — играет, снял — пауза.</dd>
+    <dt>Иллюзия жизни</dt><dd>Существо не изображает. «Герой» — фигурка, которую ставят руками. Ни экрана, ни кнопок. На Creative Tonie можно записать голос близкого человека.</dd>
+    <dt>Судьба</dt><dd>10 млн коробок к сентябрю 2025. С 2021 на Франкфуртской бирже. Если облако отключат, коробка перестанет получать записи; с 2023 есть открытый проект своего сервера.</dd>
+    <dt>Для игрушки на чипе</dt><dd>Связка «предмет-метка → звук» работает без экрана и без нейросети, а записи продаются отдельным товаром. Облачный аккаунт — слабое место.</dd>
+  </dl>
+  <p class="src"><em>Источники:</em> <a href="https://en.wikipedia.org/wiki/Tonies">Tonies — Wikipedia</a> · <a href="https://de.wikipedia.org/wiki/Toniebox">Toniebox — Wikipedia (de)</a> · <a href="https://www.ifixit.com/Device/Toniebox">Toniebox — iFixit</a> · <a href="https://www.mynewsdesk.com/uk/tonies/pressreleases/tonies-r-celebrates-milestone-with-10-million-tonieboxes-sold-worldwide-3406049">10 million Tonieboxes — tonies press release</a> · <a href="https://www.mobiflip.de/shortnews/toniebox-und-tonies-werden-teurer">Price rise 2022 — mobiFlip</a> · <a href="https://www.pcwelt.de/article/2846438/tonies-toniebox-starter-set-audioplayer-hoerbucher-lieder-kinder-kabellose-musikbox-lautsprecher-amazon-deal-prime-day-angebot.html">Starter set price — PCWelt</a></p>
+</details>
+<details class="tc" id="t-cayla">
+  <summary><span class="at s-silent"><img src="../../projects/img/atlas/cayla.jpg" alt="" loading="lazy"></span><span class="tn"><b>My Friend Cayla</b><i>2014 · Genesis Toys (США) · около $40</i></span><span class="ts ts-silent">замолчала</span></summary>
+  <dl>
+    <dt>Тело</dt><dd>Микрофон и динамик в кукле 46 см, связь с телефоном по Bluetooth. Экрана и движения нет.</dd>
+    <dt>Мозг</dt><dd>Думает не кукла. Приложение на телефоне шлёт вопрос ребёнка в дата-центр Nuance; там речь превращается в текст, ответ ищется в интернете и приходит синтезированным голосом. Часть реплик записана заранее, в том числе реклама Disney.</dd>
+    <dt>Отношения</dt><dd>Подружка, которая отвечает на вопросы. Дети.</dd>
+    <dt>Иллюзия жизни</dt><dd>На «Can I tell you a secret?» обещает никому не рассказывать. Отвечает на любые вопросы. Выглядит как обычная кукла и не показывает, что слушает.</dd>
+    <dt>Судьба</dt><dd>Bluetooth без пароля: норвежский совет потребителей подключался к кукле и мог слушать детей. В феврале 2017 Германия запретила её как скрытое шпионское устройство и попросила родителей вывести микрофон из строя. Genesis, похоже, закрылась <i class="q" title="Вывод или слабый источник">◆</i>.</dd>
+    <dt>Для игрушки на чипе</dt><dd>Голос ребёнка, который уходит из игрушки, — юридический риск. Если распознавание идёт на самом чипе, довода «шпионское устройство» нет.</dd>
+  </dl>
+  <p class="src"><em>Источники:</em> <a href="https://en.wikipedia.org/wiki/My_Friend_Cayla">My Friend Cayla — Wikipedia</a> · <a href="https://www.kpbs.org/news/2017/02/17/banned-in-germany-kids-doll-is-labeled-an">Banned in Germany — NPR (KPBS copy), 2017</a> · <a href="https://www.bostonglobe.com/business/2016/12/06/nuance-under-fire-over-toy-privacy/WryFiVdq6zIVTxLuRImdVI/story.html">Nuance under fire over toy privacy — Boston Globe, 2016</a> · <a href="https://fortune.com/2017/02/20/germany-cayla-doll-privacy-surveillance/">Germany, Cayla and surveillance — Fortune, 2017</a></p>
+</details>
+<details class="tc" id="t-hello-barbie">
+  <summary><span class="at s-silent"><img src="../../projects/img/atlas/hello-barbie.jpg" alt="" loading="lazy"></span><span class="tn"><b>Hello Barbie</b><i>2015 · Mattel + ToyTalk · около $75</i></span><span class="ts ts-silent">замолчала</span></summary>
+  <dl>
+    <dt>Тело</dt><dd>Микрофон в колье, кнопка в пряжке ремня (слушает, пока кнопка зажата), Wi-Fi, динамик. Батареи хватает примерно на час.</dd>
+    <dt>Мозг</dt><dd>Облако. Речь шифруется и уходит на серверы ToyTalk; ответ выбирается из около 8 000 реплик, записанных актёрами. Ответ приходит примерно за секунду. Свободной генерации текста нет.</dd>
+    <dt>Отношения</dt><dd>Игра и разговор, шутки и песни. Дети; родителям приходят письма со сводкой разговоров.</dd>
+    <dt>Иллюзия жизни</dt><dd>Помнит, что рассказали родители: кличку питомца, интересы. Ответ ветвится по словам ребёнка. Голоса актёров вместо синтеза.</dd>
+    <dt>Судьба</dt><dd>В продаже с ноября 2015. В 2015–2016 исследователи нашли уязвимости, в основном в сайтах и службах. В 2019 PullString (так ToyTalk называется с 2016) купила Apple; обслуживание кукол прекратили <i class="q" title="Вывод или слабый источник">◆</i>.</dd>
+    <dt>Для игрушки на чипе</dt><dd>Кнопка «нажми и говори» и банк записанных реплик дают разговор без генерации текста и без сервера, который могут выключить. Такое помещается на чипе; облачная запись детского голоса стала главной уязвимостью.</dd>
+  </dl>
+  <p class="src"><em>Источники:</em> <a href="https://www.theregister.com/2015/02/19/hello_barbie/">Hello Barbie — The Register, 2015</a> · <a href="https://www.vice.com/en/article/more-security-vulnerabilities-found-in-hello-barbie-toys-servers/">More vulnerabilities found — Vice, 2016</a> · <a href="https://d3.harvard.edu/platform-digit/submission/hello-barbie-nlp-and-the-first-conversational-doll/">Hello, Barbie? NLP and the first conversational doll — Harvard D3</a> · <a href="https://www.infosecurity-magazine.com/blogs/barbies-data-privacy-scandal/">Barbie&#x27;s data privacy scandal — Infosecurity Magazine</a> · <a href="https://www.bright.nl/nieuws/1121683/apple-koopt-spraak-startup-achter-hello-barbie.html">Apple koopt PullString — Bright.nl</a></p>
+</details>
+<details class="tc" id="t-cozmo-vector">
+  <summary><span class="at s-ember"><img src="../../projects/img/atlas/cozmo.jpg" alt="" loading="lazy"></span><span class="tn"><b>Cozmo / Vector</b><i>2016 / 2018 · Anki (США) · $180 / $249</i></span><span class="ts ts-ember">оживили</span></summary>
+  <dl>
+    <dt>Тело</dt><dd>Камера узнаёт людей; гусеницы, подъёмная «рука», три подсвеченных кубика для игр. Vector добавил датчики обрыва и отклик на «Hey Vector».</dd>
+    <dt>Мозг</dt><dd>Cozmo считает на телефоне владельца <i class="q" title="Вывод или слабый источник">◆</i>. Vector — внутри (процессор Qualcomm) и в облаке; голосовые команды зависят от облака.</dd>
+    <dt>Отношения</dt><dd>Игра и присутствие: игры с кубиками; у Vector — таймеры и ответы на вопросы.</dd>
+    <dt>Иллюзия жизни</dt><dd>Характер делали профессиональные аниматоры, «как у героя Pixar». Глаза показывают счастье, злость, грусть, сосредоточенность. Cozmo раздражается, когда его берут в руки.</dd>
+    <dt>Судьба</dt><dd>Больше 1,5 млн роботов к 2018. Anki закрылась в апреле 2019. Активы купила Digital Dream Labs и пообещала держать серверы; голос — по подписке за $11,99 в месяц. Сообщество сделало wire-pod — бесплатный открытый сервер для Vector.</dd>
+    <dt>Для игрушки на чипе</dt><dd>Характер сделали анимация глаз, звуки и паузы. Робот, чей мозг в облаке закрывшейся компании, держится только на открытом сервере.</dd>
+  </dl>
+  <p class="src"><em>Источники:</em> <a href="https://www.engadget.com/2016-10-14-anki-cozmo-robot.html">Cozmo — Engadget, 2016</a> · <a href="https://www.technologyreview.com/s/602657/watch-a-plucky-little-robot-that-wants-to-play">A plucky little robot that wants to play — MIT Technology Review</a> · <a href="https://www.engadget.com/2018-08-08-anki-vector-robot.html">Vector — Engadget, 2018</a> · <a href="https://techcrunch.com/?p=1686895">1.5 million robots — TechCrunch, 2018</a> · <a href="https://venturebeat.com/ai/robotics-startup-anki-shuts-down-after-burning-through-almost-200-million">Anki shuts down — VentureBeat</a> · <a href="https://en.wikipedia.org/wiki/Anki_(American_company)">Anki — Wikipedia</a> · <a href="https://www.itwire.com/home-it/anki-vector-robot-saved-by-digital-dream-labs.html">Vector saved by Digital Dream Labs — ITWire, 2020</a> · <a href="https://scienceinsights.org/what-happened-to-vector-from-anki-to-now/">What happened to Vector — ScienceInsights</a></p>
+</details>
+<details class="tc" id="t-jibo">
+  <summary><span class="at s-silent"><img src="../../projects/img/atlas/jibo.jpg" alt="" loading="lazy"></span><span class="tn"><b>Jibo</b><i>2017 · Jibo, Inc. (Бостон; Синтия Бризил, MIT) · $899</i></span><span class="ts ts-silent">замолчала</span></summary>
+  <dl>
+    <dt>Тело</dt><dd>Шесть микрофонов определяют, откуда голос; камера для лиц; датчики касания под пластиком; экран вместо лица; поворот по трём осям.</dd>
+    <dt>Мозг</dt><dd>Облако: ответы, погода, викторины, умный дом. После отключения серверов работала только фраза «Hey Jibo».</dd>
+    <dt>Отношения</dt><dd>Присутствие, помощь и игра для всей семьи. Узнаёт членов семьи по лицу и называет по имени.</dd>
+    <dt>Иллюзия жизни</dt><dd>Поворачивается к говорящему. Двигается плавно, «не по-роботски». Хихикает, если погладить по голове.</dd>
+    <dt>Судьба</dt><dd>$3,6 млн на Indiegogo в 2014, около $73 млн венчурных денег. Обложка Time, «25 лучших изобретений 2017 года». В 2018 уволили большинство сотрудников; весной 2019 робот сам сообщил владельцам, что серверы скоро отключат, и станцевал. Патенты позже купила NTT Disruption.</dd>
+    <dt>Для игрушки на чипе</dt><dd>Тело — взгляд, поворот, касание — держало людей и после отключения облака. Характер из света, звука и движения стоит держать на самом чипе.</dd>
+  </dl>
+  <p class="src"><em>Источники:</em> <a href="https://www.therobotreport.com/jibo-social-robot-assets-acquired-ntt-disruption/">Jibo assets acquired by NTT Disruption — The Robot Report, 2020</a> · <a href="https://techcrunch.com/2019/03/04/the-lonely-death-of-jibo-the-social-robot/">The lonely death of Jibo — TechCrunch, 2019</a> · <a href="https://www.engadget.com/2019-03-04-social-robot-jibo-shutting-down-message.html">Jibo shutting down — Engadget, 2019</a> · <a href="https://ipsnews.net/business/2020/07/24/jibo-the-social-robot-that-was-supposed-to-die-is-getting-a-second-life/">Jibo gets a second life — IPS News, 2020</a> · <a href="https://www.slashgear.com/jibo-review-2017-13507668/">Jibo review — SlashGear</a> · <a href="https://www.hanselman.com/blog/FirstImpressionsJiboSocialRobotForTheHome.aspx">First impressions of Jibo — Scott Hanselman</a> · <a href="https://www.bartneck.de/2024/01/10/jibo-is-dead-again/">Jibo is dead (again) — Christoph Bartneck</a></p>
+</details>
+<details class="tc" id="t-bittle">
+  <summary><span class="at s-live"><img src="../../projects/img/atlas/bittle.jpg" alt="" loading="lazy"></span><span class="tn"><b>Petoi Bittle</b><i>2020 · Petoi · $225 (набор на Kickstarter)</i></span><span class="ts ts-live">жива</span></summary>
+  <dl>
+    <dt>Тело</dt><dd>Девять сервоприводов (восемь на ногах, один на голове), датчик положения, ИК-вход, разъём для модулей вроде камеры.</dd>
+    <dt>Мозг</dt><dd>Внутри, без нейросети: Arduino на ATmega328P; новое поколение Bittle X — на ESP32. Походки и позы — готовые навыки. Открытая платформа OpenCat (лицензия MIT); сверху по желанию ставят Raspberry Pi.</dd>
+    <dt>Отношения</dt><dd>Игра и обучение науке и инженерии: дети, подростки, исследователи. «Делает трюки, как настоящее животное».</dd>
+    <dt>Иллюзия жизни</dt><dd>Четыре ноги вместо колёс, собачьи походки. Трюки по команде. Держит равновесие <i class="q" title="Вывод или слабый источник">◆</i>.</dd>
+    <dt>Судьба</dt><dd>$567 тыс. на Kickstarter при цели $50 тыс. Продаётся Bittle X.</dd>
+    <dt>Для игрушки на чипе</dt><dd>Живость четвероногому дают механика и записанные походки на дешёвом контроллере. Маленькой сети остаётся выбирать следующий навык; открытый код растит сообщество.</dd>
+  </dl>
+  <p class="src"><em>Источники:</em> <a href="https://github.com/PetoiCamp/OpenCat">OpenCat — GitHub</a> · <a href="https://www.petoi.com/pages/bittle-open-source-bionic-robot-dog">Bittle — Petoi</a> · <a href="https://www.petoi.com/blogs/blog/petoi-bittle-the-palm-sized-trick-playing-robot-dog-successfully-raised-567k-on-kickstarter">Bittle raised $567K on Kickstarter — Petoi</a> · <a href="https://i-programmer.info/news/169-robotics/14008-a-little-robot-quadruped-on-kickstarter.html">A little robot quadruped on Kickstarter — I Programmer</a></p>
+</details>
+<details class="tc" id="t-eilik">
+  <summary><span class="at s-live"><img src="../../projects/img/atlas/eilik.jpg" alt="" loading="lazy"></span><span class="tn"><b>Eilik</b><i>2022 · Energize Lab · $149,99</i></span><span class="ts ts-live">жива</span></summary>
+  <dl>
+    <dt>Тело</dt><dd>Касание (голова, живот, спина), тряска, подъём, микрофон. Экран-лицо 128×64, динамик, вибромотор, четыре сервопривода.</dd>
+    <dt>Мозг</dt><dd>Заявленного ИИ нет, работает без интернета. Готовые анимации и звуки запускаются касанием и состоянием. Разговор вынесен в отдельную платную приставку.</dd>
+    <dt>Отношения</dt><dd>Настольный друг для детей и взрослых; заодно будильник и таймер.</dd>
+    <dt>Иллюзия жизни</dt><dd>Сердится, если не замечают; смеётся от щекотки; пугается, когда поднимают. Два Eilik играют и дерутся.</dd>
+    <dt>Судьба</dt><dd>HK$6,06 млн на Kickstarter при цели HK$390 тыс., 4 738 вкладчиков. Продаётся.</dd>
+    <dt>Для игрушки на чипе</dt><dd>Экранчик, четыре сервы, касание и около десяти состояний — рабочая игрушка без нейросети. ИИ можно добавить позже отдельной приставкой.</dd>
+  </dl>
+  <p class="src"><em>Источники:</em> <a href="https://www.yankodesign.com/?p=352826">Eilik — Yanko Design, 2021</a> · <a href="https://www.geeky-gadgets.com/eilik-robot-companion-11-11-2021/">Eilik robot companion — Geeky Gadgets, 2021</a> · <a href="https://www.kicktraq.com/projects/energize-lab/eilik-a-little-companion-bot-with-endless-fun/">Eilik — Kicktraq</a> · <a href="https://store.energizelab.com/products/eilik">Eilik — Energize Lab store</a> · <a href="https://www.originofbots.com/news/eilik-enters-mass-production-after-kickstarter-surge">Eilik enters mass production — Origin of Bots, 2026</a></p>
+</details>
+<details class="tc" id="t-moflin">
+  <summary><span class="at s-live"><img src="../../projects/img/atlas/moflin.jpg" alt="" loading="lazy"></span><span class="tn"><b>Moflin</b><i>2024 · Casio · ¥59 400</i></span><span class="ts ts-live">жива</span></summary>
+  <dl>
+    <dt>Тело</dt><dd>Микрофон, датчик света, датчики касания, гироскоп. Два мотора поворачивают и наклоняют голову; динамик чирикает. Мех, 260 г.</dd>
+    <dt>Мозг</dt><dd>По словам Casio, всё обрабатывается на самом Moflin: голос превращается в обезличенные признаки, чтобы узнавать частого собеседника; слов он не понимает и не записывает. Нейросеть это или правила, не сказано <i class="q" title="Не нашли">□</i>.</dd>
+    <dt>Отношения</dt><dd>Присутствие и снятие стресса; взрослые, которым нельзя держать животное.</dd>
+    <dt>Иллюзия жизни</dt><dd>Мех и ответ на объятие. Узнаёт хозяина по голосу. Характер складывается за дни, один из четырёх, и у разных экземпляров разный.</dd>
+    <dt>Судьба</dt><dd>Краудфандинг перевыполнен в 30 раз. Продажи с ноября 2024; больше 7 000 к марту 2025 <i class="q" title="Вывод или слабый источник">◆</i>. С октября 2025 продаётся в США и Британии за $429 <i class="q" title="Вывод или слабый источник">◆</i>.</dd>
+    <dt>Для игрушки на чипе</dt><dd>Почти готовая модель игрушки на чипе: четыре дешёвых датчика, два мотора, несколько чисел настроения, характер растёт днями, всё локально. Избегать громких цифр вроде «4 млн личностей».</dd>
+  </dl>
+  <p class="src"><em>Источники:</em> <a href="https://www.casio.com/us/moflin/">Moflin — Casio (US)</a> · <a href="https://www.watch.impress.co.jp/docs/news/1630447.html">Moflin announced — Impress Watch, 2024</a> · <a href="https://www.bcnretail.com/news/detail/20241015_461259.html">Moflin — BCN+R, 2024</a> · <a href="https://kaden.watch.impress.co.jp/docs/news/2127724.html">New colour — Kaden Watch</a></p>
+</details>
+<details class="tc" id="t-loona">
+  <summary><span class="at s-live"><img src="../../projects/img/atlas/loona.jpg" alt="" loading="lazy"></span><span class="tn"><b>Loona</b><i>2023 · KEYi Tech (Пекин) · $449</i></span><span class="ts ts-live">жива</span></summary>
+  <dl>
+    <dt>Тело</dt><dd>Камера, 3D-камера и датчики края, четыре микрофона, касание на голове. Экранные глаза, динамик, колёса, которые поднимаются, как руки.</dd>
+    <dt>Мозг</dt><dd>Где считает, источники не говорят <i class="q" title="Не нашли">□</i>. По словам продавца, сложные функции требуют Wi-Fi, базовое движение может работать локально. Есть редактор действий.</dd>
+    <dt>Отношения</dt><dd>Игра и присутствие: питомец-игра для детей и программирование.</dd>
+    <dt>Иллюзия жизни</dt><dd>«Одно из самых плавных движений у потребительских роботов» (TechCrunch). Встречает дома, идёт на зов, ловит мяч, гоняет лазерную указку.</dd>
+    <dt>Судьба</dt><dd>Около $4 млн краудфандинга. В обзоре TechCrunch зрение работало «лишь иногда», робот терял владельца и крутился на месте. Продаётся.</dd>
+    <dt>Для игрушки на чипе</dt><dd>Движение продаёт, а сбои распознавания ломают иллюзию. На чипе надёжнее реагировать на простые сигналы: касание, громкий звук, наклон.</dd>
+  </dl>
+  <p class="src"><em>Источники:</em> <a href="https://techcrunch.com/2022/09/15/ankis-spiritual-successor-hits-kickstarter-with-some-impressive-moves">Loona on Kickstarter — TechCrunch, 2022</a> · <a href="https://newatlas.com/robotics/loona-pet-robot-kickstarter/">Loona — New Atlas</a> · <a href="https://www.engadget.com/loona-adorable-petbot-183242804.html">Loona — Engadget, 2023</a> · <a href="https://hypebeast.com/2023/1/loona-petbot-ces-2023-release-info">Loona at CES 2023 — Hypebeast</a> · <a href="https://blog.kowatek.com/?p=11379">Loona review — TechCrunch (copy on kowatek)</a> · <a href="https://robotsaroundthehouse.com/threads/loona%E2%80%99s-indiegogo-campaign-coming-to-an-end.66/">Indiegogo campaign ending — Robots Around the House</a> · <a href="https://chozan.co/keyi-built-loona-robot/">KEYi built Loona — Chozan, 2026</a></p>
+</details>
+<details class="tc" id="t-moxie">
+  <summary><span class="at s-ember"><img src="../../projects/img/atlas/moxie.jpg" alt="" loading="lazy"></span><span class="tn"><b>Moxie</b><i>2020 · Embodied, Inc. (США) · $1 500, позже $799</i></span><span class="ts ts-ember">оживили</span></summary>
+  <dl>
+    <dt>Тело</dt><dd>Микрофоны в «ушах», камера (кадры остаются на роботе), лицо-экран, поворот головы и корпуса, короткие руки. Мягкий корпус, почти 40 см.</dd>
+    <dt>Мозг</dt><dd>Облако: офлайн-режима нет, разговор на облачных языковых моделях. Обучали на разговорах около 100 семей. Тревожные темы отправляет родителям.</dd>
+    <dt>Отношения</dt><dd>Забота и обучение: дети 5–10 лет, особенно с аутизмом. Ежедневные задания, чтение, дыхательные упражнения.</dd>
+    <dt>Иллюзия жизни</dt><dd>Лицо с эмоциями. Подстраивает тон под ребёнка. Машет и показывает рукой. Ежедневные задания создают чувство жизни рядом. Дети плакали, когда его отключили.</dd>
+    <dt>Судьба</dt><dd>Серверы выключены 30 января 2025. Бывшие инженеры выпустили OpenMoxie — локальный сервер на домашнем компьютере; работает только на роботах с последним обновлением. Сейчас не продаётся.</dd>
+    <dt>Для игрушки на чипе</dt><dd>Если характер живёт только в облаке, он пропадает вместе с компанией. Нужен локальный режим — хотя бы лицо и реакции на чипе — и код сервера, опубликованный заранее.</dd>
+  </dl>
+  <p class="src"><em>Источники:</em> <a href="https://spectrum.ieee.org/moxie-a-social-robot-for-childhood-development">Moxie, a social robot for childhood development — IEEE Spectrum</a> · <a href="https://wallpaper.com/technology/yves-behar-designs-robot-moxie">Yves Béhar designs Moxie — Wallpaper</a> · <a href="https://www.mac4ever.com/ia/185915-tous-les-robots-moxie-vont-mourir-en-meme-temps">Tous les robots Moxie vont mourir — Mac4Ever, 2024</a> · <a href="https://sixdegreesofrobotics.substack.com/p/what-happens-when-robots-die-the">What happens when robots die — Six Degrees of Robotics</a> · <a href="https://dottore.substack.com/p/mourning-the-machine">Mourning the machine — Dottore, 2024</a> · <a href="https://www.osnews.com/story/141401/the-moxie-child-support-robot-gets-new-lease-on-life-through-open-source/">Moxie gets a new lease on life — OSNews, 2024</a> · <a href="https://hardware.slashdot.org/story/24/12/21/0039217/startup-set-to-brick-800-kids-robot-is-trying-to-open-source-it-first">Startup tries to open-source Moxie — Slashdot, 2024</a> · <a href="https://www.thecooldown.com/?p=769327">The Cool Down, 2026</a> · <a href="https://moxierobots.com/get.html">moxierobots.com</a></p>
+</details>
+<details class="tc" id="t-emo">
+  <summary><span class="at s-live"><img src="../../projects/img/atlas/emo.jpg" alt="" loading="lazy"></span><span class="tn"><b>EMO</b><i>2021 · Living AI · $279</i></span><span class="ts ts-live">жива</span></summary>
+  <dl>
+    <dt>Тело</dt><dd>Камера (узнаёт до 10 лиц), четыре микрофона, касание на голове, датчики края. Экран-лицо, динамик; ходит на двух «ногах».</dd>
+    <dt>Мозг</dt><dd>Смесь. Сайт компании: встроенный нейропроцессор и три модели ИИ. Обзоры: многие функции зависят от интернета, новые анимации приходят из облака.</dd>
+    <dt>Отношения</dt><dd>Настольный питомец; будильник, игры, управление лампами.</dd>
+    <dt>Иллюзия жизни</dt><dd>Исследует стол и не падает с края. Здоровается по имени. «Простужается» в плохую погоду и просит заботы. Мурлычет, если погладить.</dd>
+    <dt>Судьба</dt><dd>$348 тыс. на Kickstarter в 2020. Продаётся, без подписки. Отзывы жалуются на зависимость от Wi-Fi и всегда включённую камеру.</dd>
+    <dt>Для игрушки на чипе</dt><dd>Выразительное лицо и сотня анимаций работают на малой электронике. Когда вычисления уходят в облако, игрушка зависит от интернета и вызывает вопросы о приватности.</dd>
+  </dl>
+  <p class="src"><em>Источники:</em> <a href="https://living.ai/emo/">EMO — Living AI</a> · <a href="https://www.kicktraq.com/projects/livingai/emo-the-coolest-ai-desktop-pet-with-personality-and-ideas/">EMO on Kickstarter — Kicktraq</a> · <a href="https://vector.thedroidyouarelookingfor.info/2020/11/27/bigger-picture-on-kickstarter-emo-the-desktop-pet/">EMO on Kickstarter — thedroidyouarelookingfor, 2020</a> · <a href="https://www.personalrobots.biz/emo-by-living-ai/">EMO — Personal Robots</a> · <a href="https://keyirobot.com/blogs/buying-guide/emo-cute-robot-pet-review-is-livingais-emotional-robot-worth-it">EMO review — KEYi (a competitor)</a> · <a href="https://mia-cat.com/en/pet-robot/emo-review/">EMO review — mia-cat</a> · <a href="https://vc.ru/marketing/1799856-koty-s-lotkami-na-vyhod">EMO and cats — vc.ru</a></p>
+</details>
+<details class="tc" id="t-bubblepal">
+  <summary><span class="at s-live"><img src="../../projects/img/atlas/bubblepal.jpg" alt="" loading="lazy"></span><span class="tn"><b>BubblePal</b><i>2024 · Haivivi (Китай) · ¥399 (около $149 в США)</i></span><span class="ts ts-live">жива</span></summary>
+  <dl>
+    <dt>Тело</dt><dd>Подвеска размером с мяч для пинг-понга, крепится к мягкой игрушке. Кнопка; микрофон и динамик <i class="q" title="Вывод или слабый источник">◆</i>. В приложении 39 персонажей.</dd>
+    <dt>Мозг</dt><dd>Облачная языковая модель DeepSeek. Родители жалуются: ответы длинные, распознавание запаздывает, игрушка перебивает.</dd>
+    <dt>Отношения</dt><dd>Сказки и разговор: сочиняет истории вместе с ребёнком.</dd>
+    <dt>Иллюзия жизни</dt><dd>Голос появляется у игрушки, которую ребёнок уже любит. Персонажи, которых дети знают.</dd>
+    <dt>Судьба</dt><dd>Больше 200 000 штук по словам компании <i class="q" title="Вывод или слабый источник">◆</i>; к январю 2025 — больше 20 000 в месяц. В августе 2025 — раунд на 200 млн юаней.</dd>
+    <dt>Для игрушки на чипе</dt><dd>Съёмный модуль отделяет дешёвое тело от дорогого мозга. Задержку и болтливость облачной модели лечат короткий локальный ответ и кнопка.</dd>
+  </dl>
+  <p class="src"><em>Источники:</em> <a href="https://www.technologyreview.com/2025/10/07/1125191/ai-toys-in-china/amp/">AI toys in China — MIT Technology Review, 2025</a> · <a href="https://eu.36kr.com/en/p/3441774706644608">Haivivi / BubblePal — 36Kr</a> · <a href="https://www.asiatechlens.com/p/plush-playful-and-powered-by-ai-how">Plush, playful and powered by AI — Asia Tech Lens</a></p>
+</details>
+<details class="tc" id="t-kumma">
+  <summary><span class="at s-live"><img src="../../projects/img/atlas/kumma.jpg" alt="" loading="lazy"></span><span class="tn"><b>FoloToy Kumma</b><i>2024 · FoloToy (Сингапур) · $99</i></span><span class="ts ts-live">жива</span></summary>
+  <dl>
+    <dt>Тело</dt><dd>Плюшевый медведь с микрофоном, динамиком и Wi-Fi. Родитель может научить игрушку говорить своим голосом.</dd>
+    <dt>Мозг</dt><dd>Облако: по умолчанию GPT-4o от OpenAI, родитель мог переключить на Mistral Large. Позже сайт FoloToy пишет о боте на платформе Coze (ByteDance).</dd>
+    <dt>Отношения</dt><dd>Присутствие и разговор. Дети.</dd>
+    <dt>Иллюзия жизни</dt><dd>Плюш с голосом. Голос родителя. Свободный диалог больше чем на десяти языках.</dd>
+    <dt>Судьба</dt><dd>Больше 20 000 штук в 2024. 13 ноября 2025 отчёт PIRG: в долгих разговорах медведь обсуждал сексуальные темы и подсказывал, где найти ножи, таблетки и спички. FoloToy остановила продажи; 27 ноября медведь снова продавался.</dd>
+    <dt>Для игрушки на чипе</dt><dd>Открытая языковая модель в руках ребёнка ломается в долгих разговорах. Маленькая сеть, которая выбирает из закрытого набора реакций, сказать запретное не может.</dd>
+  </dl>
+  <p class="src"><em>Источники:</em> <a href="https://www.theregister.com/2025/11/13/ai_toys_fmatches_knives_kink/">AI toys, matches, knives and kink — The Register, 2025</a> · <a href="https://www.foxbusiness.com/lifestyle/watchdog-group-warns-ai-teddy-bear-discusses-sexually-explicit-content-dangerous-activities">AI teddy bear — Fox Business</a> · <a href="https://www.enca.com/business/singapore-ai-teddy-back-sale-after-recall-over-sex-chat-scare">AI teddy back on sale — eNCA / AFP</a> · <a href="https://www.kplctv.com/2025/12/12/consumer-safety-report-warns-disturbing-responses-ai-powered-toys/">Consumer safety report on AI toys — KPLC, 2025</a> · <a href="https://letsdatascience.com/news/folotoy-resumes-sales-of-recalled-kumma-ai-teddy-bear-using-89935c89">FoloToy resumes sales — Let&#x27;s Data Science, 2025</a> · <a href="https://www.technologyreview.com/2025/10/07/1125191/ai-toys-in-china/amp/">AI toys in China — MIT Technology Review, 2025</a></p>
+</details>
+<details class="tc" id="t-grem">
+  <summary><span class="at s-live"><img src="../../projects/img/atlas/grem.jpg" alt="" loading="lazy"></span><span class="tn"><b>Grem</b><i>2024 · Curio Interactive (Сан-Франциско) · $99</i></span><span class="ts ts-live">жива</span></summary>
+  <dl>
+    <dt>Тело</dt><dd>Плюшевый голубой кролик; голосовой блок в кармане на молнии на спине: микрофон, динамик, Wi-Fi. Экрана и камеры нет.</dd>
+    <dt>Мозг</dt><dd>Облако: языковая модель OpenAI. Темы фильтруются, но журналистка New York Times смогла увести разговор со сценария. В тестах PIRG у игрушки Curio самая строгая защита из четырёх.</dd>
+    <dt>Отношения</dt><dd>Игра и разговор вместо телевизора; 3–7 лет. Каждый разговор расшифровывается и приходит на телефон родителя.</dd>
+    <dt>Иллюзия жизни</dt><dd>Мягкое тело с голосом, электроника спрятана. У персонажа своя тема: Grem спрашивает о природе.</dd>
+    <dt>Судьба</dt><dd>Предзаказ с декабря 2023. Сейчас восемь персонажей по $119. Продажи не нашли <i class="q" title="Не нашли">□</i>.</dd>
+    <dt>Для игрушки на чипе</dt><dd>Электроника в съёмном кармане делает плюш стираемым, а мозг сменным. Копия каждой реплики родителю — простое средство доверия; облако для неё не нужно, если игрушка говорит из банка фраз.</dd>
+  </dl>
+  <p class="src"><em>Источники:</em> <a href="https://techcrunch.com/2023/12/15/grimes-launches-ai-toy-brand-curio-grok">Grimes launches AI toy brand Curio — TechCrunch, 2023</a> · <a href="https://thetoyinsider.com/curio-ai-plush-launch">Curio AI plush launch — The Toy Insider, 2023</a> · <a href="https://decrypt.co/210024/grok-ai-twitter-toy-elon-musk-grimes-trademark">Grok AI toy — Decrypt, 2023</a> · <a href="https://thenightly.com.au/from/the-new-york-times/the-new-york-times-theyre-stuffed-animals-theyre-also-ai-chatbots-c-19759954">They&#x27;re stuffed animals, they&#x27;re also AI chatbots — The New York Times (copy on The Nightly), 2025</a> · <a href="https://www.heycurio.com">heycurio.com</a> · <a href="https://www.theregister.com/2025/11/13/ai_toys_fmatches_knives_kink/">PIRG test — The Register, 2025</a></p>
+</details>
+<details class="tc" id="t-xiaozhi">
+  <summary><span class="at s-live"><img src="../../projects/img/atlas/xiaozhi.jpg" alt="" loading="lazy"></span><span class="tn"><b>xiaozhi-esp32</b><i>около 2024 · пользователь GitHub «78» и сообщество · прошивка бесплатна (MIT)</i></span><span class="ts ts-live">жива</span></summary>
+  <dl>
+    <dt>Тело</dt><dd>Зависит от платы: в репозитории больше 130 плат. Микрофон, динамик, экран с лицом-эмодзи, на части плат камера; через протокол MCP управляет светодиодами и сервоприводами.</dd>
+    <dt>Мозг</dt><dd>Смесь. На чипе — только распознавание слова пробуждения. Дальше звук уходит на сервер: распознавание речи, языковая модель (Qwen, DeepSeek), синтез голоса. По умолчанию — сервер xiaozhi.me.</dd>
+    <dt>Отношения</dt><dd>Собеседник и пульт умного дома. Для кого — источники не говорят; скорее любители <i class="q" title="Вывод или слабый источник">◆</i>.</dd>
+    <dt>Иллюзия жизни</dt><dd>Своё имя для пробуждения. Лицо-эмодзи. Узнаёт, кто говорит.</dd>
+    <dt>Судьба</dt><dd>31 тыс. звёзд на GitHub, обновляется. Слабое место: прошивка по умолчанию завязана на сервер xiaozhi.me.</dd>
+    <dt>Для игрушки на чипе</dt><dd>Разговорная игрушка на ESP32 уже собирается из готовых частей, но думает на сервере. Взять оболочку — платы, лицо, слово пробуждения — и поставить маленькую локальную сеть вместо сервера.</dd>
+  </dl>
+  <p class="src"><em>Источники:</em> <a href="https://github.com/78/xiaozhi-esp32">xiaozhi-esp32 — GitHub</a> · <a href="https://community.dfrobot.com/makelog-318730.html">Xiaozhi AI on the ESP32-S3 AI Camera — DFRobot</a> · <a href="https://www.sourcepulse.org/projects/1842959">xiaozhi-esp32 — SourcePulse</a></p>
+</details>
+</div>
+
+<footer class="afoot">
+<p>Собрано с ИИ-агентом по открытым источникам, октябрь 2026. Вручную сверены две цифры: продажи Tamagotchi и отчёт PIRG о Kumma. После сверки два утверждения понижены до <i class="q" title="Вывод или слабый источник">◆</i>.</p>
+<p><em>Что не проверено</em></p>
+<ul>
+  <li>Продажи в штуках не нашли у Jibo, Moxie, Grem, EMO, Loona, Keepon, Petoi Bittle, Eilik, Hello Barbie, Cayla, xiaozhi. У Moflin, BubblePal и LOVOT числа только от самих компаний.</li>
+  <li>Цена Toniebox на старте выведена косвенно (≈€80 <i class="q" title="Вывод или слабый источник">◆</i>). Где считает Loona — <i class="q" title="Не нашли">□</i>.</li>
+  <li>Цифры в карточках независимо не проверялись, кроме двух сверенных.</li>
+  <li>Не вошли: Robosapien (упомянут в «Корнях»), Mattel × OpenAI (продукт не вышел), домашние ассистенты вроде Alexa и Google Home (не игрушки).</li>
+</ul>
+<p><em>Фото.</em> Свободные фото подписаны автором и лицензией, обрезки — под той же лицензией. Фото производителей и прессы взяты как цитата для обзора. Уберу любое по просьбе: <a href="mailto:hello@fanarlabs.com">hello@fanarlabs.com</a>.</p>
+<ol class="aph">
+  <li>Pet Rock — <a href="https://commons.wikimedia.org/wiki/File:PetRock_Box.jpg">Hempdiddy · общественное достояние</a></li>
+  <li>Teddy Ruxpin — <a href="https://www.flickr.com/photos/39160147@N03/7755204466">JeepersMedia (Mike Mozart), Flickr · CC BY 2.0, обрезано</a></li>
+  <li>Tamagotchi — <a href="https://commons.wikimedia.org/wiki/File:Gele_tamagotchi,_objectnr_78041.JPG">Museum Rotterdam · CC BY-SA 3.0, обрезано</a></li>
+  <li>Furby — <a href="http://katalog.landesmuseum.de/object/BDD30E4197CF44C4890F612E6586B23E">Landesmuseum Württemberg · CC0</a></li>
+  <li>AIBO — <a href="https://commons.wikimedia.org/wiki/File:AIBO_ERS-111_-_July_2010.jpg">Morgan из Монреаля, Flickr · CC BY 2.0, обрезано</a></li>
+  <li>Roomba — <a href="https://commons.wikimedia.org/wiki/File:Roomba_original.jpg">Larry D. Moore · CC BY 4.0, обрезано</a></li>
+  <li>Keepon — <a href="https://commons.wikimedia.org/wiki/File:KeeponTophatNextfest2007.jpg">Ilikedudes, Википедия · CC BY 3.0, обрезано</a></li>
+  <li>Paro — <a href="https://commons.wikimedia.org/wiki/File:Robots%C3%A4len_Paro_TEKS0057912.jpg">Tekniska museet / Peter Häll · CC BY-SA 4.0, обрезано</a></li>
+  <li>Pleo — <a href="https://commons.wikimedia.org/wiki/File:Pleo_robot.jpg">Jiuguang Wang · CC BY-SA 3.0, обрезано</a></li>
+  <li>Nabaztag — <a href="https://commons.wikimedia.org/wiki/File:Nabaztag-IMG_7036.jpg">Rama, Musée Bolo · CC BY-SA 2.0 FR, обрезано</a></li>
+  <li>LOVOT — <a href="https://commons.wikimedia.org/wiki/File:223_MNACTEC,_exposici%C3%B3_Robots,_rob%C3%B2tica_per_a_la_llar,_LOVOT,_Buddy,_Moxie_i_Aibo.jpg">Enric, выставка MNACTEC · CC BY-SA 4.0, обрезано</a></li>
+  <li>Toniebox — <a href="https://commons.wikimedia.org/wiki/File:Toniebox.jpg">Johann56 · CC BY-SA 4.0, обрезано</a></li>
+  <li>My Friend Cayla — <a href="https://www.kpbs.org/news/2017/02/17/banned-in-germany-kids-doll-is-labeled-an">NPR / KPBS, 2017 · цитата для обзора</a></li>
+  <li>Hello Barbie — <a href="https://www.theregister.com/2015/02/19/hello_barbie/">© Mattel, из The Register · цитата для обзора</a></li>
+  <li>Cozmo / Vector — <a href="https://commons.wikimedia.org/wiki/File:Anki_Cozmo.png">DecafPotato · CC BY-SA 4.0, обрезано</a></li>
+  <li>Jibo — <a href="https://www.engadget.com/2019-03-04-social-robot-jibo-shutting-down-message.html">© Jibo, Inc., из Engadget · цитата для обзора</a></li>
+  <li>Petoi Bittle — <a href="https://www.flickr.com/photos/53726379@N00/52104868821">epredator, Flickr · CC BY 2.0, обрезано</a></li>
+  <li>Eilik — <a href="https://store.energizelab.com/products/eilik">© Energize Lab · цитата для обзора</a></li>
+  <li>Moflin — <a href="https://commons.wikimedia.org/wiki/File:Casio%E3%81%AEAI%E3%83%9A%E3%83%83%E3%83%88%E3%83%AD%E3%83%9C%E3%80%8CMoflin%E3%80%8D.jpg">Kyu3a · CC BY-SA 4.0, обрезано</a></li>
+  <li>Loona — <a href="https://keyirobot.com/products/loona">© KEYi Tech · цитата для обзора</a></li>
+  <li>Moxie — <a href="https://commons.wikimedia.org/wiki/File:223_MNACTEC,_exposici%C3%B3_Robots,_rob%C3%B2tica_per_a_la_llar,_LOVOT,_Buddy,_Moxie_i_Aibo.jpg">Enric, выставка MNACTEC · CC BY-SA 4.0, обрезано</a></li>
+  <li>EMO — <a href="https://living.ai/emo/">© Living AI · цитата для обзора</a></li>
+  <li>BubblePal — <a href="https://www.technologyreview.com/2025/10/07/1125191/ai-toys-in-china/">© Haivivi, из MIT Technology Review · цитата для обзора</a></li>
+  <li>FoloToy Kumma — <a href="https://folotoy.com/products/teddy">© FoloToy · цитата для обзора</a></li>
+  <li>Grem — <a href="https://www.heycurio.com/product/grem">© Curio Interactive · цитата для обзора</a></li>
+  <li>xiaozhi-esp32 — <a href="https://github.com/78/xiaozhi-esp32">78/xiaozhi-esp32 на GitHub · лицензия MIT</a></li>
+</ol>
+</footer>
+
+</div>
+<div id="lb" role="dialog" aria-modal="true" hidden><b>×</b><img alt=""></div>
+<script src="/assets/hub.js"></script>
+</body></html>

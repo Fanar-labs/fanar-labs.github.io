@@ -45,6 +45,20 @@
     apply(false);
   }
 
+  /* ── Свёрнутая карточка по адресу (атлас, 17.10) ─────────────────────
+     ⤢ на карте ведёт на #t-<вещь>: карточка раскрывается сама, а адрес
+     с таким хвостом можно дать в посте — откроется уже развёрнутой. */
+  function openHash() {
+    var id = decodeURIComponent(location.hash.slice(1));
+    var el = id && document.getElementById(id);
+    if (el && el.tagName === 'DETAILS') el.open = true;
+    // на телефоне слой клетки держится фокусом и закрыл бы раскрытую карточку — снимаем
+    var a = document.activeElement;
+    if (a && a.closest && a.closest('.ac')) a.blur();
+  }
+  window.addEventListener('hashchange', openHash);
+  openHash();
+
   /* ── Лупа ──────────────────────────────────────────────────────────── */
   var lb = document.getElementById('lb');
   if (!lb) return;
