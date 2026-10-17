@@ -1,0 +1,177 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Game design patterns: 623 cards — Fanarlabs</title>
+<meta name="description" content="623 game design patterns placed on two axes, MDA layer and part of the game, with what each needs to really work. Printable cards and data, CC BY 4.0.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Game design patterns: 623 cards — Fanarlabs">
+<meta property="og:description" content="623 game design patterns on two axes, with printable cards and data to take.">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="/assets/hub.css">
+<!-- СОБРАНО game-sim-lab/kartoteka/sobrat.py из данных гейм-дизайнера (шаблон — kartoteka/stranica.html). Правьте источник. -->
+<style>
+  .kt-take{border:2px solid var(--ink);background:#fff;box-shadow:5px 5px 0 var(--ink);padding:14px 16px 12px;margin:1.6rem 0 2.2rem}
+  .kt-take h2{font-size:15px;margin:0 0 10px;letter-spacing:.04em;text-transform:uppercase}
+  .kt-take ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px 14px}
+  .kt-take a{color:var(--ink);text-decoration:none;border-bottom:2px solid var(--ink);font-weight:700}
+  .kt-take a:hover{color:var(--accent);border-color:var(--accent)}
+  .kt-take li span{display:block;color:var(--mute);font-size:13px}
+  .kt-take p{margin:10px 0 0;font-size:13px;color:var(--mute)}
+  .kt-take p a{font-weight:400;border-bottom-width:1px}
+  .kt-tbl{overflow-x:auto;margin:0 0 .6rem;-webkit-overflow-scrolling:touch}
+  .kt-grid{display:grid;grid-template-columns:96px repeat(10,minmax(58px,1fr));gap:4px;min-width:720px}
+  .kt-grid .h{font-size:11.5px;font-weight:700;text-align:center;align-self:end;padding-bottom:2px}
+  .kt-grid .r{font-size:11.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;align-self:center;text-align:right;padding-right:6px}
+  .kt-c{border:1.5px solid var(--hair);border-radius:4px;min-height:58px;padding:5px 5px 4px;text-align:left;font:inherit;cursor:pointer;background:var(--f)}
+  .kt-c b{font-size:14px;color:var(--c)} .kt-c .ii{display:flex;gap:2px;margin-top:3px}
+  .kt-c svg{width:17px;height:17px}
+  .kt-c:hover{border-color:var(--ink)} .kt-c.on{border:2.5px solid var(--accent)}
+  .kt-c.pust{background:#f1eee8;cursor:default}
+  .kt-find{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:1.4rem 0 .6rem}
+  .kt-find input{font:inherit;padding:7px 10px;border:2px solid var(--ink);background:#fff;min-width:240px}
+  .kt-find h2{margin:0;font-size:17px;flex:1}
+  .kt-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:8px;margin-bottom:1.6rem}
+  .kt-m{display:grid;grid-template-columns:34px 1fr;gap:2px 9px;text-align:left;font:inherit;background:#fff;border:1.5px solid var(--hair);border-radius:6px;padding:8px 9px;cursor:pointer;color:var(--ink)}
+  .kt-m svg{width:34px;height:34px;grid-row:span 2} .kt-m b{font-size:14px;line-height:1.2} .kt-m span{font-size:12.5px;color:var(--mute);line-height:1.3}
+  .kt-m:hover{border-color:var(--ink)} .kt-m.on{border:2px solid var(--accent)} .kt-m em{font-style:normal;font-size:11px;color:var(--mute)}
+  .kt-card{border:2px solid var(--ink);background:#fff;box-shadow:5px 5px 0 var(--ink);padding:18px 20px 16px;margin:0 0 2rem;scroll-margin-top:64px}
+  .kt-card .top{display:grid;grid-template-columns:84px 1fr;gap:4px 16px;align-items:center;margin-bottom:12px}
+  .kt-card .top svg{width:84px;height:84px;grid-row:span 3;background:var(--f);border-bottom:5px solid var(--c);padding:6px}
+  .kt-card h3{margin:0;font-size:24px;line-height:1.15} .kt-card .pl{font-weight:700;color:var(--c);font-size:14px}
+  .kt-card .gl{font-size:16px;margin:0}
+  .kt-card dl{margin:0;display:grid;grid-template-columns:170px 1fr;gap:8px 16px}
+  .kt-card dt{font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:.03em;padding-top:2px}
+  .kt-card dd{margin:0;font-size:15px}
+  .kt-links{margin-top:16px;display:grid;gap:12px}
+  .kt-links h4{margin:0 0 4px;font-size:13px;text-transform:uppercase;letter-spacing:.03em}
+  .kt-links ul{list-style:none;margin:0;padding:0;display:grid;gap:3px}
+  .kt-links li{font-size:14px;line-height:1.35}
+  .kt-links button{font:inherit;font-weight:700;background:none;border:0;border-bottom:1.5px solid var(--ink);padding:0;cursor:pointer;color:var(--ink)}
+  .kt-links button:hover{color:var(--accent);border-color:var(--accent)}
+  .kt-links .w{color:var(--mute)} .kt-links .more{border:0;color:var(--mute);font-weight:400;text-decoration:underline}
+  .kt-card .src{margin:16px 0 0;font-size:13px;color:var(--mute)} .kt-card .src a{color:var(--ink)}
+  @media (max-width:640px){ .kt-card dl{grid-template-columns:1fr;gap:2px} .kt-card dd{margin-bottom:8px} .kt-card .top{grid-template-columns:64px 1fr} .kt-card .top svg{width:64px;height:64px} .kt-card h3{font-size:20px} .kt-find input{min-width:0;width:100%} }
+</style>
+<script data-goatcounter="https://panarini.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head><body>
+<nav class="topbar">
+  <a class="me" href="/">Fanarlabs</a>
+  <span class="links">
+    <a href="mailto:hello@fanarlabs.com" aria-label="Email">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 3h13a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5Z" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M1.6 4.1 8 8.9l6.4-4.8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+    </a>
+    <a href="https://github.com/PanarinI" aria-label="GitHub">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+    </a>
+    <a href="https://bsky.app/profile/igorpanarin.bsky.social" aria-label="Bluesky">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 7.1C7.1 5.4 4.7 2.2 2.7 1.4 1.5.9.5 1.4.5 2.9c0 1.4.8 4.7 1.3 5.5.9 1.4 2.4 1.3 3.9 1.1-1.5.2-2.8.8-1.1 2.6.4.4 1 1 1.5 1.5.8.8 1.5.9 1.9.9s1.1-.1 1.9-.9c.5-.5 1.1-1.1 1.5-1.5 1.7-1.8.4-2.4-1.1-2.6 1.5.2 3 .3 3.9-1.1.5-.8 1.3-4.1 1.3-5.5 0-1.5-1-2-2.2-1.5-2 .8-4.4 4-5.3 5.7Z"/></svg>
+    </a>
+    <a href="https://t.me/bot_and_kot" aria-label="Telegram channel, in Russian">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M15.2 2.2 1.1 7.6c-.7.3-.7.9 0 1.1l3.5 1.1L13 4.4c.4-.2.8-.1.5.2l-6.8 6.2-.3 3.6c.4 0 .6-.2.8-.4l1.7-1.7 3.6 2.6c.7.4 1.1.2 1.3-.6l2.3-10.9c.2-.9-.3-1.3-.9-1.2Z"/></svg><span class="ru">RU</span>
+    </a>
+  </span>
+</nav>
+<div class="wrap page">
+
+<a class="back" href="../#materials">← Materials</a>
+
+<div class="head"><h1>Game design patterns: 623 cards</h1><span class="stage">cards</span></div>
+
+<p class="lede">I build game prototypes from these cards. Each card is one pattern from the Game Design Patterns catalog by Staffan Björk and Jussi Holopainen. A pattern is a move that many games repeat, such as Time Limits or Tension.</p>
+<p class="sub">To find a pattern by what it does in a game, each one is placed on two axes. Up: MDA — the rules a designer writes (mechanics), what happens when people play (dynamics), what the player feels (feelings). Across: the part of the game it belongs to — Tracy Fullerton's formal elements, plus drama and interface. An AI agent read every catalog page and wrote the explanations below in its own words; nothing is copied from the catalog.</p>
+
+<section class="kt-take">
+  <h2>Take them</h2>
+  <ul>
+    <li><a href="patterns/game-design-pattern-cards.pdf">Printable cards · PDF</a><span>623 cards, 63×88 mm, 9 per A4 page, 70 pages · 4.3 MB</span></li>
+    <li><a href="patterns/game-design-patterns.csv">Table · CSV</a><span>one row per card · 0.6 MB</span></li>
+    <li><a href="patterns/game-design-patterns.json">Data with links · JSON</a><span>every link with its reason · 2.2 MB</span></li>
+    <li><a href="patterns/game-design-pattern-pictograms.zip">Pictograms · SVG</a><span>623 files · 0.2 MB</span></li>
+  </ul>
+  <p>Explanations, link reasons and pictograms: <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> — take them, change them, name the source. Pattern names and the links between them come from <a href="https://gdp.cse.chalmers.se/">the catalog</a>; each card links to its page there.</p>
+</section>
+
+<div class="kt-tbl"><div class="kt-grid" id="ktGrid"></div></div>
+
+<div class="kt-find"><h2 id="ktTitle">…</h2><input id="ktQ" type="search" placeholder="search 623 cards…" aria-label="Search cards"></div>
+<div class="kt-list" id="ktList"></div>
+<article class="kt-card" id="ktCard" hidden></article>
+
+</div>
+<script>
+(() => {
+const SL = [["mechanics", "#4A6FA5", "#e6edf7"], ["dynamics", "#4d6b3c", "#e8f0e2"], ["feelings", "#7A5BA6", "#efe7f7"]];
+const $ = s => document.querySelector(s), esc = t => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+let K = [], EL = [], WHY = null, sel = null, otkr = null;
+const ik = i => `<svg viewBox="0 0 64 64" fill="none" stroke="#222" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${K[i].ik}</svg>`;
+const mesto = (s, e) => `${SL[s][0]} × ${EL[e]}`;
+const vKletke = (s, e) => K.map((k, i) => i).filter(i => K[i].s === s && K[i].e === e).sort((a, b) => K[b].w - K[a].w || K[a].n.localeCompare(K[b].n));
+const vtorye = (s, e) => K.map((k, i) => i).filter(i => !(K[i].s === s && K[i].e === e) && (K[i].s2 >= 0 ? K[i].s2 : K[i].s) === s && (K[i].e2 >= 0 ? K[i].e2 : K[i].e) === e && (K[i].s2 >= 0 || K[i].e2 >= 0));
+
+function setka() {
+  let h = `<div></div>` + EL.map(e => `<div class="h">${esc(e)}</div>`).join("");
+  for (const s of [2, 1, 0]) {
+    h += `<div class="r" style="color:${SL[s][1]}">${SL[s][0]}</div>`;
+    EL.forEach((e, ei) => { const ids = vKletke(s, ei);
+      h += ids.length ? `<button class="kt-c${sel && sel[0] === s && sel[1] === ei ? " on" : ""}" style="--c:${SL[s][1]};--f:${SL[s][2]}" data-s="${s}" data-e="${ei}" title="${esc(mesto(s, ei))} · ${ids.length} cards"><b>${ids.length}</b><span class="ii">${ids.slice(0, 3).map(ik).join("")}</span></button>`
+        : `<div class="kt-c pust" title="${esc(mesto(s, ei))} · no cards">·</div>`; });
+  }
+  $("#ktGrid").innerHTML = h;
+}
+function spisok(ids, titul, dop = []) {
+  $("#ktTitle").textContent = titul;
+  $("#ktList").innerHTML = ids.map(i => mini(i, "")).join("") + dop.map(i => mini(i, `<em>also here · first place ${esc(mesto(K[i].s, K[i].e))}</em>`)).join("") ||
+    `<p class="sub" style="margin:0">Nothing found.</p>`;
+}
+const mini = (i, pr) => `<button class="kt-m${otkr === i ? " on" : ""}" data-i="${i}">${ik(i)}<b>${esc(K[i].n)}</b><span>${esc(K[i].g)}${pr ? "<br>" + pr : ""}</span></button>`;
+function kletka(s, e) {
+  sel = [s, e]; $("#ktQ").value = ""; setka();
+  spisok(vKletke(s, e), `${mesto(s, e)} — ${vKletke(s, e).length} cards`, vtorye(s, e));
+}
+async function karta(i, skroll = true, adres = true) {
+  otkr = i; const k = K[i];
+  document.querySelectorAll(".kt-m").forEach(b => b.classList.toggle("on", +b.dataset.i === i));
+  if (adres) history.replaceState(null, "", "#" + k.u);   // адрес карточки — чтобы ею можно было поделиться; первая карточка по умолчанию адрес не меняет
+  const vtor = k.s2 >= 0 || k.e2 >= 0 ? ` · also ${mesto(k.s2 >= 0 ? k.s2 : k.s, k.e2 >= 0 ? k.e2 : k.e)}` : "";
+  const box = $("#ktCard"); box.hidden = false; box.style.setProperty("--c", SL[k.s][1]); box.style.setProperty("--f", SL[k.s][2]);
+  box.innerHTML = `<div class="top">${ik(i)}<h3>${esc(k.n)}</h3><div class="pl">${esc(mesto(k.s, k.e))}${esc(vtor)}</div><p class="gl">${esc(k.g)}</p></div>
+    <dl><dt>Needs to really work</dt><dd>${esc(k.nz)}</dd><dt>Just a label when</dt><dd>${esc(k.yr)}</dd><dt>Knobs</dt><dd>${esc(k.rk)}</dd></dl>
+    <div class="kt-links" id="ktLinks"><p class="sub" style="margin:0">loading links…</p></div>
+    <p class="src">Catalog page: <a href="https://gdp.cse.chalmers.se/index.php/${encodeURIComponent(k.u)}">${esc(k.n)} ↗</a>${k.st ? " (the page there is still a stub)" : ""}</p>`;
+  if (skroll) box.scrollIntoView({ behavior: "smooth", block: "start" });
+  if (!WHY) WHY = await fetch('patterns/links.json').then(r => r.json()).catch(() => ({ i: {}, m: {}, k: {} }));
+  if (otkr !== i) return;
+  const gr = [["can cause", k.c, j => WHY.i[i + "," + j]], ["caused by", k.b, j => WHY.i[j + "," + i]],
+              ["changes how it plays", k.m, j => WHY.m[i + "," + j]], ["conflicts with", k.k, j => WHY.k[i + "," + j] || WHY.k[j + "," + i]]];
+  $("#ktLinks").innerHTML = gr.filter(g => g[1].length).map(([t, ids, w], n) => {
+    const li = ids.map((j, x) => `<li${x >= 8 ? " hidden" : ""}><button data-i="${j}">${esc(K[j].n)}</button>${w(j) ? ` <span class="w">— ${esc(w(j))}</span>` : ""}</li>`).join("");
+    return `<div><h4>${t} · ${ids.length}</h4><ul>${li}</ul>${ids.length > 8 ? `<button class="more" data-more="1">show all ${ids.length}</button>` : ""}</div>`;
+  }).join("") || `<p class="sub" style="margin:0">No links in the catalog.</p>`;
+}
+document.addEventListener("click", ev => {
+  const c = ev.target.closest(".kt-c[data-s]"); if (c) { kletka(+c.dataset.s, +c.dataset.e); return; }
+  const m = ev.target.closest("[data-more]"); if (m) { m.previousElementSibling.querySelectorAll("li[hidden]").forEach(l => l.hidden = false); m.remove(); return; }
+  const b = ev.target.closest("[data-i]"); if (b) { const i = +b.dataset.i;
+    if (b.closest("#ktCard")) { kletka(K[i].s, K[i].e); }
+    karta(i); }
+});
+$("#ktQ").addEventListener("input", ev => {
+  const q = ev.target.value.trim().toLowerCase();
+  if (!q) { if (sel) kletka(sel[0], sel[1]); return; }
+  sel = null; setka();
+  const ids = K.map((k, i) => i).filter(i => K[i].n.toLowerCase().includes(q) || K[i].g.toLowerCase().includes(q))
+    .sort((a, b) => (K[b].n.toLowerCase().startsWith(q) - K[a].n.toLowerCase().startsWith(q)) || K[b].w - K[a].w);
+  spisok(ids, `${ids.length} cards for “${ev.target.value.trim()}”`);
+});
+window.addEventListener("hashchange", () => {   // ссылка на другую карточку в той же вкладке
+  const i = K.findIndex(k => k.u === decodeURIComponent(location.hash.slice(1)));
+  if (i >= 0 && i !== otkr) { kletka(K[i].s, K[i].e); karta(i); }
+});
+fetch('patterns/data.json').then(r => r.json()).then(d => {
+  K = d.karty; EL = d.el;
+  const h = decodeURIComponent(location.hash.slice(1)), i0 = K.findIndex(k => k.u === h);
+  if (i0 >= 0) { kletka(K[i0].s, K[i0].e); karta(i0, true); }
+  else { kletka(2, EL.indexOf("conflict")); karta(vKletke(2, EL.indexOf("conflict"))[0], false, false); }
+});
+})();
+</script>
+</body></html>
