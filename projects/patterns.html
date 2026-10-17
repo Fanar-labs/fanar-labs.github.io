@@ -1,10 +1,10 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Game design patterns: 623 cards — Fanarlabs</title>
-<meta name="description" content="623 game design patterns placed on two axes, MDA layer and part of the game, with what each needs to really work. Printable cards and data, CC BY 4.0.">
+<meta name="description" content="623 game design patterns on two axes, MDA layer and part of the game, as printable decks with a board, and as data. CC BY 4.0.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Game design patterns: 623 cards — Fanarlabs">
-<meta property="og:description" content="623 game design patterns on two axes, with printable cards and data to take.">
+<meta property="og:description" content="623 game design patterns as printable decks and a board, to build a game on a table.">
 <meta name="twitter:card" content="summary">
 <link rel="stylesheet" href="/assets/hub.css">
 <!-- СОБРАНО game-sim-lab/kartoteka/sobrat.py из данных гейм-дизайнера (шаблон — kartoteka/stranica.html). Правьте источник. -->
@@ -17,6 +17,11 @@
   .kt-take li span{display:block;color:var(--mute);font-size:13px}
   .kt-take p{margin:10px 0 0;font-size:13px;color:var(--mute)}
   .kt-take p a{font-weight:400;border-bottom-width:1px}
+  .kt-take li a + span + a{display:inline-block;margin-top:6px}
+  .kt-stol{margin:0 0 2.4rem} .kt-stol h2{font-size:17px;margin:0 0 10px}
+  .kt-stol img{display:block;width:100%;border:2px solid var(--ink);box-shadow:5px 5px 0 var(--ink);margin:0 0 14px}
+  .kt-stol p{max-width:44em;margin:0 0 8px} .kt-stol ol{max-width:44em;margin:0;padding-left:1.3em} .kt-stol li{margin-bottom:4px}
+  .kt-kod{display:inline-block;font-weight:800;font-size:12px;border:1.5px solid currentColor;border-radius:3px;padding:0 4px;margin-left:6px;vertical-align:1px}
   .kt-tbl{overflow-x:auto;margin:0 0 .6rem;-webkit-overflow-scrolling:touch}
   .kt-grid{display:grid;grid-template-columns:96px repeat(10,minmax(58px,1fr));gap:4px;min-width:720px}
   .kt-grid .h{font-size:11.5px;font-weight:700;text-align:center;align-self:end;padding-bottom:2px}
@@ -82,12 +87,26 @@
 <section class="kt-take">
   <h2>Take them</h2>
   <ul>
-    <li><a href="patterns/game-design-pattern-cards.pdf">Printable cards · PDF</a><span>623 cards, 63×88 mm, 9 per A4 page, 70 pages · 4.3 MB</span></li>
-    <li><a href="patterns/game-design-patterns.csv">Table · CSV</a><span>one row per card · 0.6 MB</span></li>
-    <li><a href="patterns/game-design-patterns.json">Data with links · JSON</a><span>every link with its reason · 2.2 MB</span></li>
+    <li><a href="patterns/game-design-pattern-decks.pdf">Card decks · PDF</a><span>Mechanics 461 · Dynamics 119 · Feelings 43 · Kinds of fun 8; links on the back; rules on page 1 · 145 pages · 11.5 MB</span></li>
+    <li><a href="patterns/game-design-patterns-board-A3.pdf">Board · PDF, A3</a><span>2 sheets side by side · 0.1 MB</span><a href="patterns/game-design-patterns-board-A4.pdf">Board · PDF, A4</a><span>the same, 4 sheets · 0.1 MB</span></li>
+    <li><a href="patterns/game-design-patterns.csv">Table · CSV</a><span>one row per card, with its code · 0.6 MB</span><a href="patterns/game-design-patterns.json">Data with links · JSON</a><span>every link with its reason · 2.4 MB</span></li>
     <li><a href="patterns/game-design-pattern-pictograms.zip">Pictograms · SVG</a><span>623 files · 0.2 MB</span></li>
   </ul>
   <p>Explanations, link reasons and pictograms: <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> — take them, change them, name the source. Pattern names and the links between them come from <a href="https://gdp.cse.chalmers.se/">the catalog</a>; each card links to its page there.</p>
+</section>
+
+<section class="kt-stol">
+  <h2>Build a game on a table</h2>
+  <img src="patterns/on-the-table.png" data-zoom="patterns/on-the-table.png" style="cursor:zoom-in" alt="The board on a table: seven rule cards in their cells, two cards with coins on them, one card turned sideways, two Kinds of fun cards above the board" loading="lazy">
+  <p>Each card has a code, such as <b>F6·1</b>: row F (feelings), column 6 (conflict). The same code is printed on the board, so the card shows where it goes. The back of a card lists what it can cause and what it conflicts with, each with its code.</p>
+  <ol>
+    <li>Take one or two cards from the Kinds of fun deck: what the game is for.</li>
+    <li>Put 4–7 cards from the Mechanics deck in their cells.</li>
+    <li>When two cards on the board can cause the same pattern, put that card in its cell with a coin on it: it may appear in play without anyone choosing it.</li>
+    <li>When a card conflicts with another card on the board, turn one sideways and decide which stays.</li>
+    <li>Objectives, procedures, conflict and outcome need a card each, or the game has no goal, nothing to do, nothing in the way, or no ending.</li>
+    <li>Write the game in a paragraph, make a paper prototype, play it, and check each card: did it really show up?</li>
+  </ol>
 </section>
 
 <div class="kt-tbl"><div class="kt-grid" id="ktGrid"></div></div>
@@ -97,6 +116,8 @@
 <article class="kt-card" id="ktCard" hidden></article>
 
 </div>
+<div id="lb" role="dialog" aria-modal="true" hidden><b>×</b><img alt=""></div>
+<script src="/assets/hub.js"></script>
 <script>
 (() => {
 const SL = [["mechanics", "#4A6FA5", "#e6edf7"], ["dynamics", "#4d6b3c", "#e8f0e2"], ["feelings", "#7A5BA6", "#efe7f7"]];
@@ -122,7 +143,7 @@ function spisok(ids, titul, dop = []) {
   $("#ktList").innerHTML = ids.map(i => mini(i, "")).join("") + dop.map(i => mini(i, `<em>also here · first place ${esc(mesto(K[i].s, K[i].e))}</em>`)).join("") ||
     `<p class="sub" style="margin:0">Nothing found.</p>`;
 }
-const mini = (i, pr) => `<button class="kt-m${otkr === i ? " on" : ""}" data-i="${i}">${ik(i)}<b>${esc(K[i].n)}</b><span>${esc(K[i].g)}${pr ? "<br>" + pr : ""}</span></button>`;
+const mini = (i, pr) => `<button class="kt-m${otkr === i ? " on" : ""}" data-i="${i}">${ik(i)}<b>${esc(K[i].n)} <em>${esc(K[i].kod)}</em></b><span>${esc(K[i].g)}${pr ? "<br>" + pr : ""}</span></button>`;
 function kletka(s, e) {
   sel = [s, e]; $("#ktQ").value = ""; setka();
   spisok(vKletke(s, e), `${mesto(s, e)} — ${vKletke(s, e).length} cards`, vtorye(s, e));
@@ -133,7 +154,7 @@ async function karta(i, skroll = true, adres = true) {
   if (adres) history.replaceState(null, "", "#" + k.u);   // адрес карточки — чтобы ею можно было поделиться; первая карточка по умолчанию адрес не меняет
   const vtor = k.s2 >= 0 || k.e2 >= 0 ? ` · also ${mesto(k.s2 >= 0 ? k.s2 : k.s, k.e2 >= 0 ? k.e2 : k.e)}` : "";
   const box = $("#ktCard"); box.hidden = false; box.style.setProperty("--c", SL[k.s][1]); box.style.setProperty("--f", SL[k.s][2]);
-  box.innerHTML = `<div class="top">${ik(i)}<h3>${esc(k.n)}</h3><div class="pl">${esc(mesto(k.s, k.e))}${esc(vtor)}</div><p class="gl">${esc(k.g)}</p></div>
+  box.innerHTML = `<div class="top">${ik(i)}<h3>${esc(k.n)}</h3><div class="pl">${esc(mesto(k.s, k.e))}<span class="kt-kod">${esc(k.kod)}</span>${esc(vtor)}</div><p class="gl">${esc(k.g)}</p></div>
     <dl><dt>Needs to really work</dt><dd>${esc(k.nz)}</dd><dt>Just a label when</dt><dd>${esc(k.yr)}</dd><dt>Knobs</dt><dd>${esc(k.rk)}</dd></dl>
     <div class="kt-links" id="ktLinks"><p class="sub" style="margin:0">loading links…</p></div>
     <p class="src">Catalog page: <a href="https://gdp.cse.chalmers.se/index.php/${encodeURIComponent(k.u)}">${esc(k.n)} ↗</a>${k.st ? " (the page there is still a stub)" : ""}</p>`;
@@ -143,7 +164,7 @@ async function karta(i, skroll = true, adres = true) {
   const gr = [["can cause", k.c, j => WHY.i[i + "," + j]], ["caused by", k.b, j => WHY.i[j + "," + i]],
               ["changes how it plays", k.m, j => WHY.m[i + "," + j]], ["conflicts with", k.k, j => WHY.k[i + "," + j] || WHY.k[j + "," + i]]];
   $("#ktLinks").innerHTML = gr.filter(g => g[1].length).map(([t, ids, w], n) => {
-    const li = ids.map((j, x) => `<li${x >= 8 ? " hidden" : ""}><button data-i="${j}">${esc(K[j].n)}</button>${w(j) ? ` <span class="w">— ${esc(w(j))}</span>` : ""}</li>`).join("");
+    const li = ids.map((j, x) => `<li${x >= 8 ? " hidden" : ""}><button data-i="${j}">${esc(K[j].n)}</button> <em>${esc(K[j].kod)}</em>${w(j) ? ` <span class="w">— ${esc(w(j))}</span>` : ""}</li>`).join("");
     return `<div><h4>${t} · ${ids.length}</h4><ul>${li}</ul>${ids.length > 8 ? `<button class="more" data-more="1">show all ${ids.length}</button>` : ""}</div>`;
   }).join("") || `<p class="sub" style="margin:0">No links in the catalog.</p>`;
 }
