@@ -4560,7 +4560,7 @@
     st.innerHTML = '<div class="fScene"><img class="fBg" alt="" src="data:image/svg+xml;charset=utf-8,' + encodeURIComponent(FASAD_BG) + '">' + FASAD_LIVE + '</div>';              // no words on the street: the sign and the door say it (the author: «не надо простыней текста»)
     var scn = st.querySelector('.fScene'), going = false;
     function heard() { return (samplesDone || !samplesAsked) && (kitDone || !kitAsked); }   // every recording in: no raw sound first
-    function built() { var D = window.DOM3D; return !D || D.failed || D.ok && !D.busy; }   // the house in volume ready: no flat dolls first
+    function built() { var D = window.DOM3D; return !!D && (D.failed || D.ok && !D.busy); }   // the house in volume ready: no flat dolls first (not yet arrived is not ready)
     function muffle(f, g, dur) { if (snd && snd.lp) { var c = snd.ctx.currentTime; ramp(snd.lp.frequency, f, c, dur, true); ramp(snd.out.gain, g, c, dur); } }
     function enter() {                 // v45: one knock; we walk to the door while the house and every recording get ready — then the door opens, the music comes through it, and we go in
       if (going) return; going = true; unlockAudio();
@@ -4590,6 +4590,6 @@
 <script type="importmap">
 { "imports": { "three": "../lib/three-0.186.1/three.module.js", "three/addons/": "../lib/three-0.186.1/addons/" } }
 </script>
-<script type="module" src="dom3d.js"></script>
+<script type="module" src="dom3d.js" onerror="window.DOM3D = { ok: false, failed: true, show() {}, frame() {}, resize() {} }"></script>
 </body>
 </html>
