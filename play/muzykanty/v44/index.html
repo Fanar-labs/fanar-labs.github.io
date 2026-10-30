@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Musicians v43 — a flat concert</title>
+<title>Musicians v44 — a flat concert</title>
 <style>
   html, body { margin: 0; padding: 0; background: #0e1220; overflow: hidden; font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; color: #ddd; }
   #bar { height: 28px; box-sizing: border-box; padding: 6px 8px; font-size: 12px; background: #1c2029; white-space: nowrap; overflow: hidden; }
@@ -69,6 +69,7 @@
   #fDoor .fLeafL, #fDoor .fLeafR { transition: transform 0.7s ease-in-out; transform-box: fill-box; } #fDoor .fLeafL { transform-origin: 0 50%; } #fDoor .fLeafR { transform-origin: 100% 50%; }
   #prodStart.open .fLeafL, #prodStart.open .fLeafR { transform: scaleX(0.12); } #prodStart.open .fPlaque { opacity: 0; } #prodStart.open .fDoorGlow { animation: none; opacity: 1; }
   body.prod #pult h4:first-child { cursor: default; }
+  #prodVer { position: fixed; left: 8px; bottom: 6px; z-index: 70; font: 11px/1 Georgia, serif; letter-spacing: 0.05em; color: rgba(232, 220, 196, 0.38); pointer-events: none; }   /* v44: the version, quietly */
   #harHint { position: absolute; left: 0; right: 0; top: -20px; text-align: center; font-size: 12px; color: #e0c48a; pointer-events: none; }
 </style>
 <script data-goatcounter="https://panarini.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
@@ -4554,6 +4555,7 @@
     st.addEventListener('click', enter);   // a click anywhere on the street goes in — the door only shows the way
     document.addEventListener('keydown', function (e) { if (document.getElementById('prodStart') && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); e.stopPropagation(); enter(); } }, true);
     document.body.appendChild(st); labels();
+    var ver = document.createElement('div'); ver.id = 'prodVer'; ver.textContent = (document.title.match(/v\d+/) || [''])[0]; document.body.appendChild(ver);   // v44: which version a guest sees — in a corner, quietly (the author 30.10)
   })();
   if (INSIDE) { bplay.disabled = true; bplay.title = 'Sound plays only when the world is opened on its own page.'; }
   else (function loop(ts) {            // 30 frames a second while it plays, 4 while it waits: an old laptop must keep up
