@@ -66,6 +66,8 @@ composer.addPass(bokeh);
 composer.addPass(new OutputPass());
 const film = new ShaderPass(FILM);
 composer.addPass(film);
+const PHONE = matchMedia('(pointer: coarse)').matches && Math.min(innerWidth, innerHeight) < 600;   // v45: a phone: no light between the dolls, no depth of field, one pixel for one
+if (PHONE) { gtao.enabled = false; bokeh.enabled = false; renderer.setPixelRatio(1); }
 function resize() {   // the lab's canvas size, under the bar
   const s = HS.size(), w = s.w, h = s.h; cv.style.width = w + 'px'; cv.style.height = h + 'px';
   renderer.setSize(w, h, false); composer.setPixelRatio(renderer.getPixelRatio()); composer.setSize(w, h);
@@ -1239,6 +1241,7 @@ window.DOM3D = { ok: false, failed: false, K, CAM, scene, camera, renderer, LAMP
   resize() { if (built) resize(); },
   view(yaw, pitch, dist, tx, ty, tz) { Object.assign(CAM, { yaw, pitch, dist }); Object.assign(camS, { yaw, pitch, dist }); if (tx !== undefined) CAM.target.set(tx, ty, tz); },   // checks: a camera at once, no easing
   closeup(id, yaw, pitch = 0.05, dist = 1.3) { const h = headOf(id); this.view(yaw, pitch, dist, h.x, h.y, h.z); return [h.x, h.y, h.z].map((v) => +v.toFixed(2)); },
+  get phone() { return PHONE; },   // checks only: v45
   world() { const Wd = HS.world(HS.now()); return { clock: Wd.h + ':' + String(Math.floor(Wd.m)).padStart(2, '0'), candle: +Wd.candle.toFixed(3), door: +Wd.door.toFixed(2), tram: Wd.tram, doors: Wd.doors.map((x) => +x.toFixed(2)), wins: Wd.wins.map((x) => +x.toFixed(2)), otto: cast.otto.A, bo: cast.bo.A, ottoHere: cast.otto.root.visible, boHere: cast.bo.root.visible, bassHis: BASS.parent === cast.bo.root }; },   // checks only: v34
   route(id) { const d = cast[id]; if (!d || !d.home) return null; const R = d.route || (d.route = routeOf(d)); return { pts: R.getSpacedPoints(120).map((v) => [+v.x.toFixed(3), +v.z.toFixed(3)]), seat: [+d.home.x.toFixed(3), +d.home.z.toFixed(3)], L: +R.getLength().toFixed(3) }; },   // checks only: v34
   together() { const o = {}; for (const id in cast) { const d = cast[id], V = d.V; o[id] = V ? { gaze: V.gaze.kind + (V.gaze.id ? ':' + V.gaze.id : ''), lead: V.lead, leader: V.leader, breath: +V.breath.toFixed(2), rest: +V.rest.toFixed(2), pulse: +V.pulse.toFixed(2), end: V.end.tf !== null, lean: +d.spine.rotation.x.toFixed(3) } : null; } return o; },   // checks only: v33
